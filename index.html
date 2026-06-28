@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Airship Claude Adoption Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --as-purple:#8d00d4; --as-magenta:#ec00ff; --as-deep:#34004d;
+    --as-grad:linear-gradient(112deg,#BD38DF 0%,#5F1C70 100%);
+    --as-grad-bright:linear-gradient(135deg,#ec00ff 0%,#8d00d4 55%,#34004d 100%);
+    --ap-blue:#3180FF; --ap-lightblue:#38ABFF; --ap-slate:#354B64;
+    --ap-offwhite:#FAFBFB; --ap-grey:#F4F6F7; --ap-divider:#E9EDF2; --ap-green:#71BE37;
+    --tg-blue:#1770FD; --tg-deep:#1057E1; --tg-ink:#113CD0; --tg-cyan:#45C1FF;
+    --tg-electric:#00D5FF; --tg-slate:#354B64; --tg-cloud:#F3F3F3; --tg-mist:#D9D9D9;
+    --tg-coral:#F9665A; --tg-gold:#FFCC28;
+    --ink:#34004d; --body:#354B64; --line:#E9E2EF; --soft:#FAF8FC; --maxw:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; font-family:"Lato","Helvetica Neue",Arial,sans-serif; color:var(--body); background:#fff; line-height:1.6; font-size:17px; -webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:"Montserrat","Helvetica Neue",Arial,sans-serif; color:var(--ink); margin:0; letter-spacing:-0.02em; line-height:1.12}
+  a{color:var(--as-purple); text-decoration:none}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px}
+  .eyebrow{font-family:"Montserrat"; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--as-purple)}
+
+  .bar{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.9); backdrop-filter:saturate(140%) blur(6px); border-bottom:1px solid var(--line)}
+  .bar .wrap{display:flex; align-items:center; justify-content:space-between; height:62px}
+  .brandmark{font-family:"Montserrat"; font-weight:900; letter-spacing:.02em; color:var(--ink); font-size:19px}
+  .brandmark b{background:var(--as-grad-bright); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .nav{display:flex; gap:22px; font-family:"Montserrat"; font-weight:600; font-size:13.5px}
+  .nav a{color:var(--body)}
+  .nav a:hover{color:var(--as-purple)}
+  @media(max-width:760px){.nav{display:none}}
+
+  .hero{background:var(--as-grad); color:#fff; padding:88px 0 78px; position:relative; overflow:hidden}
+  .hero:after{content:""; position:absolute; inset:0; background:radial-gradient(900px 380px at 85% -10%, rgba(236,0,255,.35), transparent 60%); pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero .eyebrow{color:#f4c6ff}
+  .hero h1{color:#fff; font-weight:800; font-size:54px; margin:14px 0 18px; max-width:18ch}
+  .hero h1 .acc{color:#ffd6ff}
+  .hero p.lede{font-size:20px; color:#f0dcff; max-width:62ch; margin:0 0 30px}
+  .steps{display:flex; flex-wrap:wrap; gap:10px}
+  .steps a{display:inline-flex; align-items:center; gap:9px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.28); color:#fff; padding:9px 15px; border-radius:50px; font-family:"Montserrat"; font-weight:600; font-size:13.5px}
+  .steps a:hover{background:rgba(255,255,255,.22)}
+  .steps a span{display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%; background:#fff; color:var(--as-purple); font-weight:800; font-size:12px}
+
+  section{padding:74px 0; border-bottom:1px solid var(--line)}
+  section.tight{padding:54px 0}
+  .sec-head{max-width:66ch; margin-bottom:36px}
+  .sec-head h2{font-weight:800; font-size:34px; margin:10px 0 12px}
+  .sec-head p{font-size:18px; margin:0}
+  .num{font-family:"Montserrat"; font-weight:900; font-size:13px; color:var(--as-purple); letter-spacing:.04em}
+
+  .grid{display:grid; gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:880px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px}
+  .card h3{font-size:19px; margin-bottom:8px}
+  .card p{margin:0; font-size:15.5px}
+  .card.soft{background:var(--soft)}
+
+  .journey{display:grid; grid-template-columns:repeat(5,1fr); gap:14px}
+  @media(max-width:880px){.journey{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.journey{grid-template-columns:1fr}}
+  .j{background:var(--soft); border:1px solid var(--line); border-radius:16px; padding:20px}
+  .j .n{display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; background:var(--as-grad); color:#fff; font-family:"Montserrat"; font-weight:800; margin-bottom:12px}
+  .j h4{font-size:16px; margin-bottom:6px}
+  .j p{margin:0; font-size:14px}
+
+  .promptbox{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:16px 0}
+  .promptbox .ph{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--soft); padding:11px 16px; border-bottom:1px solid var(--line)}
+  .promptbox .ph .lbl{font-family:"Montserrat"; font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--as-deep)}
+  .copy{font-family:"Montserrat"; font-weight:700; font-size:12px; border:1px solid var(--as-purple); color:var(--as-purple); background:#fff; border-radius:50px; padding:6px 14px; cursor:pointer}
+  .copy:hover{background:var(--as-purple); color:#fff}
+  .copy.done{background:var(--ap-green); border-color:var(--ap-green); color:#fff}
+  .promptbox pre{margin:0; padding:18px 16px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13.5px; line-height:1.65; color:var(--ap-slate); white-space:pre-wrap; background:#fff}
+
+  .brain{border:1px solid var(--line); border-radius:18px; padding:22px; background:#fff; display:flex; flex-direction:column; gap:6px}
+  .brain.hq{background:var(--soft); border-color:#e7d8f3}
+  .brain .badge{font-family:"Montserrat"; font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--as-purple)}
+  .brain .badge.team{color:var(--ap-blue)}
+  .brain .name{font-family:"Montserrat"; font-weight:800; color:var(--ink); font-size:23px; display:flex; align-items:center; gap:10px}
+  .brain .dot{width:11px; height:11px; border-radius:50%; background:var(--as-grad)}
+  .brain.tm .dot{background:var(--ap-blue)}
+  .brain .role{font-weight:700; color:var(--body); font-size:15px}
+  .brain .knows{font-size:14.5px; margin:6px 0 0}
+  .brain .talk{font-size:13.5px; color:#6a5878; margin-top:8px; border-top:1px dashed var(--line); padding-top:10px}
+  .brain .talk b{color:var(--as-deep)}
+  .tag{display:inline-block; font-family:"Montserrat"; font-weight:700; font-size:11px; border-radius:50px; padding:4px 11px; background:#efe4f8; color:var(--as-purple)}
+  .tag.team{background:#e7f0ff; color:var(--ap-blue)}
+
+  .note{background:var(--soft); border-left:4px solid var(--as-purple); border-radius:0 12px 12px 0; padding:16px 18px; font-size:15px; margin:22px 0}
+  .note b{color:var(--as-deep)}
+
+  .showcase{display:grid; gap:22px}
+  .panel{border-radius:22px; overflow:hidden; border:1px solid var(--line)}
+  .panel .pbody{padding:30px}
+  .swatches{display:flex; flex-wrap:wrap; gap:10px; margin:18px 0 6px}
+  .sw{border-radius:12px; padding:12px 14px; min-width:120px; font-family:"Montserrat"; font-weight:700; font-size:12px; line-height:1.3}
+  .sw small{display:block; font-weight:500; opacity:.85; font-size:11px; margin-top:3px}
+  .pa{background:#fff}
+  .pa .top{background:var(--as-grad); color:#fff; padding:30px}
+  .pa .top .k{font-family:"Montserrat"; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#f4c6ff}
+  .pa .top h3{color:#fff; font-family:"Montserrat"; font-weight:800; font-size:30px; margin-top:8px}
+  .pa .top h3 .acc{color:#ffd6ff}
+  .pa .meta{font-family:"Montserrat"; font-size:13.5px; color:var(--as-deep)}
+  .pa .meta b{font-weight:800}
+  .pb{background:var(--ap-grey); font-family:"Lato",sans-serif}
+  .pb .ui{background:var(--ap-offwhite); border:1px solid var(--ap-divider); border-radius:9px; padding:18px; box-shadow:0 1px 2px rgba(53,75,100,.06)}
+  .pb h3{font-family:"Lato"; font-weight:900; color:var(--ap-slate); font-size:24px}
+  .pb .k{font-family:"Lato"; font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ap-blue)}
+  .pb label{display:block; font-weight:700; font-size:12.5px; color:var(--ap-slate); margin-bottom:6px}
+  .pb .inp{background:#fff; border:1px solid var(--ap-divider); border-radius:9px; padding:11px 13px; font-weight:700; color:var(--ap-slate); font-size:14px}
+  .pb .btn{display:inline-block; margin-top:14px; background:var(--ap-blue); color:#fff; font-weight:700; border-radius:50px; padding:10px 22px; font-size:14px}
+  .pb .pill{display:inline-block; background:#fff; border:1px solid var(--ap-divider); color:var(--ap-green); font-weight:700; font-size:12px; border-radius:50px; padding:5px 12px}
+  .pb .meta{font-size:13px; color:var(--ap-slate)}
+  .pc{background:var(--tg-blue); font-family:"Manrope",sans-serif; position:relative; overflow:hidden}
+  .pc .wave{position:absolute; left:0; right:0; bottom:-2px; width:100%; height:120px; display:block}
+  .pc .pbody{position:relative; z-index:2}
+  .pc .k{font-family:"Manrope"; font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#bfe3ff}
+  .pc h3{font-family:"Manrope"; font-weight:800; color:#fff; font-size:32px; letter-spacing:-0.02em; line-height:1.08; margin-top:8px}
+  .pc h3 .acc{color:var(--tg-cyan)}
+  .pc .statrow{display:flex; flex-wrap:wrap; gap:12px; margin-top:22px}
+  .pc .stat{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22); border-radius:18px; padding:16px 20px; min-width:130px}
+  .pc .stat .big{font-family:"Manrope"; font-weight:800; color:#fff; font-size:34px; line-height:1}
+  .pc .stat .lab{font-family:"Manrope"; font-weight:500; color:#d6ecff; font-size:12.5px; margin-top:6px}
+  .pc .word{font-family:"Manrope"; font-weight:800; color:#fff; font-size:18px; margin-top:24px}
+  .pc .word .sw{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--tg-coral); margin-left:3px; transform:translateY(-1px)}
+
+  .layers{display:grid; gap:14px}
+  .layer{display:grid; grid-template-columns:46px 1fr; gap:16px; align-items:start; background:var(--soft); border:1px solid var(--line); border-radius:16px; padding:18px 20px}
+  .layer .ico{width:46px; height:46px; border-radius:12px; background:var(--as-grad); display:grid; place-items:center; color:#fff; font-family:"Montserrat"; font-weight:900; font-size:18px}
+  .layer h4{font-size:17px; margin-bottom:4px}
+  .layer p{margin:0; font-size:15px}
+  .layer .scope{font-family:"Montserrat"; font-weight:700; font-size:11px; color:var(--as-purple); letter-spacing:.04em}
+
+  .loop{display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:8px; position:relative}
+  @media(max-width:780px){.loop{grid-template-columns:1fr}}
+  .loop .step{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; position:relative}
+  .loop .step .n{font-family:"Montserrat"; font-weight:900; color:var(--as-purple); font-size:13px; letter-spacing:.08em}
+  .loop .step h4{font-size:16px; margin:6px 0 6px}
+  .loop .step p{margin:0; font-size:14px}
+  .loop .arrow{display:grid; place-items:center; font-family:"Montserrat"; font-weight:900; color:var(--as-magenta); padding:0 6px}
+  @media(max-width:780px){.loop .arrow{transform:rotate(90deg); padding:8px 0}}
+
+  .play{display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--line)}
+  .play:last-child{border-bottom:0}
+  .play .p{display:inline-grid; place-items:center; min-width:30px; height:30px; border-radius:9px; background:var(--as-deep); color:#fff; font-family:"Montserrat"; font-weight:800; font-size:13px}
+  .play h4{font-size:16px; margin-bottom:3px}
+  .play p{margin:0; font-size:15px}
+
+  .guard{display:grid; grid-template-columns:1fr 1fr; gap:10px 26px; margin-top:8px}
+  @media(max-width:760px){.guard{grid-template-columns:1fr}}
+  .guard li{list-style:none; padding-left:24px; position:relative; font-size:15px; margin:8px 0}
+  .guard li:before{content:""; position:absolute; left:0; top:8px; width:11px; height:11px; border-radius:3px; background:var(--as-purple)}
+
+  .briefq{display:grid; grid-template-columns:repeat(5,1fr); gap:12px}
+  @media(max-width:860px){.briefq{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.briefq{grid-template-columns:1fr}}
+  .briefq .q{border:1px solid var(--line); border-radius:14px; padding:16px}
+  .briefq .q .t{font-family:"Montserrat"; font-weight:800; color:var(--as-deep); font-size:15px; margin-bottom:5px}
+  .briefq .q p{margin:0; font-size:13.5px}
+
+  footer{padding:46px 0 60px; background:var(--as-deep); color:#e9d6f5}
+  footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:18px; align-items:center}
+  footer .brandmark{color:#fff}
+  footer small{color:#c8a9e0; font-size:13px; max-width:64ch}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <div class="brandmark">AIRSHIP <b>Claude</b></div>
+  <nav class="nav">
+    <a href="#start">Start</a>
+    <a href="#brains">The Brains</a>
+    <a href="#brand">Brand</a>
+    <a href="#memory">Memory</a>
+    <a href="#adopt">Adoption</a>
+  </nav>
+</div></div>
+
+<!-- HERO -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Airship Claude Adoption Plan &middot; v1 draft</div>
+  <h1>Five steps to a team that gets <span class="acc">sharper every week</span>.</h1>
+  <p class="lede">A shared plan for putting Claude in every team's hands. Set yourself up once, know where your department's knowledge lives, stay on-brand by default, and keep improving the outputs you rely on. The target is 100% adoption, used in whatever way fits the job.</p>
+  <div class="steps">
+    <a href="#start"><span>0</span>Start here</a>
+    <a href="#you"><span>1</span>Set up you</a>
+    <a href="#brains"><span>2</span>The department Brains</a>
+    <a href="#brand"><span>3</span>Brand and design</a>
+    <a href="#memory"><span>4</span>Memory and improving</a>
+    <a href="#adopt"><span>5</span>Make it stick</a>
+  </div>
+</div></header>
+
+<!-- START -->
+<section id="start" class="tight"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">START HERE</div>
+    <h2>There is no single right way to use Claude.</h2>
+    <p>Use a quick chat for a one-off question or a fast draft. Use your department Brain when the work needs the department's shared knowledge, has to stay on-brand, or should get better over time for the whole team. Neither is wrong. This plan makes the second kind reliable, without getting in the way of the first.</p>
+  </div>
+  <div class="grid g3">
+    <div class="card soft"><h3>What Claude is to us</h3><p>A capable assistant that takes a rough input and returns a clean, on-brand, structured output. It augments the tools we already use. It does not replace Fin in Intercom, Pipedrive, or Cursor.</p></div>
+    <div class="card soft"><h3>Where your knowledge lives</h3><p>Each department has one Brain: its knowledge base and the first place to look. There is a defined set, created and kept correct centrally, not hundreds of projects everyone spins up.</p></div>
+    <div class="card soft"><h3>Who this is for</h3><p>Everyone, on day one. Set up your profile, find your department Brain, and you are productive. The deeper craft comes in Part 2.</p></div>
+  </div>
+
+  <h3 style="margin:38px 0 16px; font-size:20px">The journey at a glance</h3>
+  <div class="journey">
+    <div class="j"><div class="n">1</div><h4>Set up you</h4><p>Log in and set your profile so every chat knows who you are and stays on-brand.</p></div>
+    <div class="j"><div class="n">2</div><h4>The department Brains</h4><p>The defined set of knowledge bases. Know which is yours and what it holds.</p></div>
+    <div class="j"><div class="n">3</div><h4>Brand and design</h4><p>Right brand for the surface. When it is unclear which, ask before you build.</p></div>
+    <div class="j"><div class="n">4</div><h4>Memory and improving</h4><p>Feed in what works, and amend what is wrong, so the Brain stays right.</p></div>
+    <div class="j"><div class="n">5</div><h4>Make it stick</h4><p>Owners, the L10 test, quick wins, guardrails. 100% adoption, kept honest.</p></div>
+  </div>
+</div></section>
+
+<!-- STEP 1 -->
+<section id="you"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">STEP 1</div>
+    <h2>Set up you. The highest-leverage ten minutes you will spend.</h2>
+    <p>Your profile is permanent memory that travels into every chat you ever have. Set it once and Claude knows your name, your role, how you work, and the brand rules, without you ever briefing it again.</p>
+  </div>
+  <div class="grid g3" style="margin-bottom:8px">
+    <div class="card"><h3>1. Log in</h3><p>Open Claude on web, desktop or the mobile app and sign in with your Airship account.</p></div>
+    <div class="card"><h3>2. Open Settings, then Profile</h3><p>This is your personal preferences block. It is invisible to colleagues and applies to every one of your chats.</p></div>
+    <div class="card"><h3>3. Paste the block below</h3><p>Add your name and role at the top, then paste the shared brand rules underneath. Save.</p></div>
+  </div>
+
+  <div class="promptbox">
+    <div class="ph"><span class="lbl">Paste into Settings &gt; Profile</span><button class="copy">Copy</button></div>
+    <pre>I'm [name], [role] at Airship. I work across teams and need clarity and decisiveness.
+
+I run two brands. When the work is clearly one brand, apply its rules. When it's unclear which, ask before designing or writing branded copy.
+
+Shared rules (both brands):
+- UK spelling throughout (colour, organise, fulfilment, centre).
+- Hyphens, never em dashes. No emoji in brand or product output.
+- Lead with the outcome, prove it with a number. No vague claims, no flowery prose, no heavy corporate jargon.
+- Zonal: fact only (acquired October 2022). Never a competitive frame or basis for advice.
+
+Airship - the platform brand. Marketing surface is loud and gradient-forward; the in-app product is calm.
+- Brand type Montserrat; product UI type Lato.
+- Brand colours: purple #8d00d4, magenta #ec00ff, deep purple text #34004d. Purple gradient, never blue, used sparingly.
+- Product colours: blue #3180FF, slate text #354B64, layered near-whites (#FFFFFF / #FAFBFB / #F4F6F7).
+
+Toggle - Hospitality Commerce (usetoggle.com): presold revenue and CRM engagement via digital gift cards, experiences and tickets. Not "a gift card provider".
+- Type Manrope (ExtraBold headlines and big numbers), Lato fallback.
+- Colours: Toggle Blue #1770FD dominates (~60% blue / 30% white and neutral / 10% accent), cyan #45C1FF accent, Slate Ink #354B64 text. Backgrounds only white or Toggle Blue.
+- Signature: the wave motif, rounded everything, stats as the hero, two-tone headlines, mobile-first. Wordmark lowercase "toggle", never a capital T.</pre>
+  </div>
+  <div class="note"><b>Why this matters.</b> Without a profile, every colleague re-briefs Claude on the basics in every chat, and outputs drift off-brand. With it set, the brand rules are on by default and you spend your time on the actual work.</div>
+</div></section>
+
+<!-- STEP 2 -->
+<section id="brains"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">STEP 2</div>
+    <h2>The department Brains. Your knowledge bases, and the first place to look.</h2>
+    <p>A Brain is a Claude Project that holds everything a department needs Claude to know. There is a defined set of them, created and owned centrally, not a free-for-all. When you need something for your area, the Brain is where you look first and the source of truth. Each carries a name so it is easy to talk about.</p>
+  </div>
+
+  <div class="grid g3" style="margin-bottom:24px">
+    <div class="card soft"><h3>A fixed set, not a free-for-all</h3><p>One Brain per department, plus a few shared head-office Brains. You use and improve them; nobody spins up their own. Knowledge stays in one trusted place instead of scattered across hundreds of projects.</p></div>
+    <div class="card soft"><h3>One owner each</h3><p>Every Brain has a single owner who keeps its knowledge correct and current. Ownership is stewardship of a shared asset, not personal territory.</p></div>
+    <div class="card soft"><h3>The first place to look</h3><p>Before asking around or starting from scratch, open your department Brain. If the answer is not there, that is a gap to fill in the Brain, not a reason to work around it.</p></div>
+  </div>
+
+  <div class="note"><b>When a Brain is wrong, amend the Brain.</b> If Claude returns something off or out of context, the knowledge in the Brain is wrong, missing or stale. Fix it there, so it is right for everyone the next time, rather than just patching it in the chat and moving on. That correction habit is the whole difference between a knowledge base people trust and a pile of one-off chats.</div>
+
+  <div class="tag">Head office &middot; shared across the company</div>
+  <div class="grid g3" style="margin:14px 0 30px">
+    <div class="brain hq">
+      <span class="badge">Company Knowledge Base</span>
+      <span class="name"><span class="dot"></span>Athena</span>
+      <span class="role">The source of truth.</span>
+      <p class="knows">Knows: brand guidelines and tone, Airship and Toggle platform overviews, pricing, key segments and personas, the org chart.</p>
+      <p class="talk"><b>Look here when:</b> anything has to stay true to the company. Every other Brain references her.</p>
+    </div>
+    <div class="brain hq">
+      <span class="badge">Cross-Functional Comms</span>
+      <span class="name"><span class="dot"></span>Hermes</span>
+      <span class="role">The messenger.</span>
+      <p class="knows">Knows: email and Teams formats, signatures, meeting agendas, escalation paths, the sensitive-comms guide.</p>
+      <p class="talk"><b>Look here when:</b> you need any internal message drafted in the right register, fast.</p>
+    </div>
+    <div class="brain hq">
+      <span class="badge">EOS Operating Rhythm</span>
+      <span class="name"><span class="dot"></span>Porto</span>
+      <span class="role">The port everything docks at.</span>
+      <p class="knows">Knows the full rhythm: the L10 agenda, the Scorecard and KPI targets, Rocks, 1-2-1s and Quarterly Conversations, the People Analyzer (GWC), and the IDS format.</p>
+      <p class="talk"><b>Look here when:</b> a leader or manager needs a 1-2-1 prepped, a KPI read as on or off track, or messy notes turned into clean scorecards, rocks, actions and IDS. Used org-wide.</p>
+    </div>
+  </div>
+
+  <div class="tag team">Department Brains &middot; one each &middot; owned by the department champion</div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="brain tm">
+      <span class="badge team">Customer Success</span>
+      <span class="name"><span class="dot"></span>Cora</span>
+      <span class="role">Looks after the customer.</span>
+      <p class="knows">Top Intercom escalation types, onboarding checklist, back-office SOPs, escalation paths, the CSM conversion playbook.</p>
+    </div>
+    <div class="brain tm">
+      <span class="badge team">Sales / BDM</span>
+      <span class="name"><span class="dot"></span>Scout</span>
+      <span class="role">Finds and qualifies new ground.</span>
+      <p class="knows">ICP for both platforms, positioning, objection handling, the proposal structure, Pipedrive stage definitions.</p>
+    </div>
+    <div class="brain tm">
+      <span class="badge team">Marketing</span>
+      <span class="name"><span class="dot"></span>Muse</span>
+      <span class="role">Turns an idea into a brief.</span>
+      <p class="knows">Brand voice, the content brief template, the Canva brief format, content pillars, the community response bank.</p>
+    </div>
+    <div class="brain tm">
+      <span class="badge team">Product &amp; Dev</span>
+      <span class="name"><span class="dot"></span>Forge</span>
+      <span class="role">Forges rough input into specs.</span>
+      <p class="knows">Linear ticket format, QA test-case structure, Canny categories, the Claude Code usage guide, the PR review checklist.</p>
+    </div>
+    <div class="brain tm">
+      <span class="badge team">Finance &amp; HR</span>
+      <span class="name"><span class="dot"></span>Ledger</span>
+      <span class="role">Keeps numbers and policy straight.</span>
+      <p class="knows">HR policies, HR comms templates, the finance reporting narrative format, the payroll and expenses FAQ.</p>
+    </div>
+    <div class="brain tm">
+      <span class="badge team">Account Management</span>
+      <span class="name"><span class="dot"></span>Anchor</span>
+      <span class="role">Keeps customers anchored.</span>
+      <p class="knows">The QBR framework, the upsell playbook by package tier, the CSM target list format, Pipedrive stage guide.</p>
+    </div>
+  </div>
+
+  <div class="note"><b>How to use a Brain.</b> Open it and say what you want plainly. It already holds the context, so skip the long briefing. The prompt below is for the one person who owns a Brain and is setting it up, not for everyone.</div>
+
+  <div class="promptbox">
+    <div class="ph"><span class="lbl">For a Brain owner &middot; setting up the department Brain</span><button class="copy">Copy</button></div>
+    <pre>You are helping me set up the Claude Project for the [team] department, called [Brain name].
+Ask me the five brief questions one at a time - purpose, audience, outputs, standard, guardrails - then write a tight project-instruction block I can pin at the top of the project. UK spelling, hyphens not em dashes, no emoji, lead with the outcome.</pre>
+  </div>
+</div></section>
+
+<!-- STEP 3: BRAND -->
+<section id="brand"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">STEP 3</div>
+    <h2>Brand and design. Right look for the surface, every time.</h2>
+    <p>We run two brands across three surfaces. Athena and the full design-system files hold the detail; the panels below show off the look so you can recognise it on sight. The one rule: pick the surface deliberately, and when it is unclear which, ask before you build.</p>
+  </div>
+
+  <div class="showcase">
+
+    <div class="panel pa">
+      <div class="top">
+        <div class="k">Surface A &middot; Airship brand</div>
+        <h3>Loud, gradient-forward, <span class="acc">confident</span>.</h3>
+      </div>
+      <div class="pbody">
+        <p class="meta"><b>Where:</b> marketing, hero, logos, AI features. <b>Type:</b> Montserrat 400 to 900. <b>Wordmark:</b> purple gradient, never blue. Use the gradient sparingly, hero only.</p>
+        <div class="swatches">
+          <div class="sw" style="background:#8d00d4;color:#fff">Purple<small>#8d00d4</small></div>
+          <div class="sw" style="background:#ec00ff;color:#fff">Magenta<small>#ec00ff</small></div>
+          <div class="sw" style="background:#34004d;color:#fff">Deep purple<small>#34004d &middot; text</small></div>
+          <div class="sw" style="background:var(--as-grad);color:#fff">Gradient<small>112deg, sparing</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel pb"><div class="pbody">
+      <div class="k">Surface B &middot; Airship product (in-app)</div>
+      <h3>Calm, soft-grey card-on-white.</h3>
+      <p class="meta" style="margin:8px 0 18px"><b>Where:</b> the in-app product and admin UI. <b>Type:</b> Lato. Cards become whiter on hover, not greyer. Restrained, competent, never cute.</p>
+      <div class="ui">
+        <label>Reward name</label>
+        <div class="inp">Birthday gift card</div>
+        <span class="btn">Confirm</span>
+        <span class="pill" style="margin-left:10px">Active</span>
+      </div>
+      <div class="swatches">
+        <div class="sw" style="background:#3180FF;color:#fff">Blue<small>#3180FF</small></div>
+        <div class="sw" style="background:#354B64;color:#fff">Slate<small>#354B64 &middot; text</small></div>
+        <div class="sw" style="background:#F4F6F7;color:#354B64;border:1px solid #E9EDF2">Page<small>#F4F6F7</small></div>
+        <div class="sw" style="background:#71BE37;color:#fff">Success<small>#71BE37</small></div>
+      </div>
+    </div></div>
+
+    <div class="panel pc">
+      <svg class="wave" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C300,120 500,0 800,50 C1000,84 1100,60 1200,30 L1200,120 L0,120 Z" fill="#45C1FF" opacity="0.22"></path>
+        <path d="M0,70 C260,30 520,120 820,72 C1030,40 1120,70 1200,58 L1200,120 L0,120 Z" fill="#45C1FF" opacity="0.32"></path>
+      </svg>
+      <div class="pbody">
+        <div class="k">Surface C &middot; Toggle (usetoggle.com)</div>
+        <h3>Presold revenue. <span class="acc">CRM engagement.</span></h3>
+        <div class="statrow">
+          <div class="stat"><div class="big">&pound;86m</div><div class="lab">Card value issued in 2025</div></div>
+          <div class="stat"><div class="big">1.5m</div><div class="lab">Cards sold in 2024</div></div>
+          <div class="stat"><div class="big">75%</div><div class="lab">Of purchases on mobile</div></div>
+        </div>
+        <div class="word">toggle<span class="sw"></span> &middot; Manrope ExtraBold, stats as the hero, two-tone headline</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note" style="margin-top:26px"><b>One name, two meanings.</b> Inside Airship the in-app product line has historically been called Toggle as well. In this plan, "Toggle" means the usetoggle.com Hospitality Commerce brand (Surface C). The in-app look is the "Airship product" surface (B). When a request just says "Toggle", check which one is meant.</div>
+</div></section>
+
+<!-- STEP 4: MEMORY -->
+<section id="memory"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">STEP 4</div>
+    <h2>Memory and improving. Keep the Brain right, and it compounds.</h2>
+    <p>Claude remembers in layers. Knowing which layer holds what is the difference between starting from scratch every time and a Brain that nails your house style first try, and stays accurate because you keep it that way.</p>
+  </div>
+
+  <div class="layers">
+    <div class="layer"><div class="ico">1</div><div><span class="scope">GLOBAL &middot; EVERY CHAT</span><h4>Your profile</h4><p>Who you are and the brand rules. Set once in Settings, applies everywhere. (Step 1.)</p></div></div>
+    <div class="layer"><div class="ico">2</div><div><span class="scope">PER BRAIN &middot; PERMANENT</span><h4>A Brain's knowledge and instructions</h4><p>The files you add and the brief pinned at the top of the project. The Brain's fixed expertise.</p></div></div>
+    <div class="layer"><div class="ico">3</div><div><span class="scope">PER BRAIN &middot; BUILDS OVER TIME</span><h4>A Brain's memory</h4><p>What Claude carries forward from your past chats inside that project. It grows week on week. You can view, edit or clear it.</p></div></div>
+    <div class="layer"><div class="ico">4</div><div><span class="scope">TEMPORARY</span><h4>The chat</h4><p>Your working space for one task. It ends when the chat ends. Fine for one-offs; for shared work, capture what matters into the Brain.</p></div></div>
+  </div>
+
+  <h3 style="margin:42px 0 8px; font-size:21px">The improvement loop</h3>
+  <p style="margin:0 0 22px; max-width:66ch">Do not just use a Brain. Keep it right. Feed it what works, and fix what is wrong, and the next output starts from a better place. This is the owner's core habit.</p>
+  <div class="loop">
+    <div class="step"><div class="n">MOVE 1</div><h4>Build</h4><p>Get an output to where you want it, refining in the chat as normal.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">MOVE 2</div><h4>Capture or correct</h4><p>Ask Claude to write what made it good, or what went wrong, as a reusable fix.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">MOVE 3</div><h4>Save</h4><p>Put it into the Brain's instructions or knowledge so it sticks for everyone.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">MOVE 4</div><h4>Compound</h4><p>Next time the Brain is right first try. Repeat, and it sharpens every week.</p></div>
+  </div>
+
+  <div class="promptbox" style="margin-top:28px">
+    <div class="ph"><span class="lbl">Capture what worked</span><button class="copy">Copy</button></div>
+    <pre>That output is exactly right. Write an updated instruction block I can paste into this project's instructions so future outputs come out like this first time. Keep it tight and specific: format, tone, length, and what to avoid.</pre>
+  </div>
+  <div class="promptbox">
+    <div class="ph"><span class="lbl">Correct it when it is wrong</span><button class="copy">Copy</button></div>
+    <pre>That was wrong: [what it got wrong and why]. Update this project's knowledge or instructions so it does not happen again, and tell me exactly what you changed.</pre>
+  </div>
+  <div class="promptbox">
+    <div class="ph"><span class="lbl">Build on what the Brain already knows</span><button class="copy">Copy</button></div>
+    <pre>Have we worked on [topic] in this project before? If so, build on it rather than starting fresh, and tell me what you're carrying over.</pre>
+  </div>
+  <div class="promptbox">
+    <div class="ph"><span class="lbl">On-brand on demand, in any chat</span><button class="copy">Copy</button></div>
+    <pre>Apply [Airship brand / Airship product / Toggle] styling and our UK-English, hyphens-not-em-dashes, no-emoji rules. Lead with the outcome and prove it with a number.</pre>
+  </div>
+</div></section>
+
+<!-- STEP 5: ADOPTION -->
+<section id="adopt"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">STEP 5</div>
+    <h2>Make it stick. The plays that get us to 100%.</h2>
+    <p>Adoption is a behaviour, not a launch. These plays sit on top of the rollout plan and turn "we have Claude" into "this is how we work".</p>
+  </div>
+
+  <div class="grid g2" style="gap:30px">
+    <div>
+      <h3 style="font-size:19px; margin-bottom:6px">The adoption plays</h3>
+      <div class="play"><span class="p">1</span><div><h4>One Brain per person on day one</h4><p>Do not boil the ocean. Everyone joins their department Brain and Athena. That is enough to be productive.</p></div></div>
+      <div class="play"><span class="p">2</span><div><h4>Owners own their Brain</h4><p>One named owner per Brain, accountable for its knowledge being right and for the outputs it produces.</p></div></div>
+      <div class="play"><span class="p">3</span><div><h4>Lead from the top at the L10</h4><p>The Thursday L10 is the first real test. Leadership using Porto live is the strongest signal we can send.</p></div></div>
+      <div class="play"><span class="p">4</span><div><h4>Two quick wins per team, made visible</h4><p>Each champion brings two documented wins to the senior L10. Visible value pulls the rest along.</p></div></div>
+      <div class="play"><span class="p">5</span><div><h4>Keep the Brains correct</h4><p>When Claude gets something wrong, the owner amends the Brain, not just the chat. A source of truth is only useful while it stays true.</p></div></div>
+      <div class="play"><span class="p">6</span><div><h4>Feed and fix, weekly</h4><p>Every owner adds one improvement and corrects one error in their Brain each week. That is how the loop becomes a habit.</p></div></div>
+    </div>
+    <div>
+      <h3 style="font-size:19px; margin-bottom:6px">Standing guardrails</h3>
+      <ul class="guard">
+        <li>No pricing or commercial commitments without human review.</li>
+        <li>Customer comms get a human sense-check before sending.</li>
+        <li>No customer personal data pasted in without checking the data policy.</li>
+        <li>Anything going externally needs human sign-off.</li>
+        <li>L10 actions confirmed by the meeting owner before distributing.</li>
+        <li>Owners review and refresh their Brain monthly.</li>
+      </ul>
+
+      <h3 style="font-size:19px; margin:30px 0 12px">Pin this brief at the top of every Brain</h3>
+      <div class="briefq">
+        <div class="q"><div class="t">Purpose</div><p>What problem does this Brain solve?</p></div>
+        <div class="q"><div class="t">Audience</div><p>Who uses it, in what context?</p></div>
+        <div class="q"><div class="t">Outputs</div><p>What should it produce?</p></div>
+        <div class="q"><div class="t">Standard</div><p>What does good look like?</p></div>
+        <div class="q"><div class="t">Guardrails</div><p>What must it never do?</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:30px"><b>How we know it is working.</b> Three numbers, reviewed at the champion sync: the share of each team with a profile set, the number of Brains being fed and kept correct each week, and quick wins logged. Adoption you cannot measure is adoption you cannot defend.</div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="brandmark">AIRSHIP <b>Claude</b></div>
+  <small>Airship Claude Adoption Plan &middot; v1 draft &middot; Confidential. Part 1 of two; Part 2 covers context, styles, skills, artifacts and Cowork. Sits on top of the Claude rollout plan (v2.0). Living document - champions flag updates to Dan.</small>
+</div></footer>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = btn.closest('.promptbox').querySelector('pre');
+      var text = pre ? pre.innerText : '';
+      function done(){ var o=btn.textContent; btn.textContent='Copied'; btn.classList.add('done'); setTimeout(function(){btn.textContent=o; btn.classList.remove('done');},1600); }
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(text, done); });
+        } else { fallback(text, done); }
+      }catch(e){ fallback(text, done); }
+    });
+  });
+  function fallback(text, cb){
+    try{
+      var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb();
+    }catch(e){}
+  }
+</script>
+</body>
+</html>
