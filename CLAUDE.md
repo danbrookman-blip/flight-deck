@@ -63,6 +63,8 @@ Shared and supporting files:
 - `assets/site.js` - the single script: the Loom `VIDEOS` config and embed loader,
   the copy-button handler, and the active-nav highlighter. Linked from every page.
 - `assets/logos/` - downloadable brand marks used by the Design Systems page.
+- `assets/flight-deck-design-system.md` - the Flight Deck design-system write-up,
+  offered for download from `ds-flightdeck.html`.
 - `cheers/` - the standalone Cheers by Airship landing and pricing pages.
 - `dashboards/` - the standalone dashboard apps embedded by the `dash-*` pages
   (e.g. `dashboards/sales.html`, a live Supabase dashboard with its own styling).
