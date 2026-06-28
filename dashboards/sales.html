@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Sales Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F4F6F7; --card:#FFFFFF; --line:#E4E9EC; --line2:#EEF1F3;
+    --ink:#354B64; --muted:#7C8A9A; --faint:#9DA9B6;
+    --airship:#8d00d4; --airship2:#ec00ff;
+    --toggle:#1770FD; --toggle2:#45C1FF;
+    --print:#0ea5a0; --print2:#3fd0c9;
+    --won:#1a9e6a; --lost:#d14343; --add:#3180FF; --warn:#E08A00;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:28px 24px 64px}
+  .shell{max-width:1240px;margin:0 auto}
+
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px;flex-wrap:wrap}
+  h1{font-size:30px;font-weight:800;letter-spacing:-0.02em}
+  .sub{font-size:13px;color:var(--muted);margin-top:4px}
+  .controls{display:flex;align-items:center;gap:10px}
+  button.refresh{font:inherit;font-weight:600;font-size:13px;color:#fff;background:var(--ink);border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
+  button.refresh:hover{opacity:.9}
+  .synced{font-size:12px;color:var(--faint)}
+
+  .filterbar{display:flex;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+  .filterbar label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-left:6px}
+  .filterbar label:first-child{margin-left:0}
+  select{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+  #owner{min-width:200px} #dtype{min-width:150px}
+  .filterbar .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;margin-left:10px;cursor:pointer}
+  .filterbar .chk input{width:15px;height:15px;cursor:pointer;accent-color:var(--toggle)}
+  .filterbar .clr{font-size:12px;color:var(--toggle);cursor:pointer;font-weight:600;margin-left:4px}
+  .filterbar .clr.hidden{display:none}
+
+  .headline{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
+  @media(max-width:640px){.headline{grid-template-columns:1fr}}
+  .hstat{background:var(--card);padding:18px 20px}
+  .hstat .hl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .hstat .hv{font-size:30px;font-weight:800;letter-spacing:-0.02em;margin-top:6px;line-height:1}
+  .hstat .hn{font-size:12px;color:var(--faint);font-weight:600;margin-top:5px}
+  .hstat.add .hv{color:var(--add)} .hstat.won .hv{color:var(--won)} .hstat.lost .hv{color:var(--lost)}
+  .hcap{font-size:11px;color:var(--faint);margin:0 2px 22px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px;margin-bottom:24px}
+  .c{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;position:relative;overflow:hidden}
+  .c::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+  .c.airship::before{background:linear-gradient(90deg,var(--airship),var(--airship2))}
+  .c.toggle::before{background:linear-gradient(90deg,var(--toggle),var(--toggle2))}
+  .c.print::before{background:linear-gradient(90deg,var(--print),var(--print2))}
+  .c.other::before{background:var(--faint)}
+  .c h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+  .c.airship h2{color:var(--airship)} .c.toggle h2{color:var(--toggle)} .c.print h2{color:var(--print)} .c.other h2{color:var(--muted)}
+  .c .open{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .c .open .big{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1}
+  .c .open .cap{font-size:11px;color:var(--muted)}
+  .wk{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+  .wk .b{background:var(--bg);border-radius:10px;padding:8px 9px}
+  .wk .b .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .wk .b .v{font-size:15px;font-weight:700;margin-top:2px}
+  .wk .b .n{font-size:11px;color:var(--faint);font-weight:600}
+  .wk .b.won .v{color:var(--won)} .wk .b.lost .v{color:var(--lost)} .wk .b.add .v{color:var(--add)}
+  .tgt .row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+  .tgt .track{height:9px;border-radius:6px;background:var(--bg);overflow:hidden}
+  .tgt .fill{height:100%;border-radius:6px}
+  .c.airship .fill{background:linear-gradient(90deg,var(--airship),var(--airship2))}
+  .c.toggle .fill{background:linear-gradient(90deg,var(--toggle),var(--toggle2))}
+  .c.print .fill{background:linear-gradient(90deg,var(--print),var(--print2))}
+  .c.other .fill{background:var(--faint)}
+  .tgt .none{font-size:11px;color:var(--faint);font-style:italic}
+
+  .sectionhead{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin:0 2px 10px}
+  .sectionhead .hint{font-size:12px;font-weight:500;color:var(--faint);margin-left:8px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px 8px 12px;overflow-x:auto;margin-bottom:26px}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+  th{text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;padding:12px 12px 10px}
+  th.l{text-align:left}
+  td{padding:11px 12px;border-top:1px solid var(--line2);vertical-align:middle}
+  td.l{text-align:left}
+  td.r{text-align:right}
+  .grp td{background:var(--bg);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-top:1px solid var(--line)}
+  .grp.airship td{color:var(--airship)} .grp.toggle td{color:var(--toggle)} .grp.print td{color:var(--print)} .grp.other td{color:var(--muted)}
+  .pname{font-weight:600}
+  tr.muted{opacity:.5}
+  .pill{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:999px;margin-left:8px;vertical-align:middle}
+  .pill.t-new{background:#e8f1ff;color:#1f6fe0}
+  .pill.t-expansion{background:#e4f6ef;color:#138a5c}
+  .pill.t-renewal{background:#fff1dd;color:#b5730a}
+  .pill.t-cold{background:#eef1f3;color:#7C8A9A}
+  .pill.t-other{background:#eef1f3;color:#7C8A9A}
+  .cell .v{font-weight:700}
+  .cell .n{font-size:11px;color:var(--faint);font-weight:600}
+  .cell.won .v{color:var(--won)} .cell.lost .v{color:var(--lost)} .cell.add .v{color:var(--add)}
+  .cell.zero .v{color:var(--faint);font-weight:600}
+  .sub td{font-weight:700;border-top:1px solid var(--line)}
+  tr.sel td{background:#eef5ff}
+  .rank{color:var(--faint);font-weight:600;width:22px;display:inline-block}
+  .tcell{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .tcell .mini{width:88px;height:7px;border-radius:5px;background:var(--bg);overflow:hidden}
+  .tcell .mf{height:100%;border-radius:5px;background:var(--ink)}
+  .tcell .lab{font-size:11px;color:var(--muted)}
+  .dash{color:var(--faint)}
+
+  .err{background:var(--card);border:1px solid #f3c9c9;border-radius:var(--radius);padding:22px;color:var(--lost);line-height:1.6}
+  .hidden{display:none}
+  .foot{font-size:11px;color:var(--faint);margin-top:-12px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <div>
+      <h1>Weekly Sales Dashboard</h1>
+      <div class="sub"><span id="weekline"></span> &middot; Airship &amp; Toggle, every pipeline.</div>
+    </div>
+    <div class="controls">
+      <span class="synced" id="synced"></span>
+      <button class="refresh" id="refresh">Refresh</button>
+    </div>
+  </header>
+
+  <div class="err hidden" id="err"></div>
+
+  <div id="app" class="hidden">
+
+    <div class="filterbar">
+      <label for="owner">Owner</label>
+      <select id="owner"><option value="">All owners</option></select>
+      <label for="dtype">Type</label>
+      <select id="dtype"><option value="">All types</option></select>
+      <label class="chk"><input type="checkbox" id="excold" checked> Exclude cold from headline</label>
+      <span class="clr hidden" id="clr">Clear filters</span>
+    </div>
+
+    <div class="headline" id="headline"></div>
+    <div class="hcap" id="hcap"></div>
+
+    <div class="cards" id="cards"></div>
+
+    <div class="sectionhead">Pipelines<span class="hint" id="ph"></span></div>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th class="l">Pipeline</th>
+            <th>Added (wk)</th>
+            <th>Won (wk)</th>
+            <th>Lost (wk)</th>
+            <th>Open pipeline</th>
+            <th>Won MTD vs target</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div class="sectionhead">By owner<span class="hint">whole team, this week &middot; click a name to filter the view above</span></div>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th class="l">Owner</th>
+            <th>Added (wk)</th>
+            <th>Won (wk)</th>
+            <th>Lost (wk)</th>
+            <th>Open pipeline</th>
+            <th>Won MTD</th>
+          </tr>
+        </thead>
+        <tbody id="owners"></tbody>
+      </table>
+    </div>
+
+    <div class="foot">
+      Week = the seven days to <span id="weekend2"></span>. Movements counted by when each deal was added, won or lost. Won MTD is this calendar month's won value. Open pipeline is all live deals regardless of age. When "exclude cold" is on, cold pipelines are dropped from the headline cards, the brand subtotals and the owner totals, and shown greyed in the table.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== keys (baked in) =====
+const SUPABASE_URL = "https://zwiiljmyyvakyyvypvtc.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_ZRAGcLTey-PLJl_67v1HLg_LdPWycXL";
+// ===========================
+
+const $ = s => document.querySelector(s);
+const gbp0 = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0});
+const gbpC = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',notation:'compact',maximumFractionDigits:1});
+const now = new Date();
+
+function mostRecentFriday(d){
+  const x = new Date(d);
+  const diff = (x.getDay() - 5 + 7) % 7;
+  x.setDate(x.getDate() - diff); x.setHours(17,0,0,0);
+  if (x > d) x.setDate(x.getDate() - 7);
+  return x;
+}
+const weekEnd = mostRecentFriday(now);
+const weekStart = new Date(weekEnd); weekStart.setDate(weekStart.getDate()-7);
+const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+const fmtD = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+$('#weekline').textContent = 'Week to Fri '+fmtD(weekEnd);
+$('#weekend2').textContent = 'Fri '+fmtD(weekEnd);
+
+const inWeek = iso => { if(!iso) return false; const t=new Date(iso); return t>weekStart && t<=weekEnd; };
+
+let DEALS=[], PIPES=[], OWNER='', TYPE='', EXCOLD=true, TYPEOF={};
+const ownerOf = x => x.owner_name || 'Unassigned';
+const typeLabel = t => ({new:'New',cold:'Cold',renewal:'Renewal',expansion:'Expansion'}[t] || (t? t.charAt(0).toUpperCase()+t.slice(1) : 'Other'));
+const typeClass = t => (['new','cold','renewal','expansion'].includes(t)? t : 'other');
+const isCold = name => TYPEOF[name]==='cold' || /\bcold\b/i.test(name);
+
+// --- leavers to hide from the owner list (edit freely) -----------------
+//     Full names match exactly; a lone first name (e.g. "Bryony") matches
+//     anyone whose name contains it.
+const HIDDEN_OWNERS = [
+  "Andrew Whiteley",
+  "Luci Cunningham",
+  "Sam Brown",
+  "Tess Hearn",
+  "Ed Chapman",
+  "Jack Doulton",
+  "Daniel Carey",
+  "Bryony",
+];
+const hiddenSet = new Set(HIDDEN_OWNERS.map(s=>s.toLowerCase().trim()));
+const hiddenSingles = HIDDEN_OWNERS.map(s=>s.toLowerCase().trim()).filter(s=>!s.includes(' '));
+function isHidden(o){
+  const name = String(o).toLowerCase().trim();
+  if(hiddenSet.has(name)) return true;
+  const tokens = name.split(/\s+/);
+  return hiddenSingles.some(h=>tokens.includes(h));
+}
+// -----------------------------------------------------------------------
+
+const GROUP_META = {
+  Airship:{cls:'airship',label:'Airship'},
+  Toggle:{cls:'toggle',label:'Toggle'},
+  Print:{cls:'print',label:'Print & fulfilment'},
+  Shared:{cls:'other',label:'Other / operational'}
+};
+const metaFor = b => GROUP_META[b] || {cls:'other',label:b};
+function groupOrder(){
+  const present = [...new Set(PIPES.map(p=>p.brand||'Shared'))];
+  const pref = ['Airship','Toggle','Print'];
+  const others = present.filter(b=>!pref.includes(b) && b!=='Shared').sort();
+  return [...pref.filter(b=>present.includes(b)), ...others, ...(present.includes('Shared')?['Shared']:[])];
+}
+
+async function rest(view){
+  const pageSize=1000; let offset=0, all=[];
+  while(true){
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${view}?select=*&limit=${pageSize}&offset=${offset}`,{
+      headers:{ apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}` }});
+    if(!r.ok) throw new Error(`${view}: ${r.status} ${await r.text()}`);
+    const batch = await r.json(); all=all.concat(batch);
+    if(batch.length<pageSize) break; offset+=pageSize;
+  }
+  return all;
+}
+
+async function load(){
+  try{
+    [DEALS, PIPES] = await Promise.all([rest('v_ceo_deals'), rest('v_ceo_pipelines')]);
+    TYPEOF = {}; PIPES.forEach(p=>{ TYPEOF[p.pipeline_name]=p.default_deal_type||''; });
+    $('#app').classList.remove('hidden'); $('#err').classList.add('hidden');
+    const last = DEALS.reduce((m,d)=> d.update_time>m?d.update_time:m, '');
+    $('#synced').textContent = (last? 'Synced '+new Date(last).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' \u00b7 ':'') + DEALS.length.toLocaleString('en-GB')+' deals';
+    populateOwners(); populateTypes();
+    render();
+  }catch(e){
+    $('#err').classList.remove('hidden');
+    $('#err').textContent = 'Could not load from Supabase. '+e.message;
+  }
+}
+
+function populateOwners(){
+  const names = [...new Set(DEALS.map(ownerOf))].filter(o=>!isHidden(o)).sort((a,b)=>a.localeCompare(b));
+  $('#owner').innerHTML = `<option value="">All owners</option>` + names.map(o=>`<option>${escapeHtml(o)}</option>`).join('');
+  $('#owner').value = OWNER;
+}
+function populateTypes(){
+  const pref = ['new','expansion','renewal','cold'];
+  const present = [...new Set(PIPES.map(p=>p.default_deal_type).filter(Boolean))];
+  present.sort((a,b)=>{ const ia=pref.indexOf(a), ib=pref.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b); });
+  $('#dtype').innerHTML = `<option value="">All types</option>` + present.map(t=>`<option value="${t}">${typeLabel(t)}</option>`).join('');
+  $('#dtype').value = TYPE;
+}
+
+function aggregate(d){
+  const sum = arr => arr.reduce((s,x)=>s+(+x.value||0),0);
+  const added = d.filter(x=>inWeek(x.add_time));
+  const won   = d.filter(x=>x.status==='won'  && inWeek(x.won_time));
+  const lost  = d.filter(x=>x.status==='lost' && inWeek(x.lost_time));
+  const open  = d.filter(x=>x.status==='open');
+  const wonMtd= sum(d.filter(x=>x.status==='won' && x.won_time && new Date(x.won_time)>=monthStart));
+  return {addedN:added.length,addedV:sum(added),wonN:won.length,wonV:sum(won),
+          lostN:lost.length,lostV:sum(lost),openN:open.length,openV:sum(open),wonMtd};
+}
+function dealsForPipeline(name){
+  let d = DEALS.filter(x=>x.pipeline_name===name);
+  if(OWNER) d = d.filter(x=>ownerOf(x)===OWNER);
+  return d;
+}
+const blank = {addedN:0,addedV:0,wonN:0,wonV:0,lostN:0,lostV:0,openN:0,openV:0,wonMtd:0};
+const add = (s,x)=>({addedN:s.addedN+x.addedN,addedV:s.addedV+x.addedV,wonN:s.wonN+x.wonN,wonV:s.wonV+x.wonV,lostN:s.lostN+x.lostN,lostV:s.lostV+x.lostV,openN:s.openN+x.openN,openV:s.openV+x.openV,wonMtd:s.wonMtd+x.wonMtd});
+
+function cell(n,v,cls){
+  if(!n) return `<td class="r"><div class="cell zero"><span class="v">&ndash;</span></div></td>`;
+  return `<td class="r"><div class="cell ${cls}"><span class="v">${gbpC.format(v)}</span> <span class="n">${n}</span></div></td>`;
+}
+function openCell(n,v){ return `<td class="r"><div class="cell"><span class="v">${gbpC.format(v)}</span> <span class="n">${n}</span></div></td>`; }
+function targetCell(wonMtd, target){
+  if(!target) return `<td class="r"><span class="dash">&ndash;</span></td>`;
+  const pct = Math.min(100, Math.round(100*wonMtd/target));
+  return `<td class="r"><div class="tcell"><span class="lab">${gbp0.format(wonMtd)} / ${gbp0.format(target)}</span><div class="mini"><div class="mf" style="width:${pct}%"></div></div></div></td>`;
+}
+const matchesType = name => !TYPE || TYPEOF[name]===TYPE;
+
+function render(){
+  const effExcold = EXCOLD && TYPE!=='cold';
+  const anyFilter = OWNER || TYPE;
+  $('#clr').classList.toggle('hidden', !anyFilter);
+  const bits=[]; if(OWNER) bits.push(OWNER); if(TYPE) bits.push(typeLabel(TYPE).toLowerCase());
+  $('#ph').textContent = bits.length ? '\u2014 '+bits.join(' \u00b7 ') : '';
+
+  const groups = groupOrder().filter(b => PIPES.some(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name)));
+
+  // headline cards
+  let grand = {...blank};
+  $('#cards').innerHTML = groups.map(b=>{
+    const meta = metaFor(b);
+    const psAll = PIPES.filter(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name));
+    const hasCold = psAll.some(p=>isCold(p.pipeline_name));
+    const ps = effExcold ? psAll.filter(p=>!isCold(p.pipeline_name)) : psAll;
+    const a = ps.map(p=>aggregate(dealsForPipeline(p.pipeline_name))).reduce(add, {...blank});
+    grand = add(grand, a);
+    const target = ps.reduce((s,p)=>s+(+p.monthly_target||0),0);
+    const exNote = (effExcold && hasCold) ? ' &middot; excl. cold' : '';
+    const tgt = target
+      ? `<div class="tgt"><div class="row"><span>Won this month</span><span>${gbp0.format(a.wonMtd)} of ${gbp0.format(target)}</span></div><div class="track"><div class="fill" style="width:${Math.min(100,Math.round(100*a.wonMtd/target))}%"></div></div></div>`
+      : `<div class="tgt none">No target set</div>`;
+    return `<div class="c ${meta.cls}">
+      <h2>${meta.label}</h2>
+      <div class="open"><span class="big">${gbpC.format(a.openV)}</span><span class="cap">open pipeline &middot; ${a.openN} deals${exNote}</span></div>
+      <div class="wk">
+        <div class="b add"><div class="l">Added</div><div class="v">${gbpC.format(a.addedV)}</div><div class="n">${a.addedN} deals</div></div>
+        <div class="b won"><div class="l">Won</div><div class="v">${gbpC.format(a.wonV)}</div><div class="n">${a.wonN} deals</div></div>
+        <div class="b lost"><div class="l">Lost</div><div class="v">${gbpC.format(a.lostV)}</div><div class="n">${a.lostN} deals</div></div>
+      </div>
+      ${tgt}
+    </div>`;
+  }).join('');
+
+  // headline band (whole business, after the current filters)
+  const plural = n => n===1?'deal':'deals';
+  $('#headline').innerHTML = `
+    <div class="hstat add"><div class="hl">Deals added this week</div><div class="hv">${gbp0.format(grand.addedV)}</div><div class="hn">${grand.addedN} ${plural(grand.addedN)}</div></div>
+    <div class="hstat won"><div class="hl">Deals won this week</div><div class="hv">${gbp0.format(grand.wonV)}</div><div class="hn">${grand.wonN} ${plural(grand.wonN)}</div></div>
+    <div class="hstat lost"><div class="hl">Deals lost this week</div><div class="hv">${gbp0.format(grand.lostV)}</div><div class="hn">${grand.lostN} ${plural(grand.lostN)}</div></div>`;
+  const caps = ['Week to Fri '+fmtD(weekEnd)];
+  if(effExcold) caps.push('excludes cold');
+  if(OWNER) caps.push(OWNER);
+  if(TYPE) caps.push(typeLabel(TYPE));
+  $('#hcap').textContent = caps.join(' \u00b7 ');
+
+  // pipelines table
+  let html='';
+  for(const b of groups){
+    const meta = metaFor(b);
+    const psAll = PIPES.filter(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name))
+      .map(p=>({p, a:aggregate(dealsForPipeline(p.pipeline_name))}))
+      .sort((x,y)=>y.a.openV-x.a.openV);
+    if(!psAll.length) continue;
+    const hasCold = psAll.some(o=>isCold(o.p.pipeline_name));
+    html += `<tr class="grp ${meta.cls}"><td class="l" colspan="6">${meta.label}</td></tr>`;
+    for(const {p,a} of psAll){
+      const cold = isCold(p.pipeline_name);
+      const t = p.default_deal_type;
+      const pill = t ? `<span class="pill t-${typeClass(t)}">${typeLabel(t)}</span>` : '';
+      html += `<tr class="${(effExcold && cold)?'muted':''}">
+        <td class="l"><span class="pname">${escapeHtml(p.pipeline_name)}</span>${pill}</td>
+        ${cell(a.addedN,a.addedV,'add')}
+        ${cell(a.wonN,a.wonV,'won')}
+        ${cell(a.lostN,a.lostV,'lost')}
+        ${openCell(a.openN,a.openV)}
+        ${targetCell(a.wonMtd, +p.monthly_target||0)}
+      </tr>`;
+    }
+    const forTotal = effExcold ? psAll.filter(o=>!isCold(o.p.pipeline_name)) : psAll;
+    const t = forTotal.reduce((s,{a})=>add(s,a), {...blank});
+    const tg = forTotal.reduce((s,{p})=>s+(+p.monthly_target||0),0);
+    const lbl = meta.label + ' total' + ((effExcold && hasCold)?' (excl. cold)':'');
+    html += `<tr class="sub">
+      <td class="l">${lbl}</td>
+      ${cell(t.addedN,t.addedV,'add')}
+      ${cell(t.wonN,t.wonV,'won')}
+      ${cell(t.lostN,t.lostV,'lost')}
+      ${openCell(t.openN,t.openV)}
+      ${targetCell(t.wonMtd, tg)}
+    </tr>`;
+  }
+  $('#rows').innerHTML = html || `<tr><td class="l" colspan="6" style="color:var(--faint)">No pipelines match this filter.</td></tr>`;
+
+  // by-owner table: respects Type + cold exclusion, spans all owners
+  const pool = DEALS.filter(x=>matchesType(x.pipeline_name) && !(effExcold && isCold(x.pipeline_name)) && !isHidden(ownerOf(x)));
+  const names = [...new Set(pool.map(ownerOf))];
+  const rows = names.map(o=>({o, a:aggregate(pool.filter(x=>ownerOf(x)===o))}))
+    .sort((x,y)=> y.a.openV-x.a.openV);
+  let ohtml='';
+  rows.forEach(({o,a},i)=>{
+    ohtml += `<tr class="${o===OWNER?'sel':''}" data-owner="${escapeHtml(o)}" style="cursor:pointer">
+      <td class="l"><span class="rank">${i+1}</span><span class="pname">${escapeHtml(o)}</span></td>
+      ${cell(a.addedN,a.addedV,'add')}
+      ${cell(a.wonN,a.wonV,'won')}
+      ${cell(a.lostN,a.lostV,'lost')}
+      ${openCell(a.openN,a.openV)}
+      <td class="r"><div class="cell"><span class="v">${gbpC.format(a.wonMtd)}</span></div></td>
+    </tr>`;
+  });
+  const tt = rows.reduce((s,{a})=>add(s,a), {...blank});
+  ohtml += `<tr class="sub">
+    <td class="l">Team total</td>
+    ${cell(tt.addedN,tt.addedV,'add')}
+    ${cell(tt.wonN,tt.wonV,'won')}
+    ${cell(tt.lostN,tt.lostV,'lost')}
+    ${openCell(tt.openN,tt.openV)}
+    <td class="r"><div class="cell"><span class="v">${gbpC.format(tt.wonMtd)}</span></div></td>
+  </tr>`;
+  $('#owners').innerHTML = ohtml;
+
+  document.querySelectorAll('#owners tr[data-owner]').forEach(tr=>{
+    tr.addEventListener('click', ()=>{ OWNER = tr.dataset.owner===OWNER ? '' : tr.dataset.owner; $('#owner').value=OWNER; render(); });
+  });
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+$('#refresh').addEventListener('click',load);
+$('#owner').addEventListener('change', e=>{ OWNER=e.target.value; render(); });
+$('#dtype').addEventListener('change', e=>{ TYPE=e.target.value; render(); });
+$('#excold').addEventListener('change', e=>{ EXCOLD=e.target.checked; render(); });
+$('#clr').addEventListener('click', ()=>{ OWNER=''; TYPE=''; $('#owner').value=''; $('#dtype').value=''; render(); });
+load();
+</script>
+</body>
+</html>

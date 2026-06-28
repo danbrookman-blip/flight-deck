@@ -48,6 +48,13 @@ Pages (all at the repo root):
   (Community Content Manager, Airship Lookout, Single Customer View), each with its
   live demo or mockup and build-spec links.
 - `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
+- `dashboards.html` - Dashboards hub: one card per team dashboard.
+- `dash-sales.html` - the Weekly Sales Dashboard, a live Supabase app embedded via an
+  iframe from `dashboards/sales.html` (a self-contained app, kept verbatim).
+- `dash-customer-success.html` / `dash-product.html` / `dash-marketing.html` /
+  `dash-engineering.html` - stub pages with a "coming soon" panel. Each carries an HTML
+  comment showing how to drop a dashboard in later (save `dashboards/<team>.html` and
+  swap the panel for an iframe).
 
 Shared and supporting files:
 - `assets/site.css` - the single stylesheet, linked from every page. **All styling
@@ -56,6 +63,8 @@ Shared and supporting files:
   the copy-button handler, and the active-nav highlighter. Linked from every page.
 - `assets/logos/` - downloadable brand marks used by the Design Systems page.
 - `cheers/` - the standalone Cheers by Airship landing and pricing pages.
+- `dashboards/` - the standalone dashboard apps embedded by the `dash-*` pages
+  (e.g. `dashboards/sales.html`, a live Supabase dashboard with its own styling).
 - `context/` - the two brand reference files. Read them in full before any design
   or copy work. The brand essentials are also summarised in "Two brands" below.
   - `context/Airship-Design-System.md`
