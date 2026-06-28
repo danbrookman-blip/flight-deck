@@ -1,0 +1,10 @@
+# Normalise line endings to LF in the repo for all text files.
+# Stops CRLF/LF churn between Windows checkouts and the Linux deploy runner.
+* text=auto eol=lf
+
+# Be explicit about the file types this repo actually contains.
+*.html  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
