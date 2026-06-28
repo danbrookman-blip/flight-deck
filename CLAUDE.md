@@ -26,28 +26,51 @@ No build step, no framework, no bundler. Keep it that way.
 
 ## File structure
 
-Flight Deck is now a **single page**. Part 1 and Part 2 were merged.
+Flight Deck is a **multi-page** static site. One page per top-level nav area,
+sharing one stylesheet and one script. Each page only embeds its own images, so
+they stay light (the old single-page build was ~700KB on every view).
 
-- `index.html` - the complete Flight Deck (~700KB). It holds **both** parts on one
-  page, with embedded base64 dashboard images:
-  - **Part 1 - the five-step adoption plan**: Set up you, the department Brains,
-    Brand and design, Memory and improving, Make it stick.
-  - **Part 2 - the craft and power tools**: Better context in, Styles, Skills,
-    Artifacts, Cowork, "Which tool, when", Connectors, Automated Scorecard reporting.
-- `.github/workflows/main_flightdeck.yml` - the Azure deploy workflow (see above).
+Pages (all at the repo root):
+- `index.html` - home: the hero and the "no single right way" intro (`#start`).
+- `start.html` - the adoption plan: Set up you (`#you`), the department Brains
+  (`#brains`), Memory (`#memory`), Make it stick (`#adopt`).
+- `design-systems.html` - Brand and design (`#design-systems`) plus the
+  downloadable logo library.
+- `power-tools.html` - the Part 2 band plus Context (`#craft`), Styles, Skills,
+  Artifacts, Cowork, "Which tool, when" (`#ladder`), Connectors, Scorecard.
+- `ideas.html` - prototypes: Community Content Manager, Airship Lookout, Single
+  Customer View (`#scv`).
+- `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
+
+Shared and supporting files:
+- `assets/site.css` - the single stylesheet, linked from every page. **All styling
+  lives here**, not in per-page `<style>` blocks.
+- `assets/site.js` - the single script: the Loom `VIDEOS` config and embed loader,
+  the copy-button handler, and the active-nav highlighter. Linked from every page.
+- `assets/logos/` - downloadable brand marks used by the Design Systems page.
+- `cheers/` - the standalone Cheers by Airship landing and pricing pages.
 - `context/` - the two brand reference files. Read them in full before any design
   or copy work. The brand essentials are also summarised in "Two brands" below.
   - `context/Airship-Design-System.md`
   - `context/Toggle-Brand-Context.md`
+- `.github/workflows/main_flightdeck.yml` - the Azure deploy workflow (see above).
 
-**Navigation is in-page anchors, not separate files.** The sticky nav links to
-`#start`, `#adopt`, `#brains`, `#brand`, `#memory`, `#part2`, `#connectors`,
-`#scorecard`, `#you`.
+**Navigation: a shared sticky bar duplicated in each page's `<head>` markup.** Top
+level is `Start - Design Systems - Power tools - Ideas - Repackaging`; the dropdowns
+link to `#anchors` within the relevant page (e.g. `power-tools.html#styles`). The
+current page is highlighted automatically by the active-nav code in `site.js`.
+Cross-page links are fully qualified (`page.html#anchor`); same-page links may stay
+bare (`#anchor`).
 
-When adding content: add a **new section inside `index.html`**, give it an `id`,
-wire an anchor into the sticky nav, and inherit the existing `<style>` conventions.
-Match the existing structure rather than inventing a new layout language. Only
-create a second `.html` file if we deliberately decide to split the site again.
+When adding content:
+- New section on an existing page: add it inside that page's `.html`, give it an
+  `id`, and add a dropdown entry pointing at `page.html#id` **in every page's nav**
+  (the bar is duplicated, so keep all copies in sync).
+- New top-level area: create a new `.html` file using an existing page as the
+  template (copy its `<head>`, sticky bar and footer), link `assets/site.css` and
+  `assets/site.js`, and add the new `navtop` to every page's nav.
+- Style changes go in `assets/site.css`; behaviour in `assets/site.js`. Do not
+  reintroduce per-page `<style>` blocks.
 
 ---
 
@@ -97,22 +120,22 @@ should use, ask before building.
 - **Keep it as HTML.** Do not propose moving to PowerPoint or a framework - the
   copy buttons, Loom embeds, sticky nav and dashboard interactivity only exist
   because it is HTML.
-- **Copy buttons**: the `.copy` button JS at the foot of the page powers the
+- **Copy buttons**: the `.copy` button handler in `assets/site.js` powers the
   paste-ready prompt boxes. Do not break it when editing. The `[name]`, `[tone]`,
   `[team]`, `[task]` etc. inside those boxes are **intentional fill-in fields**,
   not placeholders to remove.
 - **Brain names**: each department Brain is named and lives in the Brains section
-  of the page. Current set - HQ Brains: Florence (the source of truth), Austin
+  of `start.html`. Current set - HQ Brains: Florence (the source of truth), Austin
   (cross-functional comms), Lincoln (EOS operating rhythm). Department Brains:
   Savannah (Customer Success), Phoenix (Sales/BDM), Madison (Marketing), Milan
   (Product & Dev), Geneva (Finance & HR), Kingston (Account Management). If you
   rename a Brain, change every reference consistently across the page. Individual
   Brain owners are not yet named on the cards (they read "owned by the department
   champion") - set real owners only when asked, and do it consistently.
-- **Loom**: the `VIDEOS` config (near the foot of `index.html`) has 13 embed slots
+- **Loom**: the `VIDEOS` config at the top of `assets/site.js` has 11 embed slots
   keyed `why`, `step1`-`step5`, `craft`, `styles`, `skills`, `artifacts`, `cowork`.
   All currently render "coming soon" - they need real Loom share IDs dropped into
-  the config.
+  the config. The video blocks themselves live on `start.html` and `power-tools.html`.
 
 ---
 
