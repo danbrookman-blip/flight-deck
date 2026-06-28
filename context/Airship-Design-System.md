@@ -1,10 +1,10 @@
-# Airship Design System — Reference for Claude
+# Airship Design System: Reference for Claude
 
 > **How to use this file:** Upload it to your Claude Project's knowledge (or paste it
-> into the Project's custom instructions). It is fully self-contained — every colour,
+> into the Project's custom instructions). It is fully self-contained, every colour,
 > type, spacing and motion value is written out inline, so Claude can design and build
 > on-brand for Airship without needing any external files. Where binary assets (the
-> logo, icon SVGs, illustrations) are required, upload those separately — they can't
+> logo, icon SVGs, illustrations) are required, upload those separately, they can't
 > travel as text.
 
 ---
@@ -16,7 +16,7 @@ in-app product is the **Airship Dashboard** (cloud-based hospitality CRM,
 loyalty, feedback, fulfilment, ticketing, bulk orders). Newer marketing/AI surfaces
 use the name **Airship AI**.
 
-### Two systems coexist — pick the right one for the surface
+### Two systems coexist, pick the right one for the surface
 
 | | **Brand (Airship AI)** | **Product (Airship Dashboard)** |
 |---|---|---|
@@ -32,7 +32,7 @@ The brand can be **loud** (purple→pink gradient on hero). The product is **cal
 (Lato, slate, lots of off-white). Never mix the two voices on one surface.
 
 ### "Boosters"
-The Airship Dashboard's modular features are called **Boosters** — Loyalty, Champions, Fulfilment,
+The Airship Dashboard's modular features are called **Boosters**: Loyalty, Champions, Fulfilment,
 Tickets, Feedback, Bulk Orders. Each has its own colour theme and a flat illustration.
 
 ---
@@ -44,9 +44,9 @@ Tickets, Feedback, Bulk Orders. Each has its own colour theme and a flat illustr
   confident and gradient-forward.
 - **Person:** mostly **you** ("Don't use the logo on a colour that limits visibility").
   Imperative for actions ("Confirm", "Abort", "Subscribe").
-- **Button copy:** literal verbs — `Confirm`, `Abort`, `Neutral` are the three semantic
+- **Button copy:** literal verbs, `Confirm`, `Abort`, `Neutral` are the three semantic
   states. No "Get started now!" exclamation marks.
-- **Badge labels:** single words — `Active`, `Inactive`, `Draft`, `Processing`,
+- **Badge labels:** single words, `Active`, `Inactive`, `Draft`, `Processing`,
   `Complete`, `Submitted`, `Failed`.
 - **Casing:** UK English ("colour", "visualise"). UI labels are sentence case.
 - **Emoji:** **not used** anywhere in product or brand (flag emoji in a phone-country
@@ -59,13 +59,13 @@ Tickets, Feedback, Bulk Orders. Each has its own colour theme and a flat illustr
 
 ### Brand palette (Airship AI)
 ```
---airship-pink:        #ec00ff   /* core 1 — vivid magenta */
---airship-purple:      #8d00d4   /* core 2 — primary purple */
---airship-purple-deep: #34004d   /* core 3 — deep purple (text on light) */
+--airship-pink:        #ec00ff   /* core 1, vivid magenta */
+--airship-purple:      #8d00d4   /* core 2, primary purple */
+--airship-purple-deep: #34004d   /* core 3, deep purple (text on light) */
 --airship-pink-soft:   #ea54ef   /* optional softer shade */
 --airship-magenta:     #a00498   /* optional */
 ```
-Official brand gradient (hero buttons, logos, accents — **use sparingly**):
+Official brand gradient (hero buttons, logos, accents, **use sparingly**):
 ```
 --airship-gradient:        linear-gradient(112deg, #BD38DF 0%, #5F1C70 100%);
 --airship-gradient-bright: linear-gradient(135deg, #ec00ff 0%, #8d00d4 60%, #34004d 100%);
@@ -92,7 +92,7 @@ Official brand gradient (hero buttons, logos, accents — **use sparingly**):
 --product-divider:    #E9EDF2   /* real divider line */
 --product-border-soft:#BDD2F6   /* cool grey-blue border */
 ```
-**Cards become whiter on hover, not greyer** (off-white → pure white). Distinctive — keep it.
+**Cards become whiter on hover, not greyer** (off-white → pure white). Distinctive, keep it.
 
 ### Semantic aliases
 ```
@@ -120,14 +120,14 @@ Official brand gradient (hero buttons, logos, accents — **use sparingly**):
 
 ### Product type scale
 ```
---fs-xs:   0.7rem   /* 11px — helper / table cell */
---fs-sm:   0.8rem   /* 13px — caption */
---fs-base: 1rem     /* 16px — body */
---fs-lg:   1.2rem   /* 19px — large input / lead */
---fs-xl:   1.4rem   /* 22px — section header */
---fs-2xl:  1.5rem   /* 24px — metric label */
---fs-3xl:  2.2rem   /* 35px — card header */
---fs-4xl:  2.75rem  /* 44px — metric value */
+--fs-xs:   0.7rem   /* 11px, helper / table cell */
+--fs-sm:   0.8rem   /* 13px, caption */
+--fs-base: 1rem     /* 16px, body */
+--fs-lg:   1.2rem   /* 19px, large input / lead */
+--fs-xl:   1.4rem   /* 22px, section header */
+--fs-2xl:  1.5rem   /* 24px, metric label */
+--fs-3xl:  2.2rem   /* 35px, card header */
+--fs-4xl:  2.75rem  /* 44px, metric value */
 ```
 Weights: 300 / 400 / 500 / 600 / 700 / 900.
 
@@ -149,13 +149,13 @@ brand-sub: 600, 1.25rem, line-height 1.3, colour #8d00d4
 ```
 3px   badges
 5px   small inputs
-9px   DEFAULT — input containers, cards, modals
+9px   DEFAULT: input containers, cards, modals
 18px  feature cards (rewards, email, comment)
 50px  pill / metric buttons
 50%   circle
 ```
 
-### Shadows (borders are quiet — most "borders" are 1px in the fill colour as hit padding)
+### Shadows (borders are quiet, most "borders" are 1px in the fill colour as hit padding)
 ```
 --shadow-sm:      0 1px 2px rgba(53,75,100,0.06)
 --shadow:         0 2px 8px rgba(0,0,0,0.10)
@@ -163,7 +163,7 @@ brand-sub: 600, 1.25rem, line-height 1.3, colour #8d00d4
 --shadow-lg:      0 10px 30px -10px rgba(44,193,255,0.40)  /* login button hover lift */
 --shadow-airship: 0 10px 30px -10px rgba(190,58,223,0.50)
 ```
-- Cards are **flat at rest** — 1px near-white border, 9px radius, off-white fill, no drop shadow.
+- Cards are **flat at rest**: 1px near-white border, 9px radius, off-white fill, no drop shadow.
 - No `backdrop-filter: blur`. No inner shadows. Transparency only in modal mask
   (`rgba(0,0,0,0.5)`) and tooltips (`rgba(0,0,0,0.8)`).
 
@@ -182,10 +182,10 @@ brand-sub: 600, 1.25rem, line-height 1.3, colour #8d00d4
 - **App shell:** 20% sidenav (`max-width: 280px`, `min-height: 100vh`) + content. Nav
   items `2rem` tall, `0.5rem` left padding, `0.5rem` radius.
 - **Input containers:** `9px` radius, `0.8rem 1.2rem 1.4rem 1.2rem` padding, `1px solid #FAFBFB`
-  border that becomes white on hover (very subtle — keep it). Labels above inputs.
+  border that becomes white on hover (very subtle, keep it). Labels above inputs.
 - **Modals:** `9px` radius, `rgba(0,0,0,0.5)` mask, centred, `0.8 → 1.0` scale enter.
 - **Tables:** `12px` cells, no row borders, alternating `transparent` / `#FAFBFB` zebra,
-  **`10px` radius on first/last cells of each row** (rounded-end rows — distinctive).
+  **`10px` radius on first/last cells of each row** (rounded-end rows, distinctive).
 
 ---
 
@@ -195,7 +195,7 @@ brand-sub: 600, 1.25rem, line-height 1.3, colour #8d00d4
   `background-image` (not a CSS filter), almost never inlined as `<svg>`.
 - **No icon font, no Lucide/Heroicons, no emoji.** If a needed concept is genuinely
   missing from the set, substitute carefully and flag it.
-- These SVGs can't travel in this text file — upload the icon files separately if Claude
+- These SVGs can't travel in this text file, upload the icon files separately if Claude
   needs to place real icons, otherwise use neutral placeholders.
 
 ---
