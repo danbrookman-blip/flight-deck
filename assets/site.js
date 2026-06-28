@@ -77,3 +77,55 @@
       if(top && hit){ top.classList.add('active'); }
     });
   })();
+
+  /* Mobile navigation: build a hamburger + slide-down panel from the existing .nav.
+     Runs after the active-nav pass so it can mirror the active state. */
+  (function(){
+    var wrap = document.querySelector('.bar .wrap');
+    var nav = document.querySelector('.nav');
+    if(!wrap || !nav) return;
+
+    var toggle = document.createElement('button');
+    toggle.className = 'navtoggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-label', 'Open menu');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.innerHTML = '<span class="bars"><span></span><span></span><span></span></span>';
+    wrap.appendChild(toggle);
+
+    var panel = document.createElement('div');
+    panel.className = 'navmobile';
+    nav.querySelectorAll('.navgroup').forEach(function(g){
+      var top = g.querySelector('.navtop');
+      if(!top) return;
+      var group = document.createElement('div'); group.className = 'mgroup';
+      var head = document.createElement('a'); head.className = 'mtop';
+      head.href = top.getAttribute('href'); head.textContent = top.textContent;
+      if(top.classList.contains('active')) head.classList.add('active');
+      group.appendChild(head);
+      var sub = document.createElement('div'); sub.className = 'msub';
+      g.querySelectorAll('.navmenu a[href]').forEach(function(link){
+        var a = document.createElement('a');
+        a.href = link.getAttribute('href');
+        a.textContent = link.textContent;
+        if(link.target){ a.target = link.target; a.rel = link.rel || 'noopener'; }
+        sub.appendChild(a);
+      });
+      group.appendChild(sub);
+      panel.appendChild(group);
+    });
+    document.body.appendChild(panel);
+
+    function setOpen(open){
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      panel.classList.toggle('open', open);
+      document.body.classList.toggle('navlock', open);
+    }
+    toggle.addEventListener('click', function(){
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    panel.addEventListener('click', function(e){ if(e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setOpen(false); });
+    window.addEventListener('resize', function(){ if(window.innerWidth > 900) setOpen(false); });
+  })();
