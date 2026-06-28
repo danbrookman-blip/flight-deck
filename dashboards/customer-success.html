@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Customer Success - Board Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F4F6F7; --surface:#FFFFFF; --surface-2:#FAFBFB;
+    --blue:#3180FF; --blue-soft:#E8F0FF; --slate:#354B64; --muted:#6B7E92;
+    --line:#E4E9EE; --amber:#B9791A; --amber-bg:#FBF3E3;
+    --flow:#2F8F6B; --flow-bg:#E6F4EE;
+    --radius:14px; --shadow:0 1px 2px rgba(53,75,100,.06), 0 6px 20px rgba(53,75,100,.05);
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; }
+  body { background:var(--bg); color:var(--slate);
+    font-family:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.45; }
+  .wrap { max-width:1180px; margin:0 auto; padding:28px 22px 64px; }
+
+  header.top { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-bottom:22px; }
+  .brand { display:flex; align-items:center; gap:14px; }
+  .lozenge { font-family:'Montserrat',sans-serif; font-weight:800; color:#fff;
+    background:linear-gradient(135deg,#8d00d4 0%,#ec00ff 100%);
+    padding:7px 16px 8px; border-radius:999px; font-size:15px; letter-spacing:.2px; line-height:1; white-space:nowrap; }
+  .title-block h1 { font-size:21px; font-weight:900; margin:0; letter-spacing:-.2px; color:var(--slate); }
+  .title-block p { margin:2px 0 0; font-size:13px; color:var(--muted); }
+
+  .controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .seg { display:inline-flex; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:var(--shadow); }
+  .seg button { border:0; background:transparent; color:var(--muted); font-family:inherit; font-size:13px; font-weight:700; padding:6px 13px; border-radius:999px; cursor:pointer; }
+  .seg button.active { background:var(--blue); color:#fff; }
+  .seg button:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .btn { border:1px solid var(--line); background:var(--surface); color:var(--slate); font-family:inherit; font-size:13px; font-weight:700; padding:7px 14px; border-radius:999px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:7px; }
+  .btn:hover { border-color:#C9D3DC; }
+  .btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .btn .dot { width:7px; height:7px; border-radius:50%; background:var(--flow); }
+  .updated { font-size:12px; color:var(--muted); }
+
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:16px; }
+  .kpi { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+  .kpi .label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; }
+  .kpi .num { font-size:34px; font-weight:900; color:var(--slate); line-height:1.05; margin-top:6px; letter-spacing:-1px; }
+  .kpi .sub { font-size:12px; color:var(--muted); margin-top:3px; }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px 20px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .grid .panel { margin-bottom:0; }
+  .panel.full { grid-column:1 / -1; }
+  .panel h2 { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); margin:0 0 2px; }
+  .panel .lead { font-size:13px; color:var(--muted); margin:0 0 14px; }
+
+  /* intake vs throughput */
+  .io { display:flex; align-items:flex-end; gap:36px; flex-wrap:wrap; }
+  .io-num .label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; }
+  .io-num .num { font-size:34px; font-weight:900; line-height:1.05; margin-top:5px; letter-spacing:-1px; color:var(--slate); }
+  .io-num .num.flowtext { color:var(--flow); }
+  .io-num .sub { font-size:12px; color:var(--muted); margin-top:2px; }
+  .io-net { margin-left:auto; font-size:13px; font-weight:800; padding:8px 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); align-self:center; }
+  .io-net.warn { color:var(--amber); background:var(--amber-bg); border-color:#EAD9B6; }
+  .io-net.good { color:var(--flow); background:var(--flow-bg); border-color:#CDE9DD; }
+  .legend { display:flex; gap:18px; font-size:12px; color:var(--muted); margin-top:16px; }
+  .legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+  .twin { display:flex; align-items:flex-end; gap:9px; height:88px; margin-top:8px; padding-top:4px; border-top:1px solid var(--line); }
+  .twk { flex:1; display:flex; align-items:flex-end; justify-content:center; gap:3px; height:100%; }
+  .twk .b { width:10px; border-radius:3px 3px 0 0; background:var(--blue); min-height:2px; }
+  .twk .b.cl { background:var(--flow); }
+  .wklabels { display:flex; gap:9px; margin-top:6px; }
+  .wklabels span { flex:1; text-align:center; font-size:10px; color:var(--muted); }
+
+  .bars { display:flex; flex-direction:column; gap:11px; }
+  .bar-row { display:grid; grid-template-columns:130px 1fr 44px; align-items:center; gap:10px; }
+  .bar-row .name { font-size:13px; font-weight:700; color:var(--slate); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track { background:var(--surface-2); border-radius:7px; height:22px; overflow:hidden; border:1px solid var(--line); }
+  .fill { height:100%; background:var(--blue); border-radius:7px 0 0 7px; min-width:2px; transition:width .5s ease; }
+  .fill.slow { background:var(--amber); }
+  .fill.flow { background:var(--flow); }
+  .bar-row .val { font-size:13px; font-weight:900; color:var(--slate); text-align:right; }
+
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:0 0 9px; border-bottom:1px solid var(--line); }
+  th.r, td.r { text-align:right; }
+  td { font-size:13px; padding:10px 0; border-bottom:1px solid var(--line); color:var(--slate); }
+  tr:last-child td { border-bottom:0; }
+  td .cardname { font-weight:700; }
+  .pill { display:inline-block; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; background:var(--blue-soft); color:var(--blue); white-space:nowrap; }
+  .pill.amber { background:var(--amber-bg); color:var(--amber); }
+  .days { font-weight:900; }
+  .days.hot { color:var(--amber); }
+
+  .panel.stuck { border-color:#EAD9B6; background:linear-gradient(180deg,#FFFDF8 0%,#FFFFFF 60%); }
+  .panel.stuck h2 { color:var(--amber); }
+
+  .feed { display:flex; flex-direction:column; }
+  .feed-item { display:flex; gap:11px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .feed-item:last-child { border-bottom:0; }
+  .feed-item .tl { color:var(--muted); white-space:nowrap; font-size:12px; min-width:64px; }
+  .feed-item .who { font-weight:700; }
+  .feed-item .route { color:var(--muted); }
+  .feed-item .route b { color:var(--slate); font-weight:700; }
+  .feed-item .new { color:var(--flow); font-weight:800; }
+
+  .toggle-line { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:14px; flex-wrap:wrap; }
+  .toggle-line input { accent-color:var(--blue); width:15px; height:15px; }
+  .toggle-line label { cursor:pointer; }
+  .empty { color:var(--muted); font-size:13px; padding:22px 0; text-align:center; }
+
+  .notice { background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); }
+  .notice.warn { border-left-color:var(--amber); }
+  .notice h3 { margin:0 0 8px; font-size:16px; color:var(--slate); }
+  .notice p { margin:0 0 8px; font-size:13px; color:var(--muted); }
+  .notice code { background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:1px 6px; font-size:12px; color:var(--slate); }
+  .notice ol { margin:10px 0 0; padding-left:20px; font-size:13px; }
+  .notice li { margin-bottom:6px; }
+
+  @media (max-width:860px) {
+    .kpis { grid-template-columns:repeat(2,1fr); }
+    .grid { grid-template-columns:1fr; }
+    .bar-row { grid-template-columns:104px 1fr 40px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .fill { transition:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="lozenge">Airship</span>
+      <div class="title-block">
+        <h1>Customer Success</h1>
+        <p>Board flow and momentum - intake, movement and what has stalled</p>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="periodSeg" role="group" aria-label="Time period">
+        <button data-days="7">7 days</button>
+        <button data-days="30" class="active">30 days</button>
+        <button data-days="90">90 days</button>
+        <button data-days="0">All</button>
+      </div>
+      <button class="btn" id="refreshBtn"><span class="dot"></span>Refresh</button>
+    </div>
+  </header>
+
+  <div id="app">
+    <div class="notice" id="bootNote"><h3>Loading the board...</h3><p>Pulling card activity from Supabase.</p></div>
+  </div>
+
+  <p class="updated" id="updated"></p>
+</div>
+
+<script>
+const SUPABASE_URL      = "https://zwiiljmyyvakyyvypvtc.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3aWlsam15eXZha3l5dnlwdnRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NzQ2NjgsImV4cCI6MjA5NzU1MDY2OH0.hxLjFrPLFC-wRFPRabpEQ3Ty-8auFQauQP-CA4KXGUY";
+
+const DONE_LANES = /(done|complete|completed|won|closed|lost|archive|live|shipped|resolved)/i;
+const state = { rows: [], periodDays: 30, hideDone: true, stuckThreshold: 7 };
+const DAY = 86400000, WEEK = 7 * DAY;
+const now = () => Date.now();
+
+async function fetchAll() {
+  const pageSize = 1000; let offset = 0, all = [], batch;
+  do {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/card_movements?select=*&order=moved_at.asc&limit=${pageSize}&offset=${offset}`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
+    if (!res.ok) { throw new Error(`${res.status}: ${(await res.text()).slice(0,200)}`); }
+    batch = await res.json(); all = all.concat(batch); offset += pageSize;
+  } while (batch.length === pageSize);
+  return all;
+}
+
+const fmtDate = (d) => new Date(d).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+function ago(d){ const m=Math.floor((now()-new Date(d).getTime())/60000); if(m<60)return `${m}m ago`; const h=Math.floor(m/60); if(h<24)return `${h}h ago`; return `${Math.floor(h/24)}d ago`; }
+function inPeriod(d){ if(!state.periodDays) return true; return new Date(d).getTime() >= now() - state.periodDays*DAY; }
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isCreate = (x) => x.event_type === 'create';
+const isMove   = (x) => x.event_type !== 'create';
+
+function compute() {
+  const r = state.rows;
+  const moves = r.filter(isMove);
+  const creates = r.filter(isCreate);
+  const movesP = moves.filter(x => inPeriod(x.moved_at));
+  const createsP = creates.filter(x => inPeriod(x.moved_at));
+  const clearedP = movesP.filter(x => DONE_LANES.test(x.to_list || ''));
+
+  const totalMoves = movesP.length;
+  const cardsMoved = new Set(movesP.map(x => x.card_id)).size;
+  const people = new Set(movesP.map(x => x.moved_by)).size;
+  const spanDays = state.periodDays || Math.max(1, Math.ceil((now() - new Date(r[0]?.moved_at || now()).getTime())/DAY));
+  const perDay = totalMoves ? (totalMoves/spanDays).toFixed(1) : '0';
+
+  // intake vs throughput
+  const created = createsP.length, cleared = clearedP.length, net = created - cleared;
+  const weeks = Array.from({length:8}, () => ({ created:0, cleared:0 }));
+  const wkIdx = (d) => Math.floor((now() - new Date(d).getTime())/WEEK);
+  creates.forEach(x => { const w = wkIdx(x.moved_at); if (w>=0 && w<8) weeks[w].created++; });
+  moves.forEach(x => { if (DONE_LANES.test(x.to_list||'')) { const w = wkIdx(x.moved_at); if (w>=0 && w<8) weeks[w].cleared++; } });
+
+  const byPerson = {};
+  movesP.forEach(x => { const k = x.moved_by || 'Unknown'; byPerson[k] = (byPerson[k]||0)+1; });
+  const people_ranked = Object.entries(byPerson).sort((a,b)=>b[1]-a[1]);
+
+  const byCard = {};
+  movesP.forEach(x => { byCard[x.card_id] = byCard[x.card_id] || { name:x.card_name, n:0 }; byCard[x.card_id].n++; byCard[x.card_id].name = x.card_name; });
+  const cards_ranked = Object.values(byCard).sort((a,b)=>b.n-a.n).slice(0,8);
+
+  const last = {};
+  r.forEach(x => { if (!last[x.card_id] || new Date(x.moved_at) > new Date(last[x.card_id].moved_at)) last[x.card_id] = x; });
+  let stuck = Object.values(last).map(x => ({ name:x.card_name, list:x.to_list, by:x.moved_by, at:x.moved_at, days:Math.floor((now()-new Date(x.moved_at).getTime())/DAY) }))
+    .filter(x => x.days >= state.stuckThreshold);
+  if (state.hideDone) stuck = stuck.filter(x => !DONE_LANES.test(x.list||''));
+  stuck.sort((a,b)=>b.days-a.days);
+
+  const byCardSeq = {};
+  r.forEach(x => { (byCardSeq[x.card_id] = byCardSeq[x.card_id] || []).push(x); });
+  const stageTotals = {};
+  Object.values(byCardSeq).forEach(seq => {
+    seq.sort((a,b)=>new Date(a.moved_at)-new Date(b.moved_at));
+    for (let i=0;i<seq.length-1;i++){ const stage = seq[i].to_list || 'Unknown'; const dwell = (new Date(seq[i+1].moved_at)-new Date(seq[i].moved_at))/DAY;
+      stageTotals[stage] = stageTotals[stage] || { sum:0, n:0 }; stageTotals[stage].sum += dwell; stageTotals[stage].n++; }
+  });
+  const stages = Object.entries(stageTotals).map(([stage,v])=>({ stage, avg:v.sum/v.n, n:v.n })).sort((a,b)=>b.avg-a.avg);
+
+  const feed = [...r.filter(x=>inPeriod(x.moved_at))].sort((a,b)=>new Date(b.moved_at)-new Date(a.moved_at)).slice(0,14);
+
+  return { totalMoves, cardsMoved, people, perDay, created, cleared, net, weeks, people_ranked, cards_ranked, stuck, stages, feed };
+}
+
+function render() {
+  if (!state.rows.length) {
+    document.getElementById('app').innerHTML =
+      `<div class="empty" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:40px">No activity recorded yet. Move or create a card on the board, or run the backfill, then refresh.</div>`;
+    return;
+  }
+  const d = compute();
+  const periodLabel = state.periodDays ? `last ${state.periodDays} days` : 'all time';
+  const maxPerson = Math.max(1, ...d.people_ranked.map(p=>p[1]));
+  const maxStage = Math.max(0.01, ...d.stages.map(s=>s.avg));
+  const maxWeek = Math.max(1, ...d.weeks.flatMap(w=>[w.created, w.cleared]));
+
+  const kpis = `
+    <div class="kpis">
+      <div class="kpi"><div class="label">Card moves</div><div class="num">${d.totalMoves}</div><div class="sub">${periodLabel}</div></div>
+      <div class="kpi"><div class="label">Cards moved</div><div class="num">${d.cardsMoved}</div><div class="sub">distinct cards touched</div></div>
+      <div class="kpi"><div class="label">People active</div><div class="num">${d.people}</div><div class="sub">moving cards on</div></div>
+      <div class="kpi"><div class="label">Moves / day</div><div class="num">${d.perDay}</div><div class="sub">average pace</div></div>
+    </div>`;
+
+  let netText, netClass;
+  if (d.net > 0) { netText = `+${d.net} net - more created than cleared`; netClass = 'warn'; }
+  else if (d.net < 0) { netText = `${d.net} net - cleared more than created`; netClass = 'good'; }
+  else { netText = 'Level - created and cleared match'; netClass = ''; }
+
+  const weekBars = [7,6,5,4,3,2,1,0].map(i => {
+    const w = d.weeks[i];
+    return `<div class="twk" title="${w.created} created, ${w.cleared} cleared">
+      <div class="b" style="height:${(w.created/maxWeek*100).toFixed(1)}%"></div>
+      <div class="b cl" style="height:${(w.cleared/maxWeek*100).toFixed(1)}%"></div>
+    </div>`;
+  }).join('');
+
+  const intake = `
+    <div class="panel full">
+      <h2>Intake vs throughput</h2>
+      <p class="lead">New cards landing against cards reaching a finished lane. Tells you whether the board is keeping up.</p>
+      <div class="io">
+        <div class="io-num"><div class="label">Created</div><div class="num">${d.created}</div><div class="sub">${periodLabel}</div></div>
+        <div class="io-num"><div class="label">Cleared</div><div class="num flowtext">${d.cleared}</div><div class="sub">reached a finished lane</div></div>
+        <div class="io-net ${netClass}">${netText}</div>
+      </div>
+      <div class="legend"><span><i style="background:var(--blue)"></i>Created</span><span><i style="background:var(--flow)"></i>Cleared</span><span style="margin-left:auto">last 8 weeks, oldest left</span></div>
+      <div class="twin">${weekBars}</div>
+    </div>`;
+
+  const personBars = d.people_ranked.length ? d.people_ranked.map(([name,n])=>`
+      <div class="bar-row"><span class="name" title="${esc(name)}">${esc(name)}</span>
+        <div class="track"><div class="fill" style="width:${(n/maxPerson*100).toFixed(1)}%"></div></div>
+        <span class="val">${n}</span></div>`).join('') : `<div class="empty">No activity in this period.</div>`;
+
+  const stageBars = d.stages.length ? d.stages.slice(0,8).map(s=>{ const cls = s.avg>=7?'slow':(s.avg<=2?'flow':'');
+      return `<div class="bar-row"><span class="name" title="${esc(s.stage)}">${esc(s.stage)}</span>
+        <div class="track"><div class="fill ${cls}" style="width:${(s.avg/maxStage*100).toFixed(1)}%"></div></div>
+        <span class="val">${s.avg.toFixed(1)}d</span></div>`; }).join('') : `<div class="empty">Not enough completed moves yet to measure dwell time.</div>`;
+
+  const cardRows = d.cards_ranked.length ? d.cards_ranked.map(c=>`<tr><td><span class="cardname">${esc(c.name)}</span></td><td class="r"><span class="pill">${c.n} moves</span></td></tr>`).join('')
+    : `<tr><td colspan="2"><div class="empty">No moves in this period.</div></td></tr>`;
+
+  const stuckRows = d.stuck.length ? d.stuck.slice(0,12).map(s=>`<tr>
+      <td><span class="cardname">${esc(s.name)}</span></td>
+      <td><span class="pill amber">${esc(s.list)}</span></td>
+      <td>${esc(s.by)}</td>
+      <td class="r"><span class="days ${s.days>=14?'hot':''}">${s.days}d</span></td></tr>`).join('')
+    : `<tr><td colspan="4"><div class="empty">Nothing stalled past ${state.stuckThreshold} days. Healthy.</div></td></tr>`;
+
+  const feed = d.feed.length ? d.feed.map(f => isCreate(f)
+      ? `<div class="feed-item"><span class="tl">${ago(f.moved_at)}</span><span class="route"><span class="who">${esc(f.moved_by)}</span> <span class="new">created</span> <b>${esc(f.card_name)}</b> in <b>${esc(f.to_list)}</b></span></div>`
+      : `<div class="feed-item"><span class="tl">${ago(f.moved_at)}</span><span class="route"><span class="who">${esc(f.moved_by)}</span> moved <b>${esc(f.card_name)}</b> from <b>${esc(f.from_list)}</b> to <b>${esc(f.to_list)}</b></span></div>`).join('')
+    : `<div class="empty">No recent activity.</div>`;
+
+  document.getElementById('app').innerHTML = kpis + intake + `
+    <div class="panel stuck full">
+      <h2>Stalled cards</h2>
+      <p class="lead">No movement in ${state.stuckThreshold}+ days, including cards created but never actioned. This is the list to walk in L10.</p>
+      <table><thead><tr><th>Card</th><th>Sitting in</th><th>Last touched by</th><th class="r">Stuck</th></tr></thead><tbody>${stuckRows}</tbody></table>
+      <div class="toggle-line">
+        <input type="checkbox" id="hideDone" ${state.hideDone?'checked':''} />
+        <label for="hideDone">Ignore finished lanes (Done, Complete, Closed and similar)</label>
+        <span style="margin-left:auto">Threshold:</span>
+        <select id="threshSel" class="btn" style="padding:4px 8px">
+          <option value="7" ${state.stuckThreshold==7?'selected':''}>7 days</option>
+          <option value="14" ${state.stuckThreshold==14?'selected':''}>14 days</option>
+          <option value="30" ${state.stuckThreshold==30?'selected':''}>30 days</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="panel"><h2>Who is moving work</h2><p class="lead">Card moves per person, ${periodLabel}.</p><div class="bars">${personBars}</div></div>
+      <div class="panel"><h2>Time in each stage</h2><p class="lead">Average days a card sits in a lane before moving on. Long bars are where work clogs.</p><div class="bars">${stageBars}</div></div>
+      <div class="panel"><h2>Most-moved cards</h2><p class="lead">Highest churn, ${periodLabel}. A lot of moves can mean progress or thrash.</p><table><tbody>${cardRows}</tbody></table></div>
+      <div class="panel"><h2>Recent activity</h2><p class="lead">Latest moves and new cards on the board.</p><div class="feed">${feed}</div></div>
+    </div>`;
+
+  const hd = document.getElementById('hideDone'); if (hd) hd.addEventListener('change', e=>{ state.hideDone = e.target.checked; render(); });
+  const ts = document.getElementById('threshSel'); if (ts) ts.addEventListener('change', e=>{ state.stuckThreshold = +e.target.value; render(); });
+}
+
+function showSetup(){ document.getElementById('app').innerHTML = `<div class="notice"><h3>One line to finish setup</h3><p>Paste your Supabase <b>anon / public</b> key into <code>SUPABASE_ANON_KEY</code> near the bottom of this file, then save and reopen.</p></div>`; }
+function showError(msg){ const isRls=/permission|denied|JWT|401|row-level|policy/i.test(msg);
+  document.getElementById('app').innerHTML = `<div class="notice warn"><h3>Could not load the board</h3><p><code>${esc(msg)}</code></p>${isRls?`<p>The table is likely locked to public reads. Run this once in Supabase &rarr; SQL Editor:</p><ol><li><code>alter table card_movements enable row level security;</code></li><li><code>create policy "read movements" on card_movements for select to anon using (true);</code></li></ol>`:`<p>Check the project URL and anon key, and that the <code>card_movements</code> table exists.</p>`}</div>`; }
+
+async function load(){
+  if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('PASTE_YOUR')) { showSetup(); return; }
+  try {
+    state.rows = await fetchAll(); render();
+    document.getElementById('updated').textContent = `Updated ${new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}  -  ${state.rows.length} events on record`;
+  } catch(e){ showError(e.message || String(e)); }
+}
+
+document.getElementById('periodSeg').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b)return; state.periodDays=+b.dataset.days; [...e.currentTarget.children].forEach(c=>c.classList.toggle('active', c===b)); if(state.rows.length) render(); });
+document.getElementById('refreshBtn').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

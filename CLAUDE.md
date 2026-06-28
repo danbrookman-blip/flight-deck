@@ -51,10 +51,11 @@ Pages (all at the repo root):
 - `dashboards.html` - Dashboards hub: one card per team dashboard.
 - `dash-sales.html` - the Weekly Sales Dashboard, a live Supabase app embedded via an
   iframe from `dashboards/sales.html` (a self-contained app, kept verbatim).
-- `dash-customer-success.html` / `dash-product.html` / `dash-marketing.html` /
-  `dash-engineering.html` - stub pages with a "coming soon" panel. Each carries an HTML
-  comment showing how to drop a dashboard in later (save `dashboards/<team>.html` and
-  swap the panel for an iframe).
+- `dash-customer-success.html` - the CS board-flow dashboard (Trello card movements),
+  embedded from `dashboards/customer-success.html`, same iframe pattern as Sales.
+- `dash-product.html` / `dash-marketing.html` / `dash-engineering.html` - stub pages
+  with a "coming soon" panel. Each carries an HTML comment showing how to drop a
+  dashboard in later (save `dashboards/<team>.html` and swap the panel for an iframe).
 
 Shared and supporting files:
 - `assets/site.css` - the single stylesheet, linked from every page. **All styling
