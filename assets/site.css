@@ -310,3 +310,8 @@
 
   /* multi-page: active nav item */
   .navtop.active{color:var(--purple)}
+
+  /* design-systems hub: brand cards as links */
+  .dslink{display:block; text-decoration:none; color:inherit}
+  .dslink h3{color:var(--ink)}
+  .dslink p{color:var(--body)}

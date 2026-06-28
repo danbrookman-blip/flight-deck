@@ -34,8 +34,12 @@ Pages (all at the repo root):
 - `index.html` - home: the hero and the "no single right way" intro (`#start`).
 - `start.html` - the adoption plan: Set up you (`#you`), the department Brains
   (`#brains`), Memory (`#memory`), Make it stick (`#adopt`).
-- `design-systems.html` - Brand and design (`#design-systems`) plus the
-  downloadable logo library.
+- `design-systems.html` - Design Systems hub: overview, the surface-picking video,
+  a marked spot for instructions, and cards to the three brand pages below.
+- `ds-airship.html` / `ds-toggle.html` / `ds-flightdeck.html` - one design-system
+  page per brand (colours, type, surfaces, downloadable logos). Airship carries both
+  the marketing brand and the in-app product surface; Flight Deck links the full logo
+  sheet (`flight-deck-logo.html`).
 - `power-tools.html` - the Part 2 band plus Context (`#craft`), Styles, Skills,
   Artifacts, Cowork, "Which tool, when" (`#ladder`), Connectors, Scorecard.
 - `ideas.html` - prototypes: Community Content Manager, Airship Lookout, Single
@@ -56,9 +60,11 @@ Shared and supporting files:
 - `.github/workflows/main_flightdeck.yml` - the Azure deploy workflow (see above).
 
 **Navigation: a shared sticky bar duplicated in each page's `<head>` markup.** Top
-level is `Start - Design Systems - Power tools - Ideas - Repackaging`; the dropdowns
-link to `#anchors` within the relevant page (e.g. `power-tools.html#styles`). The
-current page is highlighted automatically by the active-nav code in `site.js`.
+level is `Start - Design Systems - Power tools - Ideas - Repackaging`; most dropdowns
+link to `#anchors` within their page (e.g. `power-tools.html#styles`), but the Design
+Systems dropdown links to separate pages (`ds-airship.html` etc.). The current page is
+highlighted automatically by the active-nav code in `site.js`, which also lights up a
+dropdown parent when one of its child pages is open.
 Cross-page links are fully qualified (`page.html#anchor`); same-page links may stay
 bare (`#anchor`).
 
