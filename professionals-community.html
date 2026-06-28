@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Professionals Community · Flight Deck</title>
+<meta name="description" content="Recruitment strategy and growth plan for the Airship &amp; Toggle Professionals Community. Internal, staff only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Baloo+2:wght@700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6EE;
+    --paper-2:#F4EDE0;
+    --paper-inset:#F1E9DA;
+    --ink:#19131F;
+    --ink-2:#5b5460;
+    --ink-3:#867d86;
+    --rule:#ddd2bf;
+    --rule-strong:#c4b8a1;
+    --airship:#0c6e6a;       /* deep teal */
+    --toggle:#d8442c;        /* coral */
+    --toggle-ink:#b1351f;    /* coral, text-safe */
+    --toggle-dot:#fb5b4b;    /* logo dot */
+    --note:#2b5aa6;
+    --caution:#9a6300;
+    --flight:linear-gradient(120deg,#A31DC6,#C840EC);
+    --deck:linear-gradient(120deg,#6FA0FF,#3B7BF7);
+    --maxw:1180px;
+    --header-h:62px;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px;line-height:1.6;
+    font-feature-settings:"kern" 1;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit}
+  h1,h2,h3,p,ul,figure{margin:0}
+  ul{list-style:none;padding:0}
+
+  /* warm grain so the "paper" reads as a surface, not a flat fill */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.45;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(160,140,108,.05), transparent 40%),
+      radial-gradient(circle at 82% 78%, rgba(160,140,108,.05), transparent 42%);
+  }
+
+  :focus-visible{outline:2px solid var(--airship);outline-offset:3px;border-radius:3px}
+
+  /* ---------- monospace label ---------- */
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .label{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-weight:600;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-3);
+  }
+
+  /* ---------- logo wordmark ---------- */
+  .fd-logo{display:inline-block;white-space:nowrap;line-height:1;font-size:24px}
+  .fd-logo .fl,.fd-logo .dk{
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .fd-logo .fl{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em;background-image:var(--flight)}
+  .fd-logo .dk{font-family:"Baloo 2",sans-serif;font-weight:700;letter-spacing:-.01em;background-image:var(--deck)}
+  .fd-logo .dot{
+    display:inline-block;width:.17em;height:.17em;border-radius:2px;
+    background:var(--toggle-dot);vertical-align:baseline;margin:0 .04em;
+  }
+
+  /* ---------- perforation (kitchen-docket tear edge) ---------- */
+  .perf{
+    height:9px;width:100%;
+    background-image:radial-gradient(circle, var(--rule-strong) 1.5px, transparent 1.9px);
+    background-size:14px 9px;background-repeat:repeat-x;background-position:left center;
+  }
+
+  /* ---------- top bar ---------- */
+  .site{
+    position:sticky;top:0;z-index:30;
+    background:rgba(250,246,238,.86);
+    backdrop-filter:saturate(115%) blur(8px);
+    -webkit-backdrop-filter:saturate(115%) blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .site-in{
+    max-width:var(--maxw);margin:0 auto;height:var(--header-h);
+    padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .site .brand{display:inline-flex;align-items:center;gap:0;text-decoration:none}
+  .site .fd-logo{font-size:21px}
+  .site-meta{display:flex;align-items:center;gap:14px}
+  .staff{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--airship);
+    border:1px solid var(--rule-strong);border-radius:999px;padding:5px 10px;white-space:nowrap;
+  }
+  .site-doc{display:none}
+  @media(min-width:680px){.site-doc{display:inline;color:var(--ink-3)}}
+
+  /* ---------- shell ---------- */
+  .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---------- hero docket ---------- */
+  .hero{padding:54px 0 8px}
+  .docket{max-width:840px}
+  .docket-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
+  .hero h1{
+    font-weight:800;letter-spacing:-.02em;line-height:1.02;
+    font-size:clamp(38px,6.4vw,68px);margin:.28em 0 .12em;
+  }
+  .eyebrow{color:var(--airship)}
+  .hero .sub{
+    font-size:clamp(18px,2.4vw,23px);font-weight:500;color:var(--ink-2);
+    letter-spacing:-.01em;max-width:30ch;
+  }
+  .meta{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+    margin:30px 0 26px;max-width:560px;
+  }
+  @media(min-width:560px){.meta{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .meta div{background:var(--paper);padding:12px 14px}
+  .meta dt{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .meta dd{margin:5px 0 0;font-size:13.5px;font-weight:600;line-height:1.3}
+  .standfirst{font-size:clamp(17px,2vw,20px);line-height:1.5;color:var(--ink);max-width:54ch;margin-top:6px}
+  .standfirst b{color:var(--airship);font-weight:700}
+
+  /* ---------- layout: sticky contents + doc ---------- */
+  .layout{display:grid;grid-template-columns:1fr;gap:36px;padding:30px 0 0}
+  @media(min-width:1080px){
+    .layout{grid-template-columns:212px minmax(0,1fr);gap:60px;align-items:start}
+  }
+
+  /* contents rail */
+  .toc{font-size:14px}
+  .toc .label{display:block;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+  .toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+  .toc a{
+    display:flex;gap:10px;text-decoration:none;color:var(--ink-2);
+    padding:6px 0;line-height:1.3;transition:color .15s ease;
+  }
+  .toc a .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:2px;min-width:20px}
+  .toc a:hover{color:var(--ink)}
+  .toc a.active{color:var(--airship);font-weight:600}
+  .toc a.active .n{color:var(--airship)}
+  @media(min-width:1080px){.toc{position:sticky;top:calc(var(--header-h) + 22px)}}
+
+  /* ---------- section ---------- */
+  .doc{min-width:0}
+  .sec{padding-top:40px;margin-top:40px;scroll-margin-top:calc(var(--header-h) + 18px)}
+  .sec:first-child{margin-top:0;padding-top:0}
+  .sec-head{margin:20px 0 28px;max-width:60ch}
+  .sec-id{color:var(--airship)}
+  .sec h2{font-weight:800;letter-spacing:-.02em;line-height:1.08;font-size:clamp(26px,3.6vw,38px);margin:10px 0 0}
+  .sec-stand{color:var(--ink-2);font-size:clamp(16px,1.7vw,18px);margin-top:12px;max-width:56ch}
+
+  /* item grids */
+  .grid{display:grid;gap:26px 44px;grid-template-columns:1fr}
+  @media(min-width:600px){.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(min-width:760px){.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+  .item{padding-top:18px;border-top:1px dashed var(--rule-strong)}
+  .item h3{font-weight:700;font-size:18px;letter-spacing:-.01em;line-height:1.25}
+  .item .kick{display:block;margin-bottom:6px}
+  .item p{color:var(--ink-2);font-size:14.5px;line-height:1.62;margin-top:8px}
+  .ticks{margin-top:10px;display:grid;gap:7px}
+  .ticks li{position:relative;padding-left:18px;color:var(--ink-2);font-size:14.5px;line-height:1.55}
+  .ticks li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:1.5px;background:var(--airship);opacity:.85}
+
+  /* numbered (real sequences) */
+  .lead{display:flex;gap:16px;align-items:flex-start}
+  .route .rid{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;color:var(--airship);letter-spacing:.04em;padding-top:1px}
+  .num{
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    border:1.5px solid var(--toggle);color:var(--toggle-ink);
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;
+    display:grid;place-items:center;line-height:1;
+  }
+  .steps{display:grid;gap:0;border-top:1px dashed var(--rule-strong)}
+  .steps li{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px dashed var(--rule)}
+  .steps li p{margin:0;font-size:15.5px;line-height:1.5}
+  .steps li b{font-weight:700}
+
+  /* callouts */
+  .callout{
+    border-left:3px solid var(--ink-3);background:var(--paper-inset);
+    border-radius:0 6px 6px 0;padding:14px 18px;margin-top:26px;max-width:62ch;
+  }
+  .callout .label{display:block;margin-bottom:5px}
+  .callout p{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink)}
+  .callout.caution{border-color:var(--caution)}
+  .callout.caution .label{color:var(--caution)}
+  .callout.note{border-color:var(--note)}
+  .callout.note .label{color:var(--note)}
+
+  /* measurement themed lists */
+  .metric h3{font-weight:700;font-size:17px;margin-bottom:0}
+  .metric .ml{margin-top:12px;display:grid;gap:8px}
+  .metric .ml li{font-size:14px;color:var(--ink-2);line-height:1.45;padding-left:16px;position:relative}
+  .metric .ml li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--toggle);opacity:.8}
+
+  /* ---------- footer ---------- */
+  footer{margin-top:64px;background:#16101D;color:#cdc6d2}
+  .foot-perf{height:9px;background-image:radial-gradient(circle, #3a3142 1.5px, transparent 1.9px);background-size:14px 9px;background-repeat:repeat-x}
+  .foot-in{max-width:var(--maxw);margin:0 auto;padding:38px 24px 46px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end}
+  .foot-in .fd-logo{font-size:30px}
+  .foot-txt{font-size:13px;line-height:1.6;color:#9a93a3;max-width:46ch}
+  .foot-txt .label{color:#7d7689;display:block;margin-bottom:6px}
+
+  /* ---------- reveal (motion-safe, opt-in via JS) ---------- */
+  .js-anim .reveal{opacity:0;transform:translateY(10px)}
+  .js-anim .reveal.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+
+  html{scroll-behavior:smooth}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .js-anim .reveal{opacity:1;transform:none}
+    .js-anim .reveal.in{transition:none}
+  }
+
+  /* ---------- print ---------- */
+  @media print{
+    .site,.toc,footer .foot-perf{display:none}
+    body{background:#fff;color:#000}
+    body::before{display:none}
+    .layout{grid-template-columns:1fr;gap:0}
+    .sec{break-inside:avoid}
+    footer{background:#fff;color:#000;margin-top:24px;border-top:2px dotted #000}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-in">
+    <a class="brand" href="index.html" aria-label="Flight Deck home">
+      <span class="fd-logo"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span></span>
+    </a>
+    <div class="site-meta">
+      <span class="mono site-doc" style="font-size:11px;letter-spacing:.06em">Strategy · Jun 2025</span>
+      <span class="staff">Staff only</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- HERO DOCKET -->
+  <section class="hero">
+    <div class="docket reveal">
+      <div class="perf" aria-hidden="true"></div>
+      <div class="docket-top">
+        <span class="label" style="margin-top:14px">Airship &amp; Toggle · Strategy</span>
+      </div>
+      <p class="eyebrow label" style="letter-spacing:.18em">Recruitment &amp; growth plan</p>
+      <h1>The Professionals Community</h1>
+      <p class="sub">Recruitment strategy and growth plan.</p>
+
+      <dl class="meta">
+        <div><dt>Ref</dt><dd>FD-PRO-001</dd></div>
+        <div><dt>Date</dt><dd>June 2025</dd></div>
+        <div><dt>Owners</dt><dd>Alex Burroughes, Megan</dd></div>
+        <div><dt>Status</dt><dd>Active · recruiting</dd></div>
+      </dl>
+
+      <p class="standfirst">The infrastructure is built. The next phase is <b>recruitment momentum</b> and scaled, deliberate growth.</p>
+      <div class="perf" aria-hidden="true" style="margin-top:30px"></div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <!-- CONTENTS -->
+    <aside class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#s1"><span class="n">01</span>Foundations in place</a></li>
+        <li><a href="#s2"><span class="n">02</span>Who we're recruiting</a></li>
+        <li><a href="#s3"><span class="n">03</span>The recruitment engine</a></li>
+        <li><a href="#s4"><span class="n">04</span>Content &amp; visibility</a></li>
+        <li><a href="#s5"><span class="n">05</span>Keeping professionals close</a></li>
+        <li><a href="#s6"><span class="n">06</span>Partnerships</a></li>
+        <li><a href="#s7"><span class="n">07</span>Paid acquisition</a></li>
+        <li><a href="#s8"><span class="n">08</span>Measuring success</a></li>
+        <li><a href="#s9"><span class="n">09</span>Immediate next steps</a></li>
+      </ol>
+    </aside>
+
+    <!-- DOC -->
+    <div class="doc">
+
+      <!-- 01 -->
+      <section class="sec reveal" id="s1">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 01</span>
+          <h2>Foundations in place</h2>
+          <p class="sec-stand">The infrastructure is built. The focus now is recruitment momentum and scaled growth.</p>
+        </div>
+        <div class="grid cols-3">
+          <div class="item">
+            <h3>Landing page</h3>
+            <ul class="ticks">
+              <li>Explains the Professionals Community and who it is for.</li>
+              <li>Showcases existing members, so professionals are in good company.</li>
+              <li>CTA to get in touch with Alex via a form that feeds straight into Pipedrive.</li>
+              <li>Links to the Professionals index for social proof.</li>
+            </ul>
+          </div>
+          <div class="item">
+            <h3>Pipedrive workflow</h3>
+            <ul class="ticks">
+              <li>Qualifying form routes applications into a structured pipeline.</li>
+              <li>Intake, qualification and onboarding tracked end-to-end.</li>
+              <li>Connects community recruitment directly to commercial pipeline.</li>
+            </ul>
+          </div>
+          <div class="item">
+            <h3>Research &amp; background docs</h3>
+            <ul class="ticks">
+              <li>Alex has spoken with sales, customer success, leadership and others who have met our professionals.</li>
+              <li>Background docs on each professional: who they are, who they work with, and their relationship with Airship and Toggle.</li>
+              <li>Rich context in one place to inform every outreach conversation.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section class="sec reveal" id="s2">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 02</span>
+          <h2>Who we're recruiting</h2>
+          <p class="sec-stand">Quality over quantity. Deliberately recruited, not mass acquired.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="item">
+            <h3>The Community</h3>
+            <p>Well-informed hospitality specialists with strong reputations, covering a range of skills within the marketing umbrella.</p>
+            <p>A trusted, visible network: people our operators can turn to for expertise, and people who can refer operators to us. They stay close to both businesses, informed and engaged.</p>
+          </div>
+          <div class="item">
+            <h3>Super Users</h3>
+            <p>A deeper relationship with Airship and Toggle, and a deeper level of platform expertise.</p>
+            <p>Super Users help operators get the most out of our platforms, acting almost as account managers, hands-on in client work. They are trained, experienced, and actively using the tools to deliver measurable results.</p>
+          </div>
+        </div>
+        <div class="callout caution">
+          <span class="label">Caution · route to sales</span>
+          <p>Route-to-market or promotional platforms are commercial partnership conversations, not community fits. These are handed directly to sales.</p>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section class="sec reveal" id="s3">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 03</span>
+          <h2>The recruitment engine</h2>
+          <p class="sec-stand">Four routes. One qualifying pipeline. Deliberately scaled.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="item route">
+            <div class="lead">
+              <span class="rid">01</span>
+              <div>
+                <h3>Organic &amp; LinkedIn</h3>
+                <ul class="ticks">
+                  <li>Launch post published with good early engagement, shared across the team.</li>
+                  <li>Pinned to our profile for always-on visibility.</li>
+                  <li>Ongoing content: professional spotlights, thought leadership, data-led insight.</li>
+                  <li>Landing page as the permanent CTA destination.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="item route">
+            <div class="lead">
+              <span class="rid">02</span>
+              <div>
+                <h3>LinkedIn outreach</h3>
+                <ul class="ticks">
+                  <li>LinkedIn Premium approved, InMail outreach now active.</li>
+                  <li>Prospect list of ~25 carefully selected professionals to work through.</li>
+                  <li>Sales Navigator upgrade pending to extend reach.</li>
+                  <li>Profession-based ad targeting planned once organic is established.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="item route">
+            <div class="lead">
+              <span class="rid">03</span>
+              <div>
+                <h3>Warm &amp; referral</h3>
+                <ul class="ticks">
+                  <li>Internal team introductions underway.</li>
+                  <li>Direct referrals from leadership and the wider team.</li>
+                  <li>Existing professionals encouraged to refer peers.</li>
+                  <li>Onboarding Abigail to introduce known consultants directly.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="item route">
+            <div class="lead">
+              <span class="rid">04</span>
+              <div>
+                <h3>Events</h3>
+                <ul class="ticks">
+                  <li>Strong early signals from Propel and Cheers Hospitality, candidates in pipeline.</li>
+                  <li>9 September London meetup as the anchor moment for launch.</li>
+                  <li>Updated exhibition banners and printed collateral in development.</li>
+                  <li>Follow-up journeys built for every event.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section class="sec reveal" id="s4">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 04</span>
+          <h2>Content &amp; visibility</h2>
+          <p class="sec-stand">Recruitment is not just outreach. Content convinces before any message is sent.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="item"><h3>Professional spotlights</h3><p>Not just introductions: rich forward pieces with direct quotes, case studies and real stats. Content that demonstrates the calibre and impact of our community.</p></div>
+          <div class="item"><h3>Thought leadership</h3><p>Co-created with professionals on the topics they know best. Their expertise, their voice, our platform.</p></div>
+          <div class="item"><h3>Data-led insight</h3><p>Professionals have access to real project data and sector statistics. Co-produced insight pieces, heavier on numbers, adding authority to the community and Airship.</p></div>
+          <div class="item"><h3>Team marketing sponsorship</h3><p>Signed agreement (~£25k) with the first sponsored post pointed directly at Professionals recruitment. Extends reach beyond our owned channels from day one.</p></div>
+          <div class="item"><h3>Mixed media &amp; co-content</h3><p>Webinars, video, social takeovers and collaborative formats. Raises the professional's profile while building Airship and Toggle's authority across channels.</p></div>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section class="sec reveal" id="s5">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 05</span>
+          <h2>Keeping professionals close</h2>
+          <p class="sec-stand">Once recruited, professionals enter a structured cycle of involvement, staying genuinely informed, connected and valued by both businesses.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="item"><h3>Early access</h3><p>Professionals see major product developments before general release. Already demonstrated with Ask Airship. Continues with SCV, Segments, Performance Dashboard and future releases.</p></div>
+          <div class="item"><h3>Drop-in sessions</h3><p>A recurring, informal community session, not a formal webinar. Format rotates: product previews, industry discussion, open Q&amp;A, feedback. Regular contact that feels accessible.</p></div>
+          <div class="item"><h3>Training &amp; upskilling</h3><p>Platform training so professionals can actively recommend us. A clear path from community member to Super User for those who want deeper involvement.</p></div>
+          <div class="item"><h3>Advocacy</h3><p>Testimonials, success stories, social visibility and referrals. Professionals actively recommending the platform and community. Creating advocates, not just members.</p></div>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section class="sec reveal" id="s6">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 06</span>
+          <h2>Partnerships as a recruitment channel</h2>
+          <p class="sec-stand">Leverage trusted communities rather than relying solely on paid acquisition.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="item">
+            <h3>Team Marketing, headline sponsor</h3>
+            <ul class="ticks">
+              <li>Agreement signed, starting 5 July (~£25k).</li>
+              <li>First sponsored activity pointed directly at Professionals recruitment.</li>
+              <li>Access to a highly relevant, engaged audience of hospitality operators.</li>
+              <li>Extends reach beyond our owned channels immediately.</li>
+            </ul>
+          </div>
+          <div class="item">
+            <h3>Additional partnership routes</h3>
+            <ul class="ticks">
+              <li>Existing professionals encouraged to refer suitable candidates.</li>
+              <li>Expanding recruitment through additional partner organisations as the community grows.</li>
+              <li>Industry bodies and associations identified as longer-term opportunities.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section class="sec reveal" id="s7">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 07</span>
+          <h2>Paid acquisition, when the engine is ready</h2>
+          <p class="sec-stand">Paid activity amplifies a proven recruitment process. It doesn't build awareness from scratch.</p>
+        </div>
+        <div class="grid cols-3">
+          <div class="item phase">
+            <div class="lead">
+              <span class="num">1</span>
+              <div>
+                <h3>Organic &amp; outreach first</h3>
+                <p>Prove the message and identify what converts. LinkedIn outreach, warm referrals, events and content build a validated recruitment process.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item phase">
+            <div class="lead">
+              <span class="num">2</span>
+              <div>
+                <h3>Case studies &amp; co-content</h3>
+                <p>Professionals generate credibility through their own content and endorsements. A steady stream of co-created content and advocacy amplifies the network before paid spend begins.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item phase">
+            <div class="lead">
+              <span class="num">3</span>
+              <div>
+                <h3>Paid LinkedIn ads</h3>
+                <p>Profession-based targeting. In-platform form fills. Landing page as destination. Introduced once the organic engine has matured and conversion is established.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout note">
+          <span class="label">Note · sequencing</span>
+          <p>Paid acquisition is a planned phase, not the current priority. Organic, outreach, partnerships and community content come first.</p>
+        </div>
+      </section>
+
+      <!-- 08 -->
+      <section class="sec reveal" id="s8">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 08</span>
+          <h2>How we'll measure success</h2>
+          <p class="sec-stand">Measured as a commercial asset, not just a community metric.</p>
+        </div>
+        <div class="grid cols-3">
+          <div class="item metric">
+            <h3>Recruitment</h3>
+            <ul class="ml">
+              <li>Community members recruited</li>
+              <li>Super Users recruited</li>
+              <li>Applications received</li>
+              <li>Messages responded to, fit or not</li>
+              <li>Landing page conversion rate</li>
+              <li>Outreach conversion rates</li>
+            </ul>
+          </div>
+          <div class="item metric">
+            <h3>Engagement</h3>
+            <ul class="ml">
+              <li>Drop-in session attendance</li>
+              <li>Webinar participation</li>
+              <li>Content collaborations</li>
+              <li>Testimonials secured</li>
+              <li>Professional referrals made</li>
+              <li>Social reach, engagement and shares</li>
+            </ul>
+          </div>
+          <div class="item metric">
+            <h3>Commercial impact</h3>
+            <ul class="ml">
+              <li>Leads introduced to sales</li>
+              <li>Opportunities influenced</li>
+              <li>Revenue generated through the network</li>
+              <li>Pipeline contribution over time</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 09 -->
+      <section class="sec reveal" id="s9">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="sec-head">
+          <span class="sec-id label">FD · PRO · 09</span>
+          <h2>Immediate next steps</h2>
+          <p class="sec-stand">What happens now.</p>
+        </div>
+        <ul class="steps">
+          <li><span class="num">1</span><p>Begin proactive LinkedIn outreach, working through the prospect list with InMail via LinkedIn Premium.</p></li>
+          <li><span class="num">2</span><p>Launch Team Marketing recruitment activity, first sponsored post live from <b>5 July</b>.</p></li>
+          <li><span class="num">3</span><p>Develop event collateral, updated banners and printed Professionals materials for upcoming events.</p></li>
+          <li><span class="num">4</span><p>Introduce recurring Professionals drop-in sessions, informal, flexible, accessible.</p></li>
+          <li><span class="num">5</span><p>Firm up the <b>9 September</b> London meetup, including the "meet your advisor" breakout format.</p></li>
+          <li><span class="num">6</span><p>Capture first testimonials and advocacy content from engaged professionals.</p></li>
+        </ul>
+      </section>
+
+    </div><!-- /doc -->
+  </div><!-- /layout -->
+</main>
+
+<footer>
+  <div class="foot-perf" aria-hidden="true"></div>
+  <div class="foot-in">
+    <span class="fd-logo"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span></span>
+    <p class="foot-txt">
+      <span class="label">Professionals Community · Airship &amp; Toggle</span>
+      Prepared by Alex Burroughes and Megan, 2025. Flight Deck is for internal use only, not for client distribution.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Opt in to motion only when allowed.
+  (function(){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduce){
+      document.body.classList.add('js-anim');
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+      }, {rootMargin:'0px 0px -10% 0px', threshold:0.06});
+      document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    }
+
+    // Contents scrollspy
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(a){ a.classList.remove('active'); });
+          if(map[e.target.id]) map[e.target.id].classList.add('active');
+        }
+      });
+    }, {rootMargin:'-30% 0px -60% 0px', threshold:0});
+    document.querySelectorAll('.doc .sec').forEach(function(s){ spy.observe(s); });
+  })();
+</script>
+</body>
+</html>
