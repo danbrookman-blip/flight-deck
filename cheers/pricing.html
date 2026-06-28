@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing — Cheers by Airship</title>
+<meta name="description" content="Simple per-location pricing for Cheers by Airship. The more venues you run, the less you pay per location. Works with Zonal, Fourth, S4 Labour, RotaReady, Polaris and Toggle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#34004D;--v-light:#BE38E6;--v-mid:#9A12D6;--v-deep:#8204CC;
+    --ink:#2A0A3A;--paper:#F4F0F7;--line:#E4D8EC;--muted:#5A4866;
+    --grad:linear-gradient(168deg,#BE38E6 0%,#9A12D6 55%,#8204CC 100%);
+    --grad-soft:linear-gradient(180deg,#FBF7FE,#F4ECFA);
+    --display:'Montserrat','Century Gothic','Futura',system-ui,sans-serif;
+    --body:'Lato',system-ui,-apple-system,sans-serif;
+    --radius:18px;--shadow:0 18px 50px rgba(52,0,77,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .eyebrow{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--v-mid)}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;font-size:15px;border-radius:999px;padding:13px 24px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 24px rgba(130,4,204,.30)}
+  .btn-primary:hover{box-shadow:0 14px 32px rgba(130,4,204,.42)}
+  .btn-ghost{background:#fff;color:var(--purple);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--v-light);color:var(--v-deep)}
+  .btn-light{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.28)}
+  .btn-light:hover{background:rgba(255,255,255,.2)}
+
+  /* lockup */
+  .lockup{display:inline-flex;align-items:center;gap:14px}
+  .lockup .hero{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lockup .endorse{display:inline-flex;align-items:center;gap:10px}
+  .lockup .by{font-family:var(--display);font-weight:600;letter-spacing:.02em;color:#8A6F9C}
+  .lockup .airship{height:34px;width:auto}
+  .lockup.sm .hero{font-size:26px;position:relative}
+  .lockup.sm .by{font-size:13px}
+  .lockup.sm .airship{height:26px}
+  .spark{position:absolute;top:-6px;right:-20px;width:20px;height:20px}
+
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:rgba(244,240,247,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .nav .links{display:flex;align-items:center;gap:30px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted)}
+  .nav .links a:hover,.nav .links a.active{color:var(--v-deep)}
+  .nav .actions{display:flex;align-items:center;gap:12px}
+  @media(max-width:880px){.nav .links{display:none}}
+
+  /* hero */
+  .ph-sec{position:relative;overflow:hidden;padding:66px 0 30px;text-align:center}
+  .ph-sec::before{content:"";position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:620px;height:620px;border-radius:50%;background:var(--grad);opacity:.09;filter:blur(20px);z-index:0}
+  .ph-sec .inner{position:relative;z-index:1}
+  h1.headline{font-family:var(--display);font-weight:900;font-size:clamp(36px,5vw,56px);line-height:1.03;letter-spacing:-.03em;color:var(--purple);margin-top:12px}
+  .ph-lede{margin:18px auto 0;font-size:19px;color:var(--muted);max-width:54ch}
+
+  /* calculator */
+  .calc{max-width:760px;margin:40px auto 0;background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+  .calc .top{padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .calc .q{font-family:var(--display);font-weight:800;font-size:18px;color:var(--purple);text-align:left}
+  .calc .q small{display:block;font-family:var(--body);font-weight:400;font-size:13px;color:#8A7898;margin-top:3px}
+  .stepper{display:inline-flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .stepper button{width:46px;height:46px;border:0;background:#fff;font-size:22px;font-family:var(--display);font-weight:800;color:var(--v-deep);cursor:pointer}
+  .stepper button:hover{background:var(--grad-soft)}
+  .stepper input{width:74px;height:46px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-family:var(--display);font-weight:800;font-size:20px;color:var(--purple);-moz-appearance:textfield}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .calc .result{background:var(--purple);color:#fff;padding:26px 30px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center}
+  .calc .result .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A9DC;font-family:var(--display);font-weight:700}
+  .calc .result .val{font-family:var(--display);font-weight:900;font-size:34px;line-height:1.05;margin-top:6px}
+  .calc .result .val span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .calc .result .sub{font-size:12px;color:#C9A9DC;margin-top:3px}
+  .calc .foot{padding:14px 30px;font-size:12.5px;color:#8A7898;text-align:center}
+  .calc .foot b{color:var(--v-deep);font-family:var(--display)}
+
+  section{padding:78px 0}
+  .sec-head{max-width:60ch}
+  .sec-head.center{margin:0 auto;text-align:center}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,3.6vw,40px);line-height:1.08;letter-spacing:-.02em;color:var(--purple);margin-top:12px}
+  .sec-lede{margin-top:14px;font-size:17px;color:var(--muted)}
+
+  /* band table */
+  .bands{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .bandgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:40px}
+  .band{border:1px solid var(--line);border-radius:14px;padding:18px 12px;text-align:center;background:var(--paper);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+  .band:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--v-light)}
+  .band.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:var(--shadow)}
+  .band .rng{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.04em;color:#8A7898;text-transform:uppercase;min-height:30px;display:flex;align-items:center;justify-content:center}
+  .band.on .rng{color:rgba(255,255,255,.85)}
+  .band .price{font-family:var(--display);font-weight:900;font-size:27px;color:var(--purple);margin-top:8px}
+  .band.on .price{color:#fff}
+  .band .per{font-size:11px;color:#9B86A9;margin-top:2px}
+  .band.on .per{color:rgba(255,255,255,.8)}
+  .bands .note{text-align:center;margin-top:22px;font-size:13px;color:#8A7898}
+
+  /* partners */
+  .partners{text-align:center}
+  .plogos{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;align-items:center;margin-top:38px}
+  .plogo{height:84px;width:188px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .plogo img{max-height:42px;max-width:140px;width:auto;object-fit:contain}
+
+  /* case studies */
+  .cases{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+  .case{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+  .case .shot{background:#EFE7F5;border-bottom:1px solid var(--line);height:210px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center}
+  .case .shot img{width:100%;height:auto}
+  .case .body{padding:22px;display:flex;flex-direction:column;flex:1}
+  .case .stat{font-family:var(--display);font-weight:900;font-size:40px;line-height:1;letter-spacing:-.02em}
+  .case .stat span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .case .statcap{font-size:13px;color:#8A7898;margin-top:6px;font-weight:700;font-family:var(--display)}
+  .case h3{font-family:var(--display);font-weight:800;font-size:18px;color:var(--purple);margin-top:16px}
+  .case p{font-size:14.5px;color:var(--muted);margin-top:7px}
+
+  /* engagement proof */
+  .proof{background:var(--purple);color:#fff;border-radius:26px;padding:48px 40px;box-shadow:var(--shadow)}
+  .proof .head{text-align:center;max-width:60ch;margin:0 auto 36px}
+  .proof .head h2{color:#fff}
+  .proof .head p{margin-top:12px;color:#D9C4E6;font-size:16px}
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;text-align:center}
+  .pstat .num{font-family:var(--display);font-weight:900;font-size:clamp(34px,4.4vw,46px);line-height:1}
+  .pstat .num span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .pstat .cap{margin-top:10px;font-size:13.5px;color:#C9A9DC;line-height:1.4}
+
+  /* included */
+  .inc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+  .inc{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:#fff}
+  .inc .ic{width:42px;height:42px;border-radius:12px;background:var(--grad);display:grid;place-items:center;color:#fff;margin-bottom:14px;font-size:18px}
+  .inc h3{font-family:var(--display);font-weight:800;font-size:16px;color:var(--purple)}
+  .inc p{font-size:14px;color:var(--muted);margin-top:6px}
+
+  /* faq */
+  .faq{max-width:780px;margin:40px auto 0}
+  details{border:1px solid var(--line);border-radius:14px;background:#fff;padding:0;margin-bottom:12px;overflow:hidden}
+  details summary{list-style:none;cursor:pointer;padding:18px 22px;font-family:var(--display);font-weight:700;font-size:16px;color:var(--purple);display:flex;justify-content:space-between;align-items:center;gap:16px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+";font-size:22px;color:var(--v-mid);font-weight:700}
+  details[open] summary::after{content:"\2212"}
+  details .ans{padding:0 22px 20px;font-size:15px;color:var(--muted)}
+
+  /* cta */
+  .cta-band{position:relative;overflow:hidden;background:var(--purple);border-radius:26px;padding:62px 40px;text-align:center;color:#fff;box-shadow:var(--shadow)}
+  .cta-band::before{content:"";position:absolute;bottom:-180px;left:-120px;width:480px;height:480px;border-radius:50%;background:var(--grad);opacity:.30;filter:blur(10px)}
+  .cta-band .inner{position:relative;z-index:1}
+  .cta-band h2{color:#fff}
+  .cta-band p{margin-top:14px;font-size:17px;color:#D9C4E6;max-width:48ch;margin-left:auto;margin-right:auto}
+  .cta-band .row{margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* footer */
+  footer{padding:56px 0 40px}
+  .fgrid2{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+  .fcol h4{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9B86A9;margin-bottom:14px}
+  .fcol a{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}
+  .fcol a:hover{color:var(--v-deep)}
+  .fcol p{font-size:14px;color:var(--muted);max-width:34ch;margin-top:14px}
+  .fbar{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;color:#9B86A9}
+
+  @media(max-width:980px){.bandgrid{grid-template-columns:repeat(4,1fr)}.cgrid,.inc-grid{grid-template-columns:1fr 1fr}.pgrid{grid-template-columns:1fr 1fr}}
+  @media(max-width:720px){.bandgrid{grid-template-columns:repeat(2,1fr)}.cgrid,.inc-grid,.fgrid2{grid-template-columns:1fr}.calc .result{grid-template-columns:1fr;gap:22px}}
+  @media(max-width:520px){.fgrid2{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="lockup sm" aria-label="Cheers by Airship home">
+      <span class="hero">Cheers
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <defs><linearGradient id="sgh" x1="0" y1="0" x2="32" y2="32"><stop offset="0" stop-color="#BE38E6"/><stop offset="1" stop-color="#8204CC"/></linearGradient></defs>
+          <path d="M16 0c1.2 8.6 6.2 13.6 16 16-9.8 2.4-14.8 7.4-16 16-1.2-8.6-6.2-13.6-16-16C9.8 13.6 14.8 8.6 16 0Z" fill="url(#sgh)"/>
+        </svg>
+      </span>
+      <span class="endorse"><span class="by">by</span><img class="airship" src="assets/airship-logo.png" alt="Airship"></span>
+    </a>
+    <nav class="links">
+      <a href="index.html#why">Why Cheers</a>
+      <a href="index.html#features">Features</a>
+      <a href="index.html#how">How it works</a>
+      <a href="pricing.html" class="active">Pricing</a>
+    </nav>
+    <div class="actions">
+      <a href="#demo" class="btn btn-primary">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO + CALCULATOR -->
+<section class="ph-sec">
+  <div class="wrap inner">
+    <div class="eyebrow">Pricing</div>
+    <h1 class="headline">Pay less per venue as <span class="grad-text">you grow</span>.</h1>
+    <p class="ph-lede">One simple price per location, every month. The more venues you run, the less each one costs. No setup fees, no per-employee charges.</p>
+
+    <div class="calc">
+      <div class="top">
+        <div class="q">How many venues do you run?<small>Drag the number up or down to see your price</small></div>
+        <div class="stepper">
+          <button type="button" id="dec" aria-label="Fewer venues">&minus;</button>
+          <input id="locs" type="number" min="1" max="2000" value="12" aria-label="Number of venues">
+          <button type="button" id="inc" aria-label="More venues">+</button>
+        </div>
+      </div>
+      <div class="result">
+        <div><div class="lab">Your band</div><div class="val" style="font-size:24px" id="band">6 to 15</div><div class="sub">locations</div></div>
+        <div><div class="lab">Per location</div><div class="val"><span id="per">&pound;60</span></div><div class="sub">per month</div></div>
+        <div><div class="lab">Your total</div><div class="val" id="total">&pound;720</div><div class="sub" id="annual">&pound;8,640 / year</div></div>
+      </div>
+      <div class="foot">Live on your existing <b>Airship</b> setup. Prices subject to terms and conditions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND TABLE -->
+<section id="bands" class="bands">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Every band</div>
+      <h2>The bigger your group, the lower the price.</h2>
+    </div>
+    <div class="bandgrid" id="bandgrid">
+      <div class="band" data-min="1" data-max="1"><div class="rng">1 location</div><div class="price">&pound;125</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="2" data-max="5"><div class="rng">2 to 5</div><div class="price">&pound;75</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="6" data-max="15"><div class="rng">6 to 15</div><div class="price">&pound;60</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="16" data-max="30"><div class="rng">16 to 30</div><div class="price">&pound;50</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="31" data-max="50"><div class="rng">31 to 50</div><div class="price">&pound;40</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="51" data-max="100"><div class="rng">51 to 100</div><div class="price">&pound;30</div><div class="per">per location / mo</div></div>
+      <div class="band" data-min="101" data-max="100000"><div class="rng">101+</div><div class="price">&pound;20</div><div class="per">per location / mo</div></div>
+    </div>
+    <p class="note">All bands include the full platform: rewards, the staff benefits portal, automated journeys, surveys and integrations. *Subject to terms and conditions.</p>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Works with your stack</div>
+      <h2>Plugs into the systems you already run.</h2>
+      <p class="sec-lede">A daily sync keeps your employee data accurate across HR, EPOS and loyalty. New starters and leavers update automatically, so nobody has to keep three systems in step.</p>
+    </div>
+    <div class="plogos">
+      <div class="plogo"><img src="assets/partner-zonal.png" alt="Zonal"></div>
+      <div class="plogo"><img src="assets/partner-fourth.png" alt="Fourth"></div>
+      <div class="plogo"><img src="assets/partner-s4labour.png" alt="S4 Labour"></div>
+      <div class="plogo"><img src="assets/partner-rotaready.png" alt="RotaReady"></div>
+      <div class="plogo"><img src="assets/partner-polaris.png" alt="Polaris"></div>
+      <div class="plogo"><img src="assets/partner-toggle.png" alt="Toggle"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="cases">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Who is using it well</div>
+      <h2>Hospitality groups already winning with Cheers.</h2>
+    </div>
+    <div class="cgrid">
+      <div class="case">
+        <div class="shot"><img src="assets/case-honest.jpg" alt="Honest Burgers employee reward email"></div>
+        <div class="body">
+          <div class="stat"><span>87%</span></div>
+          <div class="statcap">conversion on monthly rewards</div>
+          <h3>Honest Burgers</h3>
+          <p>Monthly "Honest Rewards" perks reach employees' friends and family, turning the whole team into advocates.</p>
+        </div>
+      </div>
+      <div class="case">
+        <div class="shot"><img src="assets/case-cosy.jpg" alt="Cosy Club employee newsletter"></div>
+        <div class="body">
+          <div class="stat"><span>59%</span></div>
+          <div class="statcap">email open rate</div>
+          <h3>Cosy Club</h3>
+          <p>Shout-outs, recognition and launch buzz, from new menu drops to staff festivals, keep teams aligned and excited.</p>
+        </div>
+      </div>
+      <div class="case">
+        <div class="shot"><img src="assets/case-loungers.jpg" alt="Loungers employee newsletter"></div>
+        <div class="body">
+          <div class="stat"><span>16%</span></div>
+          <div class="statcap">click rate on team emails</div>
+          <h3>Loungers</h3>
+          <p>"The Lounge Lowdown" connects teams with updates, ESG and charity work, and what is coming next.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGAGEMENT PROOF -->
+<section>
+  <div class="wrap">
+    <div class="proof">
+      <div class="head">
+        <div class="eyebrow" style="color:#E2B7F2">The numbers</div>
+        <h2>Your team engages far more than your guests do.</h2>
+        <p>Across Airship, team audiences open more, click more and redeem more than guest audiences. Rewards aimed at staff simply work harder.</p>
+      </div>
+      <div class="pgrid">
+        <div class="pstat"><div class="num"><span>64%</span></div><div class="cap">of rewards used by teams, against 10% by guests</div></div>
+        <div class="pstat"><div class="num"><span>8&times;</span></div><div class="cap">higher birthday reward usage than guests</div></div>
+        <div class="pstat"><div class="num"><span>3&times;</span></div><div class="cap">welcome reward conversion versus guests</div></div>
+        <div class="pstat"><div class="num"><span>59%</span></div><div class="cap">team email open rate, against 43% for guests</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Every plan includes</div>
+      <h2>One price. The whole platform.</h2>
+    </div>
+    <div class="inc-grid">
+      <div class="inc"><div class="ic">🎁</div><h3>Staff benefits portal</h3><p>Every perk in one digital wallet, with trackable, expirable vouchers that work across your ecosystem.</p></div>
+      <div class="inc"><div class="ic">🏆</div><h3>Team rewards</h3><p>Welcome rewards, birthdays and milestone "workiversary" gifts, sent automatically the moment they are due.</p></div>
+      <div class="inc"><div class="ic">✉️</div><h3>Automated journeys</h3><p>Onboarding, birthday and milestone sequences that run themselves, triggered from each person's start date.</p></div>
+      <div class="inc"><div class="ic">📊</div><h3>Employee Sentiment Score</h3><p>An eNPS-style survey that tracks how your people feel about working for you, trending over time.</p></div>
+      <div class="inc"><div class="ic">🎯</div><h3>Role and location targeting</h3><p>Message by department, site, job title or anniversary, so every email lands as if it was written for one person.</p></div>
+      <div class="inc"><div class="ic">🔄</div><h3>Daily HR sync</h3><p>Starters and leavers update automatically from your HR system, so the right people always have access.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Good to know</div>
+      <h2>The common questions.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Is the price really just per location?</summary>
+        <div class="ans">Yes. You pay one monthly fee for each venue, and the rate drops as your group grows, from £125 for a single site down to £20 a location at 101+ venues. There are no per-employee fees. Prices are subject to terms and conditions.</div>
+      </details>
+      <details>
+        <summary>What happens when a team member joins?</summary>
+        <div class="ans">They are enrolled automatically from your HR system, taken through the onboarding journey, issued their welcome reward and asked for feedback. Nothing to set up by hand.</div>
+      </details>
+      <details>
+        <summary>And when someone leaves?</summary>
+        <div class="ans">When they are marked as a leaver in your HR system, they are removed from Airship on the next daily sync. Their comms stop and their access to the staff rewards portal ends.</div>
+      </details>
+      <details>
+        <summary>How do staff access their benefits?</summary>
+        <div class="ans">Through a secure magic-link URL, with no password to remember and no app to download. They can save it to their phone home screen so it behaves like an app. Add to Wallet is coming soon for one-click access to individual rewards.</div>
+      </details>
+      <details>
+        <summary>Will it work with our existing systems?</summary>
+        <div class="ans">Cheers syncs with Zonal, Fourth, S4 Labour, RotaReady and Polaris, and connects to Toggle and Zonal loyalty for perks and discounts. A daily API sync keeps employee data accurate across all of them.</div>
+      </details>
+      <details>
+        <summary>How long does it take to go live?</summary>
+        <div class="ans">Around four weeks. We set up the account, switch on your integrations, build your templates and run training with your HR team, then your account manager supports you from launch onwards.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="demo">
+  <div class="wrap">
+    <div class="cta-band">
+      <div class="inner">
+        <h2>See your price and the platform in one demo.</h2>
+        <p>Tell us how many venues you run and we will show you exactly what Cheers costs and how it keeps your team longer.</p>
+        <div class="row">
+          <a href="mailto:hello@airship.co.uk?subject=Cheers%20pricing%20and%20demo" class="btn btn-primary">Book a demo</a>
+          <a href="index.html#features" class="btn btn-light">Explore features</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid2">
+      <div class="fcol">
+        <a href="index.html" class="lockup sm" aria-label="Cheers by Airship">
+          <span class="hero" style="font-size:24px">Cheers</span>
+          <span class="endorse"><span class="by">by</span><img class="airship" src="assets/airship-logo.png" alt="Airship"></span>
+        </a>
+        <p>The employee engagement and loyalty platform that treats your team like your best guests.</p>
+      </div>
+      <div class="fcol">
+        <h4>Product</h4>
+        <a href="index.html#why">Why Cheers</a>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how">How it works</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="fcol">
+        <h4>Company</h4>
+        <a href="https://airship.co.uk" target="_blank" rel="noopener">About Airship</a>
+        <a href="#demo">Book a demo</a>
+        <a href="mailto:hello@airship.co.uk">Contact</a>
+      </div>
+      <div class="fcol">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+    <div class="fbar">
+      <span>© 2026 Airship. Cheers is a product by Airship.</span>
+      <span>Made for hospitality teams 🍻</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var BANDS = [
+    {min:1,max:1,price:125,label:"1 location"},
+    {min:2,max:5,price:75,label:"2 to 5"},
+    {min:6,max:15,price:60,label:"6 to 15"},
+    {min:16,max:30,price:50,label:"16 to 30"},
+    {min:31,max:50,price:40,label:"31 to 50"},
+    {min:51,max:100,price:30,label:"51 to 100"},
+    {min:101,max:Infinity,price:20,label:"101+"}
+  ];
+  var input = document.getElementById('locs');
+  var gbp = function(n){ return '£' + n.toLocaleString('en-GB'); };
+
+  function bandFor(n){ for(var i=0;i<BANDS.length;i++){ if(n>=BANDS[i].min && n<=BANDS[i].max) return BANDS[i]; } return BANDS[BANDS.length-1]; }
+
+  function render(){
+    var n = parseInt(input.value,10);
+    if(isNaN(n)||n<1){ n=1; }
+    if(n>2000){ n=2000; }
+    input.value = n;
+    var b = bandFor(n);
+    var total = n*b.price;
+    document.getElementById('band').textContent = b.label;
+    document.getElementById('per').innerHTML = gbp(b.price);
+    document.getElementById('total').innerHTML = gbp(total);
+    document.getElementById('annual').innerHTML = gbp(total*12) + ' / year';
+    var cards = document.querySelectorAll('#bandgrid .band');
+    cards.forEach(function(c){
+      var lo = parseInt(c.getAttribute('data-min'),10);
+      var hi = parseInt(c.getAttribute('data-max'),10);
+      c.classList.toggle('on', n>=lo && n<=hi);
+    });
+  }
+  document.getElementById('inc').addEventListener('click', function(){ input.value = (parseInt(input.value,10)||0)+1; render(); });
+  document.getElementById('dec').addEventListener('click', function(){ input.value = (parseInt(input.value,10)||2)-1; render(); });
+  input.addEventListener('input', render);
+  render();
+</script>
+</body>
+</html>

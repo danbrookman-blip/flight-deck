@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheers by Airship — treat your team like your best guests</title>
+<meta name="description" content="Cheers is the employee engagement and loyalty platform for hospitality. Reward great shifts, hand out real perks, and keep your best people longer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#34004D;
+    --v-light:#BE38E6;
+    --v-mid:#9A12D6;
+    --v-deep:#8204CC;
+    --ink:#2A0A3A;
+    --paper:#F4F0F7;
+    --line:#E4D8EC;
+    --muted:#5A4866;
+    --grad:linear-gradient(168deg,#BE38E6 0%,#9A12D6 55%,#8204CC 100%);
+    --grad-soft:linear-gradient(180deg,#FBF7FE,#F4ECFA);
+    --display:'Montserrat','Century Gothic','Futura',system-ui,sans-serif;
+    --body:'Lato',system-ui,-apple-system,sans-serif;
+    --radius:18px;
+    --shadow:0 18px 50px rgba(52,0,77,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--v-mid)}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;font-size:15px;border-radius:999px;padding:13px 24px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 24px rgba(130,4,204,.30)}
+  .btn-primary:hover{box-shadow:0 14px 32px rgba(130,4,204,.42)}
+  .btn-ghost{background:#fff;color:var(--purple);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--v-light);color:var(--v-deep)}
+  .btn-light{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.28)}
+  .btn-light:hover{background:rgba(255,255,255,.2)}
+
+  /* ---------- lockup (from the brand sheet) ---------- */
+  .lockup{display:inline-flex;align-items:center;gap:14px}
+  .lockup .hero{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lockup .endorse{display:inline-flex;align-items:center;gap:10px}
+  .lockup .by{font-family:var(--display);font-weight:600;letter-spacing:.02em;color:#8A6F9C}
+  .lockup .airship{height:34px;width:auto}
+  .lockup.sm .hero{font-size:26px;position:relative}
+  .lockup.sm .by{font-size:13px}
+  .lockup.sm .airship{height:26px}
+  .lockup.reverse .hero{background:none;-webkit-text-fill-color:#fff;color:#fff}
+  .lockup.reverse .by{color:#C9A9DC}
+  .lockup.reverse .airship{filter:brightness(0) invert(1)}
+  .spark{position:absolute;top:-6px;right:-20px;width:20px;height:20px}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(244,240,247,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .nav .links{display:flex;align-items:center;gap:30px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted)}
+  .nav .links a:hover{color:var(--v-deep)}
+  .nav .actions{display:flex;align-items:center;gap:12px}
+  .burger{display:none;background:none;border:0;cursor:pointer}
+  @media(max-width:880px){.nav .links{display:none}}
+
+  /* ---------- hero ---------- */
+  .hero-sec{position:relative;overflow:hidden;padding:74px 0 88px}
+  .hero-sec::before{content:"";position:absolute;top:-220px;right:-160px;width:560px;height:560px;border-radius:50%;background:var(--grad);opacity:.10;filter:blur(20px);z-index:0}
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
+  h1.headline{font-family:var(--display);font-weight:900;font-size:clamp(38px,5.4vw,62px);line-height:1.02;letter-spacing:-.03em;color:var(--purple)}
+  .hero-lede{margin-top:20px;font-size:19px;color:var(--muted);max-width:30ch}
+  .hero-cta{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+  .hero-meta{margin-top:26px;display:flex;align-items:center;gap:10px;font-size:13.5px;color:#8A7898}
+  .hero-meta .dot{width:7px;height:7px;border-radius:50%;background:var(--v-mid)}
+
+  /* ---------- phone mock ---------- */
+  .phone{justify-self:center;width:300px;background:#fff;border:1px solid var(--line);border-radius:34px;box-shadow:var(--shadow);padding:14px;position:relative}
+  .phone::after{content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);width:96px;height:6px;border-radius:99px;background:var(--line)}
+  .ph-bar{display:flex;align-items:center;justify-content:space-between;padding:24px 6px 14px}
+  .ph-av{width:32px;height:32px;border-radius:50%;background:var(--grad)}
+  .ph-body{background:var(--grad-soft);border:1px solid var(--line);border-radius:22px;padding:18px}
+  .ph-greet{font-family:var(--display);font-weight:800;color:var(--purple);font-size:17px}
+  .ph-sub{font-size:12.5px;color:#8A7898;margin-top:2px}
+  .ph-chip{margin-top:14px;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;font-size:13px;font-weight:700;box-shadow:0 4px 14px rgba(52,0,77,.06)}
+  .ph-chip .ic{width:30px;height:30px;border-radius:9px;background:var(--grad);flex:none;display:grid;place-items:center;color:#fff;font-size:14px}
+  .ph-points{margin-top:14px;background:var(--purple);border-radius:16px;padding:15px 16px;color:#fff}
+  .ph-points .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A9DC;font-family:var(--display);font-weight:700}
+  .ph-points .val{font-family:var(--display);font-weight:900;font-size:30px;line-height:1.1;margin-top:3px}
+  .ph-points .val small{font-size:13px;font-weight:700;color:#C9A9DC}
+
+  /* ---------- trust strip ---------- */
+  .trust{padding:26px 0 6px}
+  .trust p{text-align:center;font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9B86A9;margin-bottom:18px}
+  .trust .row{display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:center;align-items:center}
+  .trust .row span{font-family:var(--display);font-weight:800;font-size:19px;color:#B7A5C4;letter-spacing:-.01em}
+
+  /* ---------- section frame ---------- */
+  section{padding:84px 0}
+  .sec-head{max-width:60ch}
+  .sec-head.center{margin:0 auto;text-align:center}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,3.6vw,40px);line-height:1.08;letter-spacing:-.02em;color:var(--purple);margin-top:12px}
+  .sec-lede{margin-top:14px;font-size:17px;color:var(--muted)}
+
+  /* ---------- features ---------- */
+  .features{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:44px}
+  .feat{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--paper);transition:transform .18s ease,box-shadow .18s ease}
+  .feat:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .feat .ic{width:46px;height:46px;border-radius:13px;background:var(--grad);display:grid;place-items:center;color:#fff;margin-bottom:16px}
+  .feat h3{font-family:var(--display);font-weight:800;font-size:20px;color:var(--purple);letter-spacing:-.01em}
+  .feat p{margin-top:9px;font-size:15px;color:var(--muted)}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px;counter-reset:step}
+  .step{position:relative;padding:30px 26px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}
+  .step::before{counter-increment:step;content:counter(step);font-family:var(--display);font-weight:900;font-size:15px;width:38px;height:38px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;margin-bottom:16px}
+  .step h3{font-family:var(--display);font-weight:800;font-size:18px;color:var(--purple)}
+  .step p{margin-top:8px;font-size:14.5px;color:var(--muted)}
+
+  /* ---------- stats band ---------- */
+  .stats{background:var(--purple);color:#fff;border-radius:26px;padding:54px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;text-align:center;box-shadow:var(--shadow)}
+  .stat .num{font-family:var(--display);font-weight:900;font-size:clamp(36px,5vw,52px);line-height:1;letter-spacing:-.02em}
+  .stat .num span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .cap{margin-top:10px;font-size:14px;color:#C9A9DC}
+
+  /* ---------- showcase / portal preview ---------- */
+  .showcase{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .show-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  .portal{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .portal .top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#fff}
+  .portal .av{width:30px;height:30px;border-radius:50%;background:var(--grad)}
+  .portal .main{background:var(--grad-soft);padding:22px 18px}
+  .portal .pg{font-family:var(--display);font-weight:800;color:var(--purple);font-size:16px;margin-bottom:14px}
+  .pcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .pcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .pcard .t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9B86A9;font-family:var(--display);font-weight:700}
+  .pcard .b{font-family:var(--display);font-weight:800;color:var(--purple);font-size:22px;margin-top:6px}
+  .pcard.span{grid-column:1/-1;display:flex;align-items:center;gap:11px}
+  .pcard.span .dot{width:9px;height:9px;border-radius:50%;background:var(--grad);flex:none}
+  .pcard.span .txt{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .checklist{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+  .checklist li{list-style:none;display:flex;gap:13px;align-items:flex-start}
+  .checklist .tick{width:24px;height:24px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font-size:13px;flex:none;margin-top:2px}
+  .checklist .ct{font-size:15.5px;color:var(--ink)}
+  .checklist .ct strong{font-family:var(--display);color:var(--purple)}
+
+  /* ---------- quote ---------- */
+  .quote{text-align:center;max-width:50ch;margin:0 auto}
+  .quote blockquote{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);line-height:1.3;letter-spacing:-.01em;color:var(--purple)}
+  .quote .who{margin-top:22px;font-size:14px;color:var(--muted)}
+  .quote .who b{font-family:var(--display);color:var(--v-deep)}
+
+  /* ---------- final cta ---------- */
+  .cta-band{position:relative;overflow:hidden;background:var(--purple);border-radius:26px;padding:62px 40px;text-align:center;color:#fff;box-shadow:var(--shadow)}
+  .cta-band::before{content:"";position:absolute;bottom:-180px;left:-120px;width:480px;height:480px;border-radius:50%;background:var(--grad);opacity:.30;filter:blur(10px)}
+  .cta-band .inner{position:relative;z-index:1}
+  .cta-band h2{color:#fff}
+  .cta-band p{margin-top:14px;font-size:17px;color:#D9C4E6;max-width:48ch;margin-left:auto;margin-right:auto}
+  .cta-band .row{margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* ---------- footer ---------- */
+  footer{padding:56px 0 40px}
+  .fgrid2{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+  .fcol h4{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9B86A9;margin-bottom:14px}
+  .fcol a{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}
+  .fcol a:hover{color:var(--v-deep)}
+  .fcol p{font-size:14px;color:var(--muted);max-width:34ch;margin-top:14px}
+  .fbar{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;color:#9B86A9}
+
+  @media(max-width:880px){
+    .hero-grid,.show-grid{grid-template-columns:1fr;gap:40px}
+    .phone{order:-1}
+    .fgrid,.pcards{grid-template-columns:1fr}
+    .steps,.stats{grid-template-columns:1fr}
+    .fgrid2{grid-template-columns:1fr 1fr}
+    .burger{display:block}
+  }
+  @media(max-width:520px){.fgrid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="lockup sm" aria-label="Cheers by Airship home">
+      <span class="hero">Cheers
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <defs><linearGradient id="sgh" x1="0" y1="0" x2="32" y2="32"><stop offset="0" stop-color="#BE38E6"/><stop offset="1" stop-color="#8204CC"/></linearGradient></defs>
+          <path d="M16 0c1.2 8.6 6.2 13.6 16 16-9.8 2.4-14.8 7.4-16 16-1.2-8.6-6.2-13.6-16-16C9.8 13.6 14.8 8.6 16 0Z" fill="url(#sgh)"/>
+        </svg>
+      </span>
+      <span class="endorse"><span class="by">by</span><img class="airship" src="assets/airship-logo.png" alt="Airship"></span>
+    </a>
+    <nav class="links">
+      <a href="#why">Why Cheers</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <div class="actions">
+      <a href="#demo" class="btn btn-primary">Book a demo</a>
+    </div>
+    <button class="burger" aria-label="Menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34004D" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero-sec">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Employee engagement &amp; loyalty</div>
+      <h1 class="headline">Treat your team like your <span class="grad-text">best guests</span>.</h1>
+      <p class="hero-lede">Cheers rewards great shifts, hands out real perks, and keeps your best people on the team for longer.</p>
+      <div class="hero-cta">
+        <a href="#demo" class="btn btn-primary">Book a demo</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-meta"><span class="dot"></span> Built for hospitality groups. Live on your existing Airship setup.</div>
+    </div>
+
+    <div class="phone" aria-label="Cheers staff app preview">
+      <div class="ph-bar">
+        <span class="lockup sm"><span class="hero" style="font-size:20px">Cheers</span></span>
+        <span class="ph-av"></span>
+      </div>
+      <div class="ph-body">
+        <div class="ph-greet">Nice one, Sam 👋</div>
+        <div class="ph-sub">You picked up 2 shifts this week</div>
+        <div class="ph-points">
+          <div class="lab">Your balance</div>
+          <div class="val">1,240 <small>points</small></div>
+        </div>
+        <div class="ph-chip"><span class="ic">🎁</span> 20% off voucher · ready in your wallet</div>
+        <div class="ph-chip"><span class="ic">☕</span> Free coffee on shift · tap to claim</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST ============ -->
+<div class="trust wrap">
+  <p>Built for hospitality groups, from 3 to 250 locations</p>
+  <div class="row">
+    <span>The Coastal Group</span>
+    <span>Maple &amp; Vine</span>
+    <span>Northgate Inns</span>
+    <span>Harbour &amp; Co</span>
+    <span>The Tap House</span>
+  </div>
+</div>
+
+<!-- ============ WHY ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Why Cheers</div>
+      <h2>Losing good staff costs more than keeping them happy.</h2>
+      <p class="sec-lede">Hospitality turnover is brutal, and every leaver takes their training, their regulars and their pace with them. Cheers gives your team a reason to stay: recognition they feel and perks they actually want, all in one place on their phone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features" class="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">What you get</div>
+      <h2>Everything that makes great people stay.</h2>
+    </div>
+    <div class="fgrid">
+      <div class="feat">
+        <div class="ic">🏆</div>
+        <h3>Your people stay longer</h3>
+        <p>Reward shifts, milestones and going the extra mile. Recognition lands the moment it is earned, so good work never goes unnoticed.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">🎁</div>
+        <h3>Perks they actually use</h3>
+        <p>A wallet of vouchers and discounts across your venues and partners, ready on every team member's phone.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">📈</div>
+        <h3>Managers see what is working</h3>
+        <p>One view of engagement, redemption and retention across every site, so you can act before people walk.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">⚡</div>
+        <h3>Live on day one</h3>
+        <p>Cheers sits on your existing Airship account. No new system to wire up, no data to migrate, nothing for IT to fear.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">How it works</div>
+      <h2>Up and running in three steps.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>Connect your venues</h3>
+        <p>Cheers plugs straight into your Airship account and pulls in your sites and teams.</p>
+      </div>
+      <div class="step">
+        <h3>Set the rewards</h3>
+        <p>Choose the perks, points and milestones that fit your group. Change them whenever you like.</p>
+      </div>
+      <div class="step">
+        <h3>Watch retention climb</h3>
+        <p>Staff earn, redeem and stay. You see the impact on every site from one dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS / STATS ============ -->
+<section id="results">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num"><span>1 in 4</span></div><div class="cap">more staff kept past their first year</div></div>
+      <div class="stat"><div class="num"><span>3&times;</span></div><div class="cap">higher reward redemption than email perks</div></div>
+      <div class="stat"><div class="num"><span>1 day</span></div><div class="cap">to go live on your Airship setup</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE ============ -->
+<section class="showcase">
+  <div class="wrap show-grid">
+    <div>
+      <div class="eyebrow">The manager view</div>
+      <h2>Spot who is thriving and who is slipping.</h2>
+      <p class="sec-lede">Cheers turns engagement into something you can manage. See redemption, recognition and retention by site, and reward your standout team before a rival does.</p>
+      <ul class="checklist">
+        <li><span class="tick">✓</span><span class="ct"><strong>Retention by site</strong>, not guesswork. Know which venues keep people and which need help.</span></li>
+        <li><span class="tick">✓</span><span class="ct"><strong>Reward in a tap.</strong> Recognise a great shift from your phone and it lands instantly.</span></li>
+        <li><span class="tick">✓</span><span class="ct"><strong>One wallet, every perk.</strong> Vouchers, discounts and points your team carries with them.</span></li>
+      </ul>
+      <div style="margin-top:28px"><a href="#demo" class="btn btn-primary">Book a demo</a></div>
+    </div>
+
+    <div class="portal" aria-label="Cheers manager dashboard preview">
+      <div class="top">
+        <span class="lockup sm"><span class="hero" style="font-size:18px">Cheers</span><span class="endorse"><span class="by" style="font-size:11px">by</span><img class="airship" style="height:18px" src="assets/airship-logo.png" alt="Airship"></span></span>
+        <span class="av"></span>
+      </div>
+      <div class="main">
+        <div class="pg">Your group this month</div>
+        <div class="pcards">
+          <div class="pcard"><div class="t">Staff retained</div><div class="b">94%</div></div>
+          <div class="pcard"><div class="t">Rewards sent</div><div class="b">1,820</div></div>
+          <div class="pcard"><div class="t">Perks claimed</div><div class="b">76%</div></div>
+          <div class="pcard"><div class="t">Active sites</div><div class="b">12</div></div>
+          <div class="pcard span"><span class="dot"></span><span class="txt">Northgate Inns just hit a 6-month retention high 🎉</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUOTE ============ -->
+<section>
+  <div class="wrap quote">
+    <div class="eyebrow" style="text-align:center;margin-bottom:8px">Why teams switch</div>
+    <blockquote>&ldquo;Our people finally feel seen. We are keeping staff a full season longer, and the perks pay for themselves.&rdquo;</blockquote>
+    <div class="who"><b>Priya Shah</b> · Operations Director, The Coastal Group</div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section id="demo">
+  <div class="wrap">
+    <div class="cta-band">
+      <div class="inner">
+        <h2>Ready to keep your best people?</h2>
+        <p>See how Cheers rewards your team and lifts retention across every venue. A short demo, set up on your own Airship account.</p>
+        <div class="row">
+          <a href="mailto:hello@airship.co.uk?subject=Cheers%20demo" class="btn btn-primary">Book a demo</a>
+          <a href="#features" class="btn btn-light">Explore features</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid2">
+      <div class="fcol">
+        <a href="#top" class="lockup sm" aria-label="Cheers by Airship">
+          <span class="hero" style="font-size:24px">Cheers</span>
+          <span class="endorse"><span class="by">by</span><img class="airship" src="assets/airship-logo.png" alt="Airship"></span>
+        </a>
+        <p>The employee engagement and loyalty platform that treats your team like your best guests.</p>
+      </div>
+      <div class="fcol">
+        <h4>Product</h4>
+        <a href="#why">Why Cheers</a>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#results">Results</a>
+      </div>
+      <div class="fcol">
+        <h4>Company</h4>
+        <a href="https://airship.co.uk" target="_blank" rel="noopener">About Airship</a>
+        <a href="#demo">Book a demo</a>
+        <a href="mailto:hello@airship.co.uk">Contact</a>
+      </div>
+      <div class="fcol">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+    <div class="fbar">
+      <span>© 2026 Airship. Cheers is a product by Airship.</span>
+      <span>Made for hospitality teams 🍻</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu: simple jump to nav anchors via scroll (links hidden on small screens),
+  // so the burger reveals a lightweight in-page menu.
+  document.querySelector('.burger').addEventListener('click', function(){
+    var links = document.querySelector('.nav .links');
+    var open = links.style.display === 'flex';
+    links.style.display = open ? 'none' : 'flex';
+    links.style.position = 'absolute';
+    links.style.top = '72px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.flexDirection = 'column';
+    links.style.gap = '4px';
+    links.style.padding = '16px 24px';
+    links.style.background = '#fff';
+    links.style.borderBottom = '1px solid var(--line)';
+  });
+</script>
+</body>
+</html>
