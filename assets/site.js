@@ -7,8 +7,8 @@
      Leave an ID blank and that step keeps its "coming soon" placeholder.
      ============================================================ */
   var VIDEOS = {
-    why:   { id: "46f9100fbc69476f9e4069202035b4eb", title: "The why" },
-    step1: { id: "", title: "Set up your profile" },
+    why:   { id: "b8ba5486a76240efb83688019a4e1294", title: "The why" },
+    step1: { id: "46f9100fbc69476f9e4069202035b4eb", title: "Set up your profile" },
     step2: { id: "", title: "Find and use your Brain" },
     step3: { id: "", title: "Pick the right surface" },
     step4: { id: "", title: "The improvement loop" },

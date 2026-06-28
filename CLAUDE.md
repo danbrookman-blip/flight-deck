@@ -145,14 +145,18 @@ should use, ask before building.
   paste-ready prompt boxes. Do not break it when editing. The `[name]`, `[tone]`,
   `[team]`, `[task]` etc. inside those boxes are **intentional fill-in fields**,
   not placeholders to remove.
-- **Brain names**: each department Brain is named and lives in the Brains section
-  of `start.html`. Current set - HQ Brains: Florence (the source of truth), Austin
-  (cross-functional comms), Lincoln (EOS operating rhythm). Department Brains:
-  Savannah (Customer Success), Phoenix (Sales/BDM), Madison (Marketing), Milan
-  (Product & Dev), Geneva (Finance & HR), Kingston (Account Management). If you
-  rename a Brain, change every reference consistently across the page. Individual
-  Brain owners are not yet named on the cards (they read "owned by the department
-  champion") - set real owners only when asked, and do it consistently.
+- **Brain names**: each Brain is named and lives in the Brains section of
+  `start.html`, grouped into five themed bands. Current set - Knowledge bases:
+  Adelaide (Airship Knowledge Base), Troy (Toggle Knowledge Base), Essen
+  (Engineering Support). Sales & commercial: Sydney (Airship Sales Brain), Caesar
+  (Commercial Account Management), Shelly (Toggle Pricing Wizard). Marketing,
+  design & strategy: Monte (Airship Marketing Brain), Kent (Design Briefs), Athena
+  (Airship Strategy Expert). Engineering, security & operations: Devin (DevOps),
+  Shelby (Security, Infrastructure & Performance / SIP), Smith (Security / CISO).
+  Company operating system: Gino (EOS Implementor), The Professionals (prototype).
+  If you rename a Brain, change every reference consistently across the page
+  (Step 5 plays name specific Brains). Individual Brain owners are not yet named on
+  the cards - set real owners only when asked, and do it consistently.
 - **Loom**: the `VIDEOS` config at the top of `assets/site.js` has 11 embed slots
   keyed `why`, `step1`-`step5`, `craft`, `styles`, `skills`, `artifacts`, `cowork`.
   All currently render "coming soon" - they need real Loom share IDs dropped into
