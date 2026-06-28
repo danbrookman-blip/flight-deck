@@ -42,8 +42,11 @@ Pages (all at the repo root):
   sheet (`flight-deck-logo.html`).
 - `power-tools.html` - the Part 2 band plus Context (`#craft`), Styles, Skills,
   Artifacts, Cowork, "Which tool, when" (`#ladder`), Connectors, Scorecard.
-- `ideas.html` - prototypes: Community Content Manager, Airship Lookout, Single
-  Customer View (`#scv`).
+- `ideas.html` - Ideas hub: the commercial rationale (why we prototype, what earns
+  a build, when we build) plus cards to the idea pages below.
+- `idea-ccm.html` / `idea-lookout.html` / `idea-scv.html` - one page per prototype
+  (Community Content Manager, Airship Lookout, Single Customer View), each with its
+  live demo or mockup and build-spec links.
 - `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
 
 Shared and supporting files:

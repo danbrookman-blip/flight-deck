@@ -64,10 +64,16 @@
     document.querySelectorAll('.nav a.navtop[href]').forEach(function(a){
       if(norm(a.getAttribute('href')) === here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
     });
-    /* also light up a dropdown parent when one of its child pages is current */
+    /* also light up a dropdown parent when one of its child pages is current.
+       only consider same-folder page links: skip external (://) and subdir (/) hrefs
+       so e.g. cheers/index.html does not collide with the home page. */
     document.querySelectorAll('.nav .navgroup').forEach(function(g){
       var top = g.querySelector('.navtop');
-      var hit = [].slice.call(g.querySelectorAll('.navmenu a[href]')).some(function(a){ return norm(a.getAttribute('href')) === here; });
+      var hit = [].slice.call(g.querySelectorAll('.navmenu a[href]')).some(function(a){
+        var h = a.getAttribute('href');
+        if(/:\/\//.test(h) || h.indexOf('/') !== -1) return false;
+        return norm(h) === here;
+      });
       if(top && hit){ top.classList.add('active'); }
     });
   })();
