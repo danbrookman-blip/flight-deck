@@ -50,6 +50,14 @@
   .nav{display:flex; gap:22px; font-family:"Archivo"; font-weight:600; font-size:13.5px}
   .nav a{color:var(--body)}
   .nav a:hover{color:var(--purple)}
+  .navgroup{position:relative; display:flex; align-items:center}
+  .navtop{display:inline-flex; align-items:center; gap:6px; padding:21px 0; cursor:pointer}
+  .navgroup>.navtop::after{content:""; width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-2px) rotate(45deg); opacity:.5; transition:transform .15s ease, opacity .15s ease}
+  .navgroup:hover>.navtop::after, .navgroup:focus-within>.navtop::after{transform:translateY(1px) rotate(45deg); opacity:.85}
+  .navmenu{position:absolute; top:100%; right:0; transform:translateY(-6px); min-width:184px; display:flex; flex-direction:column; gap:2px; padding:8px; background:#fff; border:1px solid var(--line); border-radius:9px; box-shadow:0 16px 38px -16px rgba(52,0,77,.28); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:30}
+  .navgroup:hover>.navmenu, .navgroup:focus-within>.navmenu{opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0)}
+  .navmenu a{padding:7px 11px; border-radius:6px; white-space:nowrap; color:var(--body)}
+  .navmenu a:hover{background:var(--soft); color:var(--purple)}
   @media(max-width:760px){.nav{display:none} .wordmark .sub{display:none}}
 
   /* ---- hero: dark-ink surface, purple-to-blue glow ---- */
@@ -275,6 +283,24 @@
   .promise h3{position:relative; font-family:"Archivo"; font-weight:800; font-size:30px; line-height:1.1; margin:10px 0 8px; max-width:24ch}
   .promise h3 .acc{color:#FFD9C2}
   .promise p{position:relative; font-size:16.5px; color:#f1ecf7; margin:0; max-width:66ch}
+
+  /* IDEAS - working prototypes showcase */
+  .idea{display:grid; grid-template-columns:1fr 580px; gap:34px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:18px; padding:30px}
+  .idea h3{font-size:24px; margin:12px 0 10px}
+  .idea p{font-size:16px; margin:0 0 16px; max-width:54ch}
+  .idea-meta{display:flex; gap:7px; flex-wrap:wrap; margin:0 0 20px}
+  .idea .actions{display:flex; gap:10px; flex-wrap:wrap}
+  .idea .btn{display:inline-flex; align-items:center; gap:8px; font-family:"Archivo"; font-weight:700; font-size:14px; border-radius:50px; padding:11px 20px; text-decoration:none; cursor:pointer}
+  .idea .btn svg{width:15px; height:15px}
+  .idea .btn.primary{background:var(--purple); color:#fff}
+  .idea .btn.primary:hover{filter:brightness(1.06)}
+  .idea .btn.ghost{background:#fff; color:var(--purple); border:1.5px solid var(--line)}
+  .idea .btn.ghost:hover{border-color:var(--purple)}
+  .idea-frame{position:relative; width:580px; max-width:100%; height:414px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--soft); box-shadow:0 18px 40px -18px rgba(52,0,77,.24)}
+  .idea-frame iframe{position:absolute; top:0; left:0; width:1280px; height:914px; border:0; transform:scale(.453125); transform-origin:top left}
+  .idea-frame figcaption{position:absolute; bottom:0; left:0; right:0; font-family:"Archivo"; font-weight:600; font-size:11.5px; color:#fff; background:linear-gradient(0deg,rgba(32,0,48,.55),transparent); padding:18px 12px 8px; text-align:center}
+  @media(max-width:920px){.idea{grid-template-columns:1fr} .idea-frame{width:100%; height:0; padding-bottom:71%} .idea-frame iframe{width:221%; height:221%; transform:scale(.4525)}}
+  @media(max-width:560px){.idea-frame{display:none}}
 </style>
 </head>
 <body>
@@ -282,14 +308,24 @@
 <div class="bar"><div class="wrap">
   <a href="#start" class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span><span class="sub">Claude adoption</span></a>
   <nav class="nav">
-    <a href="#start">Start</a>
-    <a href="#brains">The Brains</a>
-    <a href="#brand">Brand</a>
-    <a href="#memory">Memory</a>
-    <a href="#adopt">Adoption</a>
-    <a href="#part2">Power tools</a>
-    <a href="#connectors">Connectors</a>
-    <a href="#scorecard">Scorecard</a>
+    <div class="navgroup">
+      <a href="#start" class="navtop" aria-haspopup="true">Start</a>
+      <div class="navmenu" role="menu">
+        <a href="#brains" role="menuitem">The Brains</a>
+        <a href="#brand" role="menuitem">Brand</a>
+        <a href="#memory" role="menuitem">Memory</a>
+        <a href="#adopt" role="menuitem">Adoption</a>
+        <a href="#part2" role="menuitem">Power tools</a>
+        <a href="#connectors" role="menuitem">Connectors</a>
+        <a href="#scorecard" role="menuitem">Scorecard</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="#ideas" class="navtop" aria-haspopup="true">Ideas</a>
+      <div class="navmenu" role="menu">
+        <a href="#ideas" role="menuitem">Community Content Manager</a>
+      </div>
+    </div>
   </nav>
 </div></div>
 
@@ -1007,6 +1043,43 @@ Ask me the five brief questions one at a time - purpose, audience, outputs, stan
   </div>
 
   <div class="note"><b>Bring these to the L10, not slides.</b> Both reports refresh on demand and tie straight to the EOS Scorecard and the stalled-cards walk. Ask the EOS Brain to pull the headline and the stalled list before the meeting.</div>
+</div></section>
+
+
+<!-- IDEAS -->
+<section id="ideas"><div class="wrap">
+  <div class="sec-head">
+    <div class="num">Ideas</div>
+    <h2>Working prototypes, not slideware.</h2>
+    <p>A home for product ideas built as clickable prototypes. Each one is a real, working demo you can open and try, with a build spec ready to hand to engineering. First up: a tool that turns a multi-site content chore into a single submission.</p>
+  </div>
+
+  <div class="idea">
+    <div>
+      <span class="tag">Prototype &middot; live and clickable</span>
+      <h3>Community Content Manager</h3>
+      <p>Lets a multi-site manager submit one local story or charity appeal to every lounge they run in a single pass, instead of copy-pasting it into a spreadsheet for each site. Central marketing reviews, approves and schedules it into each site's own branded email. One submission reaches 8 sites and 32,360 regulars from a single screen.</p>
+      <div class="idea-meta">
+        <span class="tag team">Site and reviewer views</span>
+        <span class="tag team">AI copy polish</span>
+        <span class="tag team">Multi-site email preview</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://danbrookman-blip.github.io/community-content-manager/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+          Open the demo
+        </a>
+        <a class="btn ghost" href="https://danbrookman-blip.github.io/community-content-manager/spec.html" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v5h5"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+          Read the build spec
+        </a>
+      </div>
+    </div>
+    <figure class="idea-frame">
+      <iframe src="https://danbrookman-blip.github.io/community-content-manager/" loading="lazy" title="Community Content Manager - live prototype"></iframe>
+      <figcaption>Live prototype &middot; click to explore the site manager and reviewer flows</figcaption>
+    </figure>
+  </div>
 </div></section>
 
 
