@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="58" height="28" viewBox="0 0 58 28">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_1266" data-name="Rectangle 1266" width="45.991" height="17.12" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_505" data-name="Group 505" transform="translate(-612.822 -395.286)">
+    <path id="Union_13" data-name="Union 13" d="M12.25,28a12.25,12.25,0,0,1,0-24.5h7.813a13.159,13.159,0,0,1,17.873,0H45.75a12.25,12.25,0,1,1,0,24.5Z" transform="translate(612.822 395.286)" fill="#ffa631"/>
+    <g id="Group_203" data-name="Group 203" transform="translate(618.882 400.933)">
+      <g id="Group_202" data-name="Group 202" clip-path="url(#clip-path)">
+        <path id="Path_70" data-name="Path 70" d="M162.068,1.307a5.658,5.658,0,1,1-5.658,5.658,5.665,5.665,0,0,1,5.658-5.658m0-1.306a6.964,6.964,0,1,0,6.964,6.964A6.964,6.964,0,0,0,162.068,0" transform="translate(-139.181 -0.001)" fill="#fff"/>
+        <path id="Path_71" data-name="Path 71" d="M193.772,36.638a2.031,2.031,0,1,1-2.031,2.031,2.033,2.033,0,0,1,2.031-2.031m0-1.306a3.337,3.337,0,1,0,3.337,3.337,3.337,3.337,0,0,0-3.337-3.337" transform="translate(-170.885 -31.705)" fill="#fff"/>
+        <path id="Path_72" data-name="Path 72" d="M13.928,38.056a6.964,6.964,0,1,1-6.964-6.964,6.964,6.964,0,0,1,6.964,6.964" transform="translate(0 -27.9)" fill="#fff"/>
+        <path id="Union_11" data-name="Union 11" d="M.243,6.528A.242.242,0,0,1,0,6.286V.243A.243.243,0,0,1,.243,0H1.567V0H2.6a2.44,2.44,0,0,1,0,4.88H1.567v1.4a.242.242,0,0,1-.242.242Zm2.36-3.2a.88.88,0,0,0,0-1.76H1.567v1.76Z" transform="translate(4.968 7.238)" fill="#ffa631" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+        <path id="Path_75" data-name="Path 75" d="M326.256,38.056a6.964,6.964,0,1,1-6.964-6.964,6.964,6.964,0,0,1,6.964,6.964" transform="translate(-280.265 -27.9)" fill="#fff"/>
+        <path id="Union_12" data-name="Union 12" d="M.243,6.528A.242.242,0,0,1,0,6.286V.243A.243.243,0,0,1,.243,0H1.567V0H2.6a2.44,2.44,0,0,1,0,4.88H1.567v1.4a.242.242,0,0,1-.242.242Zm2.36-3.2a.88.88,0,0,0,0-1.76H1.567v1.76Z" transform="translate(37.031 7.238)" fill="#ffa631" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+        <path id="Line_37" data-name="Line 37" d="M-1.064-5.054H-5.707a.653.653,0,0,1-.653-.653.653.653,0,0,1,.653-.653h4.643a.653.653,0,0,1,.653.653A.653.653,0,0,1-1.064-5.054Z" transform="translate(26.272 22.173)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>
