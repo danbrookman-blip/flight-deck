@@ -48,11 +48,6 @@ Pages (all at the repo root):
   (Community Content Manager, Airship Lookout, Single Customer View), each with its
   live demo or mockup and build-spec links.
 - `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
-- `ai-dlc.html` - the AI-DLC development-cycle playbook (in the Playbooks nav group): the AI-led
-  loop, the three phases, Intent/Unit/Bolt, Pods & Mobs, Human-in-the-Loop and
-  adaptive depth. Self-contained inline styling (like `partnerships.html` /
-  `professionals-community.html`) but carries the shared sticky nav and loads
-  `assets/site.js`. The source deck downloads from `assets/AI-DLC-development-cycle.pptx`.
 - `dashboards.html` - Dashboards hub: one card per team dashboard.
 - `dash-sales.html` - the Weekly Sales Dashboard, a live Supabase app embedded via an
   iframe from `dashboards/sales.html` (a self-contained app, kept verbatim).
@@ -83,9 +78,9 @@ Shared and supporting files:
 level is `Start - Power tools - Design Systems - Ideas - Playbooks - Dashboards`; most
 dropdowns link to `#anchors` within their page (e.g. `power-tools.html#styles`), but the
 Design Systems, Ideas and Playbooks dropdowns link to separate pages (`ds-airship.html`,
-`idea-*.html`, `ai-dlc.html`, `release-process.html` etc.). The Playbooks group label
+`idea-*.html`, `partnerships.html` etc.). The Playbooks group label
 points at `repackaging.html` and lists Cheers by Airship, Professionals Community,
-Partnerships, AI Development Cycle, Release Process and Airship Repackaged. The current page is
+Partnerships and Airship Repackaged. The current page is
 highlighted automatically by the active-nav code in `site.js`, which also lights up a
 dropdown parent when one of its child pages is open.
 Cross-page links are fully qualified (`page.html#anchor`); same-page links may stay
