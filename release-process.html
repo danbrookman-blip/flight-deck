@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Release Process &middot; Initiative &middot; flight&middot;deck</title>
+<meta name="description" content="On the radar. On the runway. Cleared for release. How Product, Marketing, CS and Sales move new features and fixes to customers at pace, with nothing landing as a surprise. Internal, staff only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --flight-purple: #A31DC6;
+    --flight-purple-2: #C840EC;
+    --deck-blue: #3B7BF7;
+    --deck-blue-2: #6FA0FF;
+    --coral: #FB5B4B;
+    --ink: #16101D;
+    --paper: #FAF8FC;
+    --card: #FFFFFF;
+    --muted: #5A5266;
+    --line: rgba(22, 16, 29, 0.10);
+    --line-soft: rgba(22, 16, 29, 0.06);
+    --structure: 'Archivo', system-ui, -apple-system, sans-serif;
+    --accent: 'Baloo 2', system-ui, sans-serif;
+    --grad-flight: linear-gradient(120deg,#A31DC6,#C840EC);
+    --grad-deck: linear-gradient(120deg,#6FA0FF,#3B7BF7);
+    --grad-bridge: linear-gradient(120deg,#A31DC6 0%,#C840EC 44%,#3B7BF7 100%);
+    --body: #4a4250;
+    --purple: #A31DC6;
+    --soft: #f8f5fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--structure);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ Flight Deck shared nav (inlined; behaviour lives in assets/site.js) ============ */
+  .wordmark { display:inline-flex; align-items:center; font-family:var(--structure); font-weight:800; letter-spacing:-.015em; line-height:1; font-size:21px; text-decoration:none }
+  .wordmark .fl { background:var(--grad-flight); -webkit-background-clip:text; background-clip:text; color:transparent }
+  .wordmark .dk { font-family:var(--accent); font-weight:700; text-transform:lowercase; letter-spacing:0; background:var(--grad-deck); -webkit-background-clip:text; background-clip:text; color:transparent }
+  .wordmark .dot { flex:none; width:.19em; height:.19em; border-radius:.04em; background:var(--coral); margin:0 .2em; transform:translateY(.34em) }
+  .wordmark .sub { font-family:var(--structure); font-weight:700; font-size:12px; letter-spacing:.01em; color:var(--muted); margin-left:12px; padding-left:13px; border-left:1px solid var(--line); text-transform:none }
+  .bar { position:sticky; top:0; z-index:20; background:rgba(255,255,255,.9); backdrop-filter:saturate(140%) blur(6px); -webkit-backdrop-filter:saturate(140%) blur(6px) }
+  .bar::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--grad-bridge) }
+  .bar .wrap { display:flex; align-items:center; justify-content:space-between; height:62px }
+  .nav { display:flex; gap:22px; font-family:var(--structure); font-weight:600; font-size:13.5px }
+  .nav a { color:var(--body); text-decoration:none }
+  .nav a:hover { color:var(--purple) }
+  .navgroup { position:relative; display:flex; align-items:center }
+  .navtop { display:inline-flex; align-items:center; gap:6px; padding:21px 0; cursor:pointer; white-space:nowrap; position:relative }
+  .navtop.active::before { content:""; position:absolute; left:0; right:13px; bottom:8px; height:2px; border-radius:2px; background:var(--grad-bridge) }
+  .navgroup>.navtop::after { content:""; width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-2px) rotate(45deg); opacity:.5; transition:transform .15s ease, opacity .15s ease }
+  .navgroup:hover>.navtop::after, .navgroup:focus-within>.navtop::after { transform:translateY(1px) rotate(45deg); opacity:.85 }
+  .navmenu { position:absolute; top:100%; right:0; transform:translateY(-6px); min-width:184px; display:flex; flex-direction:column; gap:2px; padding:8px; background:#fff; border:1px solid var(--line); border-radius:9px; box-shadow:0 16px 38px -16px rgba(52,0,77,.28); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:30 }
+  .navgroup:hover>.navmenu, .navgroup:focus-within>.navmenu { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) }
+  .navmenu a { padding:7px 11px; border-radius:6px; white-space:nowrap; color:var(--body); text-decoration:none }
+  .navmenu a:hover { background:var(--soft); color:var(--purple) }
+  .navtoggle { display:none; appearance:none; -webkit-appearance:none; border:0; background:transparent; width:42px; height:42px; border-radius:9px; align-items:center; justify-content:center; cursor:pointer; padding:0; color:var(--ink) }
+  .navtoggle:hover { background:var(--soft) }
+  .navtoggle .bars { position:relative; width:20px; height:14px; display:block }
+  .navtoggle .bars span { position:absolute; left:0; right:0; height:2px; border-radius:2px; background:currentColor; transition:transform .2s ease, opacity .15s ease, top .2s ease }
+  .navtoggle .bars span:nth-child(1) { top:0 }
+  .navtoggle .bars span:nth-child(2) { top:6px }
+  .navtoggle .bars span:nth-child(3) { top:12px }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(1) { top:6px; transform:rotate(45deg) }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(2) { opacity:0 }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(3) { top:6px; transform:rotate(-45deg) }
+  .navmobile { position:fixed; left:0; right:0; top:62px; bottom:0; background:rgba(255,255,255,.98); backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); z-index:25; overflow-y:auto; padding:6px 0 48px; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-8px); transition:opacity .2s ease, transform .2s ease }
+  .navmobile.open { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) }
+  .navmobile .mgroup { border-bottom:1px solid var(--line) }
+  .navmobile .mtop { display:block; font-family:var(--structure); font-weight:800; font-size:18px; color:var(--ink); letter-spacing:-.01em; padding:17px 28px 7px; text-decoration:none }
+  .navmobile .mtop.active { color:var(--purple) }
+  .navmobile .msub { display:flex; flex-direction:column; padding:0 28px 14px }
+  .navmobile .msub a { padding:9px 0; color:var(--body); font-family:var(--structure); font-weight:600; font-size:15px; text-decoration:none }
+  .navmobile .msub a:hover { color:var(--purple) }
+  body.navlock { overflow:hidden }
+  @media(max-width:1000px) { .wordmark .sub { display:none } }
+  @media(max-width:900px) { .nav { display:none } .navtoggle { display:inline-flex } }
+  @media(min-width:901px) { .navmobile { display:none } }
+
+  /* ---------- Hero (cockpit panel) ---------- */
+  .hero { background: var(--ink); color: #F3EEF7; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(111,160,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111,160,255,0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, #000 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, #000 30%, transparent 78%);
+  }
+  .hero .wrap { position: relative; padding-top: 64px; padding-bottom: 56px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--deck-blue-2);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .eyebrow .bar-line { width: 26px; height: 2px; background: var(--coral); display: inline-block; }
+  .hero h1 { font-size: clamp(34px, 5.2vw, 58px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.02; margin-bottom: 14px; }
+  .tagline { font-family: var(--accent); font-weight: 700; font-size: clamp(17px, 2.3vw, 23px); color: var(--deck-blue-2); line-height: 1.15; margin-bottom: 20px; }
+  .hero .lede { font-size: clamp(16px, 1.9vw, 20px); color: #C9BFD6; max-width: 34ch; }
+  .hero .lede b { color: #fff; font-weight: 700; }
+  .verline { margin-top: 22px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+  /* deck link */
+  .hero-cta { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .deck-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--structure); font-weight: 700; font-size: 14px;
+    color: #fff; text-decoration: none;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(243,238,247,0.22);
+    border-radius: 100px; padding: 11px 18px;
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .deck-btn:hover { background: rgba(255,255,255,0.09); border-color: var(--coral); transform: translateY(-1px); }
+  .deck-btn svg { width: 17px; height: 17px; flex: none; }
+  .deck-btn .fmt { color: var(--deck-blue-2); font-weight: 600; font-size: 12px; letter-spacing: 0.04em; }
+
+  /* ---------- Radar ---------- */
+  .radar { width: 100%; max-width: 420px; margin: 0 auto; display: block; }
+  .radar .rring { fill: none; stroke: rgba(243,238,247,0.14); stroke-width: 1.5; }
+  .radar .rcross { stroke: rgba(243,238,247,0.10); stroke-width: 1.5; }
+  .radar .rlabel { font-family: var(--structure); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--muted); }
+  .radar .sweep { transform-origin: 210px 210px; animation: radarspin 6s linear infinite; }
+  @keyframes radarspin { to { transform: rotate(360deg); } }
+  .radar .blip { fill: var(--coral); animation: blip 6s ease-in-out infinite; }
+  .radar .blip.b2 { fill: var(--deck-blue-2); animation-delay: 1.2s; }
+  .radar .blip.b3 { fill: var(--flight-purple-2); animation-delay: 2.6s; }
+  .radar .blip.b4 { fill: #fff; opacity: .5; animation-delay: 4s; }
+  @keyframes blip { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+  .radar .rcentre { fill: #fff; }
+
+  /* ---------- Stats ---------- */
+  .stats { background: var(--ink); border-top: 1px solid rgba(243,238,247,0.10); }
+  .stats .wrap { display: grid; grid-template-columns: repeat(4, 1fr); padding-top: 0; padding-bottom: 56px; gap: 0; }
+  .stat { padding: 4px 24px; border-left: 1px solid rgba(243,238,247,0.12); }
+  .stat:first-child { padding-left: 0; border-left: 0; }
+  .stat .big { font-family: var(--accent); font-weight: 800; font-size: clamp(38px, 5vw, 52px); line-height: 1; color: #fff; letter-spacing: -0.01em; }
+  .stat .big .u { font-size: 0.5em; color: var(--deck-blue-2); margin-left: 2px; }
+  .stat .cap { font-size: 12.5px; color: #C9BFD6; margin-top: 10px; font-weight: 500; }
+
+  /* ---------- Sections ---------- */
+  section.band { padding: 78px 0; border-bottom: 1px solid var(--line-soft); }
+  .sec-head { max-width: 62ch; margin-bottom: 40px; }
+  .kicker { font-family: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; color: var(--flight-purple); margin-bottom: 12px; display: flex; align-items: center; gap: 9px; }
+  .kicker .sq { width: 9px; height: 9px; background: var(--coral); border-radius: 2px; }
+  h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; margin-bottom: 14px; }
+  .sec-head p { font-size: 17px; color: var(--muted); }
+
+  .callout { margin-top: 26px; background: var(--soft); border: 1px solid var(--line); border-left: 3px solid var(--coral); border-radius: 0 12px 12px 0; padding: 16px 20px; font-size: 16px; color: var(--ink); font-weight: 600; max-width: 80ch; }
+  .callout b { color: var(--flight-purple); }
+  .illus { margin-top: 16px; font-size: 12.5px; color: var(--muted); font-style: italic; }
+
+  /* ---------- Problem cards (case for change) / comms cards ---------- */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card3 { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px 28px; }
+  .card3 .c-top { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .card3 .marker { width: 16px; height: 16px; border-radius: 5px; flex: none; background: var(--coral); }
+  .card3:nth-child(2) .marker { background: var(--flight-purple); }
+  .card3:nth-child(3) .marker { background: var(--deck-blue); }
+  .card3 h3 { font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
+  .card3 p { font-size: 14.5px; color: #3c3447; }
+
+  /* ---------- 5-step flow ---------- */
+  .steps5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+  .rstep { padding: 26px 20px 26px 0; position: relative; }
+  .rstep + .rstep { padding-left: 24px; }
+  .rstep + .rstep::before { content: ""; position: absolute; left: 0; top: 30px; bottom: 24px; width: 1px; background: var(--line); }
+  .rstep .n { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-family: var(--accent); font-weight: 800; font-size: 15px; color: #fff; background: var(--grad-bridge); margin-bottom: 14px; }
+  .rstep .st { font-weight: 800; font-size: 17px; letter-spacing: -0.01em; margin-bottom: 7px; }
+  .rstep p { font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- Forward look (radar columns) ---------- */
+  .radar-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .rcol { border: 1px solid var(--line); border-radius: 18px; padding: 22px 20px 24px; background: var(--card); }
+  .rcol .h { display: flex; align-items: center; gap: 9px; font-family: var(--accent); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 16px; }
+  .rcol .h .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .rcol:nth-child(1) .h .dot { background: var(--coral); }
+  .rcol:nth-child(2) .h .dot { background: var(--flight-purple); }
+  .rcol:nth-child(3) .h .dot { background: var(--deck-blue); }
+  .rcol:nth-child(4) .h .dot { background: var(--muted); }
+  .rcol ul { list-style: none; }
+  .rcol li { font-size: 13.5px; color: #3c3447; padding-left: 16px; position: relative; margin-bottom: 10px; line-height: 1.4; }
+  .rcol li::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 2px; background: var(--line); }
+
+  /* ---------- Ownership lanes ---------- */
+  .lanes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .lane { border: 1px solid var(--line); border-radius: 18px; padding: 24px 22px; background: var(--card); border-top: 3px solid var(--flight-purple); }
+  .lane:nth-child(2) { border-top-color: var(--deck-blue); }
+  .lane:nth-child(3) { border-top-color: var(--coral); }
+  .lane:nth-child(4) { border-top-color: var(--flight-purple-2); }
+  .lane h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .lane p { font-size: 14px; color: #3c3447; margin-bottom: 14px; }
+  .lane .ch { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line-soft); padding-top: 12px; }
+  .lane .ch b { display: block; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin-bottom: 5px; }
+
+  /* ---------- Tables ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; -webkit-overflow-scrolling: touch; }
+  .dtable { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 680px; }
+  .dtable th, .dtable td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  .dtable thead th { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--soft); }
+  .dtable tbody tr:last-child td { border-bottom: 0; }
+  .dtable td:first-child, .dtable th:first-child { font-weight: 700; color: var(--ink); }
+  .dtable td { color: #3c3447; }
+  .dtable .yes { color: var(--flight-purple); font-weight: 700; }
+  .dtable .dash { color: var(--line); }
+  .btag { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em; padding: 2px 9px; border-radius: 100px; }
+  .btag.air { background: rgba(163,29,198,0.12); color: var(--flight-purple); }
+  .btag.tog { background: rgba(59,123,247,0.12); color: var(--deck-blue); text-transform: lowercase; }
+
+  /* ---------- Sign-off gates (dark band) ---------- */
+  .guard { background: var(--ink); color: #EDE7F2; }
+  .guard .kicker { color: var(--deck-blue-2); }
+  .guard h2 { color: #fff; }
+  .guard .sec-head p { color: #C9BFD6; }
+  .gates { display: flex; flex-direction: column; gap: 12px; }
+  .grow { display: flex; align-items: center; gap: 16px; border: 1px solid rgba(243,238,247,0.14); border-radius: 14px; padding: 16px 18px; background: rgba(255,255,255,0.02); }
+  .grow .ic { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-family: var(--accent); font-weight: 800; font-size: 16px; color: #fff; background: var(--grad-bridge); }
+  .grow .t { font-size: 15px; font-weight: 600; }
+  .grow .t span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deck-blue-2); margin-bottom: 3px; }
+  .tiebreak { border-left: 3px solid var(--coral); padding: 4px 0 4px 20px; margin-top: 24px; max-width: 70ch; }
+  .tiebreak h4 { font-family: var(--accent); font-weight: 700; font-size: 17px; color: #fff; margin-bottom: 8px; }
+  .tiebreak p { font-size: 15px; color: #C9BFD6; }
+
+  /* ---------- From Monday ---------- */
+  .monday { display: grid; gap: 14px; max-width: 72ch; }
+  .mrow { display: flex; gap: 16px; align-items: flex-start; }
+  .mrow .mk { flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--grad-bridge); color: #fff; font-family: var(--accent); font-weight: 800; font-size: 14px; }
+  .mrow p { font-size: 16px; color: #3c3447; font-weight: 600; padding-top: 3px; }
+  .mrow p b { color: var(--ink); font-weight: 800; }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--ink); color: #C9BFD6; padding: 48px 0 56px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; }
+  footer .wordmark { font-size: 22px; color: #fff; margin-bottom: 14px; }
+  footer .wordmark .fl, footer .wordmark .dk { -webkit-background-clip: text; background-clip: text; color: transparent; }
+  footer .note { font-size: 13.5px; max-width: 48ch; }
+  footer .right { font-size: 12px; text-align: right; }
+  footer .right .il { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coral); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero .lede { max-width: none; }
+    .stats .wrap { grid-template-columns: 1fr 1fr; gap: 28px 0; }
+    .stat:nth-child(3) { border-left: 0; padding-left: 0; }
+    .cards3, .radar-cols, .lanes { grid-template-columns: 1fr 1fr; }
+    .steps5 { grid-template-columns: 1fr; }
+    .steps5 .rstep, .steps5 .rstep + .rstep { padding: 22px 0; border-top: 1px solid var(--line-soft); }
+    .steps5 .rstep:first-child { border-top: 0; padding-top: 0; }
+    .steps5 .rstep + .rstep::before { display: none; }
+  }
+  @media (max-width: 520px) {
+    .cards3, .radar-cols, .lanes { grid-template-columns: 1fr; }
+  }
+
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--deck-blue-2); outline-offset: 3px; border-radius: 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radar .sweep, .radar .blip { animation: none; }
+    .radar .blip { opacity: .85; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Flight Deck shared nav -->
+<div class="bar"><div class="wrap">
+  <a href="index.html" class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span><span class="sub">Claude adoption</span></a>
+  <nav class="nav">
+    <div class="navgroup">
+      <a href="start.html" class="navtop" aria-haspopup="true">Start</a>
+      <div class="navmenu" role="menu">
+        <a href="start.html#you" role="menuitem">Set up you</a>
+        <a href="start.html#brains" role="menuitem">The Brains</a>
+        <a href="start.html#memory" role="menuitem">Memory</a>
+        <a href="start.html#adopt" role="menuitem">Make it stick</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="power-tools.html" class="navtop" aria-haspopup="true">Power tools</a>
+      <div class="navmenu" role="menu">
+        <a href="power-tools.html#craft" role="menuitem">Context</a>
+        <a href="power-tools.html#styles" role="menuitem">Styles</a>
+        <a href="power-tools.html#skills" role="menuitem">Skills</a>
+        <a href="power-tools.html#artifacts" role="menuitem">Artifacts</a>
+        <a href="power-tools.html#cowork" role="menuitem">Cowork</a>
+        <a href="power-tools.html#ladder" role="menuitem">Which tool, when</a>
+        <a href="power-tools.html#connectors" role="menuitem">Connectors</a>
+        <a href="power-tools.html#scorecard" role="menuitem">Scorecard</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="design-systems.html" class="navtop" aria-haspopup="true">Design Systems</a>
+      <div class="navmenu" role="menu">
+        <a href="ds-airship.html" role="menuitem">Airship</a>
+        <a href="ds-toggle.html" role="menuitem">Toggle</a>
+        <a href="ds-flightdeck.html" role="menuitem">Flight Deck</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="ideas.html" class="navtop" aria-haspopup="true">Ideas</a>
+      <div class="navmenu" role="menu">
+        <a href="idea-ccm.html" role="menuitem">Community Content Manager</a>
+        <a href="idea-lookout.html" role="menuitem">Airship Lookout</a>
+        <a href="idea-scv.html" role="menuitem">Single Customer View</a>
+        <a href="idea-contact-profile.html" role="menuitem">Contact Profile</a>
+        <a href="idea-actions.html" role="menuitem">Airship Actions</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="repackaging.html" class="navtop" aria-haspopup="true">Initiatives</a>
+      <div class="navmenu" role="menu">
+        <a href="repackaging.html#repackaging" role="menuitem">Cheers by Airship</a>
+        <a href="professionals-community.html" role="menuitem">Professionals Community</a>
+        <a href="partnerships.html" role="menuitem">Partnerships</a>
+        <a href="ai-dlc.html" role="menuitem">AI Development Cycle</a>
+        <a href="release-process.html" role="menuitem">Release Process</a>
+        <a href="https://danbrookman-blip.github.io/repackaging/" target="_blank" rel="noopener" role="menuitem">Airship Repackaged</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="dashboards.html" class="navtop" aria-haspopup="true">Dashboards</a>
+      <div class="navmenu" role="menu">
+        <a href="dash-sales.html" role="menuitem">Sales</a>
+        <a href="dash-customer-success.html" role="menuitem">Customer Success</a>
+        <a href="dash-product.html" role="menuitem">Product</a>
+        <a href="dash-marketing.html" role="menuitem">Marketing</a>
+        <a href="dash-engineering.html" role="menuitem">Engineering</a>
+      </div>
+    </div>
+  </nav>
+</div></div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow"><span class="bar-line"></span>Initiative &middot; The Release Process</div>
+          <h1>The Release Process</h1>
+          <p class="tagline">On the radar. On the runway. Cleared for release.</p>
+          <p class="lede">How Product, Marketing, CS and Sales move new features and fixes to customers <b>at pace, with nothing landing as a surprise.</b></p>
+          <div class="hero-cta">
+            <a class="deck-btn" href="https://airshipcouk023.sharepoint.com/:p:/s/claude/IQCVeLFGG5G8QLIhNFmMqAamAdpi13k-vtimbCD6KqjbcBY?e=x6ceSE" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+              Open the source deck <span class="fmt">SharePoint</span>
+            </a>
+          </div>
+          <div class="verline">Version 1.1 &middot; June 2026 &middot; Owner: Dan Brookman</div>
+        </div>
+
+        <div>
+          <svg class="radar" viewBox="0 0 420 420" role="img" aria-label="A release radar: concentric horizons from this week at the centre out to this quarter, with a rotating sweep and release blips.">
+            <defs>
+              <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#6FA0FF" stop-opacity="0"></stop>
+                <stop offset="100%" stop-color="#6FA0FF" stop-opacity="0.42"></stop>
+              </linearGradient>
+            </defs>
+            <circle class="rring" cx="210" cy="210" r="60"></circle>
+            <circle class="rring" cx="210" cy="210" r="120"></circle>
+            <circle class="rring" cx="210" cy="210" r="180"></circle>
+            <line class="rcross" x1="210" y1="26" x2="210" y2="394"></line>
+            <line class="rcross" x1="26" y1="210" x2="394" y2="210"></line>
+            <g class="sweep"><path d="M210 210 L210 30 A180 180 0 0 1 366.8 132 Z" fill="url(#sweep)"></path></g>
+            <circle class="blip b1" cx="252" cy="176" r="6"></circle>
+            <circle class="blip b2" cx="150" cy="266" r="6"></circle>
+            <circle class="blip b3" cx="300" cy="252" r="6"></circle>
+            <circle class="blip b4" cx="124" cy="128" r="6"></circle>
+            <circle class="rcentre" cx="210" cy="210" r="5"></circle>
+            <text class="rlabel" x="214" y="158" text-anchor="start">This week</text>
+            <text class="rlabel" x="214" y="98" text-anchor="start">This month</text>
+            <text class="rlabel" x="214" y="44" text-anchor="start">This quarter</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="wrap">
+      <div class="stat"><div class="big">1</div><div class="cap">radar - every item visible the moment dev starts</div></div>
+      <div class="stat"><div class="big">4</div><div class="cap">tiers - the runway scales to the size of the release</div></div>
+      <div class="stat"><div class="big">4</div><div class="cap">teams - Product, Marketing, CS and Sales, one plan</div></div>
+      <div class="stat"><div class="big">5</div><div class="cap">gates - nothing moves to a customer without sign-off</div></div>
+    </div>
+  </div>
+
+  <!-- The case for change -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>The case for change</div>
+        <h2>Why this matters</h2>
+        <p>We are moving to price increases and sales-led comms. Features have to land with impact, and the team has to feel confident selling them. Today they do not always have what they need.</p>
+      </div>
+
+      <div class="cards3">
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>Prep happens too late</h3></div>
+          <p>Marketing and CS build assets while the feature is still moving, so we arrive under-prepared and the work gets reworked.</p>
+        </div>
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>No shared view</h3></div>
+          <p>Teams cannot see what is coming until it is nearly here, so there is no time to plan a proper launch around it.</p>
+        </div>
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>Every release looks the same</h3></div>
+          <p>A hotfix and a flagship feature get treated alike. Big things do not get the runway they need; small things get slowed down.</p>
+        </div>
+      </div>
+
+      <div class="callout">The fix: <b>tier the work, and put everything on one radar.</b> Big features get a full runway. Small fixes still move at pace. Every team sees what is coming the moment development starts.</div>
+    </div>
+  </section>
+
+  <!-- The process at a glance -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>The process at a glance</div>
+        <h2>How it works, end to end</h2>
+        <p>Five moves take a release from the first line of code to a customer's inbox. Each one has a clear owner and a gate.</p>
+      </div>
+
+      <div class="steps5">
+        <div class="rstep">
+          <div class="n">1</div>
+          <div class="st">Dev starts</div>
+          <p>It goes on the radar with a release horizon.</p>
+        </div>
+        <div class="rstep">
+          <div class="n">2</div>
+          <div class="st">Tier is set</div>
+          <p>Runway length and prep scope are agreed.</p>
+        </div>
+        <div class="rstep">
+          <div class="n">3</div>
+          <div class="st">Locked</div>
+          <p>QA passed, UX frozen, Product signs off.</p>
+        </div>
+        <div class="rstep">
+          <div class="n">4</div>
+          <div class="st">Runway</div>
+          <p>Marketing, CS and Sales prep in parallel.</p>
+        </div>
+        <div class="rstep">
+          <div class="n">5</div>
+          <div class="st">Cleared</div>
+          <p>Released, customer comms out, logged.</p>
+        </div>
+      </div>
+
+      <div class="callout">Nothing reaches a customer without being on the radar first. <b>Pace comes from tiering the runway, not from skipping prep.</b></div>
+    </div>
+  </section>
+
+  <!-- The forward look -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>The forward look</div>
+        <h2>The Release Radar - what is coming, and when</h2>
+        <p>One view, four horizons. The closer to the centre, the closer to a customer.</p>
+      </div>
+
+      <div class="radar-cols">
+        <div class="rcol">
+          <div class="h"><span class="dot"></span>This week</div>
+          <ul>
+            <li>Locked and on the runway</li>
+            <li>Final review and comms scheduled</li>
+            <li>Fixes shipping with changelog notes</li>
+          </ul>
+        </div>
+        <div class="rcol">
+          <div class="h"><span class="dot"></span>Within 2 weeks</div>
+          <ul>
+            <li>Major feature in full runway</li>
+            <li>Sales deck and assets in build</li>
+            <li>Customer email and video in draft</li>
+          </ul>
+        </div>
+        <div class="rcol">
+          <div class="h"><span class="dot"></span>This month</div>
+          <ul>
+            <li>Feature in QA, tier set</li>
+            <li>Enhancement scoped</li>
+            <li>Beta wins being gathered</li>
+          </ul>
+        </div>
+        <div class="rcol">
+          <div class="h"><span class="dot"></span>This quarter</div>
+          <ul>
+            <li>New capability in dev</li>
+            <li>On the roadmap, horizon to tighten</li>
+            <li>Discovery and spec underway</li>
+          </ul>
+        </div>
+      </div>
+      <p class="illus">Illustrative. An item's horizon is set when development starts and tightens as it moves. Every team plans back from the radar.</p>
+    </div>
+  </section>
+
+  <!-- Tiering the runway -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>Tiering the runway</div>
+        <h2>Four tiers, four runways</h2>
+        <p>The tier sets how much runway a release gets and how much prep it needs. It is agreed the moment the tier is set, not negotiated at the end.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="dtable">
+          <thead>
+            <tr><th>Tier</th><th>What it is</th><th>Runway</th><th>Prep required</th><th>Who calls it</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Major feature</td>
+              <td>New capability, with a pricing or sales angle</td>
+              <td>2 weeks+</td>
+              <td>Full: handover deck + video, sales deck, website, social, customer email + video, Intercom article, CS enablement, sales talking points</td>
+              <td>Product proposes, Dan confirms</td>
+            </tr>
+            <tr>
+              <td>Minor feature / enhancement</td>
+              <td>A visible improvement to something we already do</td>
+              <td>~1 week</td>
+              <td>Light: one-pager, Intercom article, lighter customer email, CS note, sales heads-up</td>
+              <td>Product</td>
+            </tr>
+            <tr>
+              <td>Improvement / maintenance</td>
+              <td>Under-the-hood work or a small UX change</td>
+              <td>Days</td>
+              <td>Changelog and Intercom entry, CS made aware</td>
+              <td>Product</td>
+            </tr>
+            <tr>
+              <td>Bug fix / hotfix</td>
+              <td>A fix, large or small</td>
+              <td>Days</td>
+              <td>Logged to the register; customer note where it touched them</td>
+              <td>Engineering</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><b>Everything is logged, down to the smallest fix.</b> That is how customers hear the thing they raised is on its way.</div>
+    </div>
+  </section>
+
+  <!-- Who owns what -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>Who owns what</div>
+        <h2>Four lanes, one release</h2>
+        <p>Each lane owns its part of the release and the channels that carry it. Nothing falls between teams.</p>
+      </div>
+
+      <div class="lanes">
+        <div class="lane">
+          <h3>Product</h3>
+          <p>Owns the feature, the handover deck and video. Sets the tier and horizon, signs off Locked.</p>
+          <div class="ch"><b>Channels</b>Changelog, register, handover</div>
+        </div>
+        <div class="lane">
+          <h3>Marketing</h3>
+          <p>Owns the external story and assets.</p>
+          <div class="ch"><b>Channels</b>Customer email, website, social, campaign assets</div>
+        </div>
+        <div class="lane">
+          <h3>Customer Success</h3>
+          <p>Owns customer readiness and the confidence to support.</p>
+          <div class="ch"><b>Channels</b>Intercom articles, help docs, in-app, training</div>
+        </div>
+        <div class="lane">
+          <h3>Sales</h3>
+          <p>Owns the commercial story and the pricing context.</p>
+          <div class="ch"><b>Channels</b>Sales deck, talking points, customer wins</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The runway checklist -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>The runway checklist</div>
+        <h2>What gets prepped, by tier</h2>
+        <p>Setting the tier sets the checklist. Each team knows exactly what they owe for each kind of release.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="dtable">
+          <thead>
+            <tr><th>Deliverable</th><th>Major</th><th>Minor</th><th>Maint.</th><th>Hotfix</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Handover deck + video</td><td class="yes">Yes</td><td>One-pager</td><td class="dash">-</td><td class="dash">-</td></tr>
+            <tr><td>Sales deck update</td><td class="yes">Yes</td><td>Heads-up</td><td class="dash">-</td><td class="dash">-</td></tr>
+            <tr><td>Website update</td><td class="yes">Yes</td><td>If relevant</td><td class="dash">-</td><td class="dash">-</td></tr>
+            <tr><td>Social assets</td><td class="yes">Yes</td><td>Optional</td><td class="dash">-</td><td class="dash">-</td></tr>
+            <tr><td>Customer email (+ video link)</td><td class="yes">Full</td><td>Light</td><td class="dash">-</td><td>If impacted</td></tr>
+            <tr><td>Intercom article</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td>If customer-facing</td></tr>
+            <tr><td>CS enablement / sign-off</td><td class="yes">Yes</td><td>Note</td><td>Aware</td><td class="dash">-</td></tr>
+            <tr><td>Sales talking points</td><td class="yes">Yes</td><td>Heads-up</td><td class="dash">-</td><td class="dash">-</td></tr>
+            <tr><td>Logged to the register</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telling the customer -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>Telling the customer</div>
+        <h2>The customer comms standard</h2>
+        <p>Every major and minor release tells the customer what is coming, how it works, and links a video.</p>
+      </div>
+
+      <div class="cards3">
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>The email</h3></div>
+          <p>"Hi [name]", what is coming, when, and what is in it for them. One link to the video. Calm Airship product styling.</p>
+        </div>
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>The video</h3></div>
+          <p>A short walkthrough: what it does and how to use it. Linked from the email and the article.</p>
+        </div>
+        <div class="card3">
+          <div class="c-top"><span class="marker"></span><h3>The Intercom article</h3></div>
+          <p>Step by step, how it works. Live before release. The evergreen reference CS points to.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sign-off gates -->
+  <section class="band guard">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>Sign-off</div>
+        <h2>Nothing moves without sign-off</h2>
+        <p>Five gates carry a release from dev start to cleared. Each one has an owner who says go.</p>
+      </div>
+
+      <div class="gates">
+        <div class="grow"><span class="ic">1</span><span class="t"><span>Gate 1 &middot; On the radar</span>Product logs the item and a horizon at dev start.</span></div>
+        <div class="grow"><span class="ic">2</span><span class="t"><span>Gate 2 &middot; Tier set</span>Product proposes the tier; Dan confirms Major.</span></div>
+        <div class="grow"><span class="ic">3</span><span class="t"><span>Gate 3 &middot; Locked</span>QA passed, UX frozen, Product signs off. The runway starts.</span></div>
+        <div class="grow"><span class="ic">4</span><span class="t"><span>Gate 4 &middot; Ready</span>CS, Marketing and Sales each confirm readiness.</span></div>
+        <div class="grow"><span class="ic">5</span><span class="t"><span>Gate 5 &middot; Cleared</span>Go given. Release, comms out, logged to the register.</span></div>
+      </div>
+
+      <div class="tiebreak">
+        <h4>The tie-breaker</h4>
+        <p>If a lane says "not ready" at Gate 4, the call to ship or hold sits with Dan. The process surfaces the decision; it does not stall on it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- One source of truth -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>One source of truth</div>
+        <h2>The register - everything, down to the last fix</h2>
+        <p>One board for both brands: every release and fix, its stage, and what we have told customers.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="dtable">
+          <thead>
+            <tr><th>Item</th><th>Brand</th><th>Tier</th><th>Stage</th><th>Horizon</th><th>Customer comms</th><th>Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Email editor enhancement</td><td><span class="btag air">Airship</span></td><td>Minor</td><td>In runway</td><td>This week</td><td>Email + article</td><td>Product</td></tr>
+            <tr><td>New reporting capability</td><td><span class="btag air">Airship</span></td><td>Major</td><td>In QA</td><td>This month</td><td>Full launch</td><td>Product</td></tr>
+            <tr><td>Gift card flow improvement</td><td><span class="btag tog">toggle</span></td><td>Minor</td><td>Locked</td><td>2 weeks</td><td>Email + article</td><td>Product</td></tr>
+            <tr><td>Android render fix</td><td><span class="btag air">Airship</span></td><td>Hotfix</td><td>Shipped</td><td>Done</td><td>Note if impacted</td><td>Engineering</td></tr>
+            <tr><td>Integration data sync fix</td><td><span class="btag tog">toggle</span></td><td>Maint.</td><td>In dev</td><td>This quarter</td><td>Changelog</td><td>Engineering</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="illus">Illustrative rows. The live register is one board for both brands - every release and fix, its stage and what we have told customers. Designed to populate from the changelog feed.</p>
+    </div>
+  </section>
+
+  <!-- Where this goes next -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>Where this goes next</div>
+        <h2>The radar, as a live tool</h2>
+        <p>The register and radar become a single live board, fed automatically from dev status and the changelog, visible to every team, triggering the right prep checklist for each tier.</p>
+      </div>
+
+      <div class="lanes">
+        <div class="lane">
+          <h3>Auto-populated</h3>
+          <p>Items appear from dev status and the changelog, with no manual entry.</p>
+        </div>
+        <div class="lane">
+          <h3>Tier-driven checklists</h3>
+          <p>Setting the tier triggers the exact prep each team owns.</p>
+        </div>
+        <div class="lane">
+          <h3>Team views</h3>
+          <p>Product, Marketing, CS and Sales each see their lane and dates.</p>
+        </div>
+        <div class="lane">
+          <h3>Customer-facing feed</h3>
+          <p>A clean "what is coming" view we can share with customers.</p>
+        </div>
+      </div>
+      <p class="illus">Vision, not committed scope. The process works on day one without it - the platform just makes it effortless.</p>
+    </div>
+  </section>
+
+  <!-- From Monday -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker"><span class="sq"></span>From Monday</div>
+        <h2>What changes now</h2>
+        <p>The process works from day one. No tooling required to start.</p>
+      </div>
+
+      <div class="monday">
+        <div class="mrow"><span class="mk">1</span><p>Every item in development goes <b>on the radar</b> this week, with a horizon.</p></div>
+        <div class="mrow"><span class="mk">2</span><p>Product sets a <b>tier</b> for each. Major needs Dan sign-off; nothing else waits.</p></div>
+        <div class="mrow"><span class="mk">3</span><p><b>No major release without a full runway.</b> No release of any size unlogged.</p></div>
+        <div class="mrow"><span class="mk">4</span><p>One radar, four lanes - and <b>nothing lands as a surprise.</b></p></div>
+      </div>
+
+      <div class="callout">One radar. Four lanes. <b>Nothing lands as a surprise.</b></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap">
+      <div>
+        <div class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span></div>
+        <p class="note">The Release Process - how Product, Marketing, CS and Sales move new features and fixes to customers at pace, with nothing landing as a surprise.</p>
+      </div>
+      <div class="right">
+        <div class="il">Internal &middot; Airship &amp; Toggle</div>
+        <p style="margin-top:8px;">Version 1.1 &middot; June 2026 &middot; Owner: Dan Brookman</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
