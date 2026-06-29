@@ -48,7 +48,7 @@ Pages (all at the repo root):
   (Community Content Manager, Airship Lookout, Single Customer View), each with its
   live demo or mockup and build-spec links.
 - `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
-- `ai-dlc.html` - the AI-DLC development-cycle playbook (an Initiative): the AI-led
+- `ai-dlc.html` - the AI-DLC development-cycle playbook (in the Playbooks nav group): the AI-led
   loop, the three phases, Intent/Unit/Bolt, Pods & Mobs, Human-in-the-Loop and
   adaptive depth. Self-contained inline styling (like `partnerships.html` /
   `professionals-community.html`) but carries the shared sticky nav and loads
@@ -80,9 +80,12 @@ Shared and supporting files:
 - `.github/workflows/main_flightdeck.yml` - the Azure deploy workflow (see above).
 
 **Navigation: a shared sticky bar duplicated in each page's `<head>` markup.** Top
-level is `Start - Design Systems - Power tools - Ideas - Repackaging`; most dropdowns
-link to `#anchors` within their page (e.g. `power-tools.html#styles`), but the Design
-Systems dropdown links to separate pages (`ds-airship.html` etc.). The current page is
+level is `Start - Power tools - Design Systems - Ideas - Playbooks - Dashboards`; most
+dropdowns link to `#anchors` within their page (e.g. `power-tools.html#styles`), but the
+Design Systems, Ideas and Playbooks dropdowns link to separate pages (`ds-airship.html`,
+`idea-*.html`, `ai-dlc.html`, `release-process.html` etc.). The Playbooks group label
+points at `repackaging.html` and lists Cheers by Airship, Professionals Community,
+Partnerships, AI Development Cycle, Release Process and Airship Repackaged. The current page is
 highlighted automatically by the active-nav code in `site.js`, which also lights up a
 dropdown parent when one of its child pages is open.
 Cross-page links are fully qualified (`page.html#anchor`); same-page links may stay
