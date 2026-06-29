@@ -48,6 +48,11 @@ Pages (all at the repo root):
   (Community Content Manager, Airship Lookout, Single Customer View), each with its
   live demo or mockup and build-spec links.
 - `repackaging.html` - Cheers by Airship (`#repackaging`), plus the `cheers/` site.
+- `ai-dlc.html` - the AI-DLC development-cycle playbook (an Initiative): the AI-led
+  loop, the three phases, Intent/Unit/Bolt, Pods & Mobs, Human-in-the-Loop and
+  adaptive depth. Self-contained inline styling (like `partnerships.html` /
+  `professionals-community.html`) but carries the shared sticky nav and loads
+  `assets/site.js`. The source deck downloads from `assets/AI-DLC-development-cycle.pptx`.
 - `dashboards.html` - Dashboards hub: one card per team dashboard.
 - `dash-sales.html` - the Weekly Sales Dashboard, a live Supabase app embedded via an
   iframe from `dashboards/sales.html` (a self-contained app, kept verbatim).
