@@ -7,7 +7,7 @@
 <meta name="description" content="Recruitment strategy and growth plan for the Airship &amp; Toggle Professionals Community. Internal, staff only.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Baloo+2:wght@700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Baloo+2:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#FAF6EE;
@@ -229,28 +229,133 @@
 
   /* ---------- print ---------- */
   @media print{
-    .site,.toc,footer .foot-perf{display:none}
+    .bar,.navmobile,.toc,footer .foot-perf{display:none}
     body{background:#fff;color:#000}
     body::before{display:none}
     .layout{grid-template-columns:1fr;gap:0}
     .sec{break-inside:avoid}
     footer{background:#fff;color:#000;margin-top:24px;border-top:2px dotted #000}
   }
+
+  /* ============ Flight Deck shared nav (inlined; behaviour lives in assets/site.js) ============ */
+  /* Nav-only tokens. These names are NOT used by the docket above, so they cannot alter its design. */
+  :root{
+    --grad-flight:linear-gradient(120deg,#A31DC6,#C840EC);
+    --grad-deck:linear-gradient(120deg,#6FA0FF,#3B7BF7);
+    --grad-bridge:linear-gradient(120deg,#A31DC6 0%,#C840EC 44%,#3B7BF7 100%);
+    --coral:#FB5B4B; --body:#4a4250; --muted:#6a6072;
+    --purple:#A31DC6; --line:#ece7f1; --soft:#f8f5fc;
+  }
+  .wordmark{display:inline-flex; align-items:center; font-family:"Archivo",sans-serif; font-weight:800; letter-spacing:-.015em; line-height:1; font-size:21px}
+  .wordmark .fl{background:var(--grad-flight); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .wordmark .dk{font-family:"Baloo 2",sans-serif; font-weight:700; text-transform:lowercase; letter-spacing:0; background:var(--grad-deck); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .wordmark .dot{flex:none; width:.19em; height:.19em; border-radius:.04em; background:var(--coral); margin:0 .2em; transform:translateY(.34em)}
+  .wordmark .sub{font-family:"Archivo"; font-weight:700; font-size:12px; letter-spacing:.01em; color:var(--muted); margin-left:12px; padding-left:13px; border-left:1px solid var(--line); text-transform:none}
+  .bar{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.9); backdrop-filter:saturate(140%) blur(6px); -webkit-backdrop-filter:saturate(140%) blur(6px)}
+  .bar::after{content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--grad-bridge)}
+  .bar .wrap{display:flex; align-items:center; justify-content:space-between; height:62px}
+  .nav{display:flex; gap:22px; font-family:"Archivo"; font-weight:600; font-size:13.5px}
+  .nav a{color:var(--body); text-decoration:none}
+  .nav a:hover{color:var(--purple)}
+  .navgroup{position:relative; display:flex; align-items:center}
+  .navtop{display:inline-flex; align-items:center; gap:6px; padding:21px 0; cursor:pointer; white-space:nowrap; position:relative}
+  .navtop.active::before{content:""; position:absolute; left:0; right:13px; bottom:8px; height:2px; border-radius:2px; background:var(--grad-bridge)}
+  .navgroup>.navtop::after{content:""; width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-2px) rotate(45deg); opacity:.5; transition:transform .15s ease, opacity .15s ease}
+  .navgroup:hover>.navtop::after, .navgroup:focus-within>.navtop::after{transform:translateY(1px) rotate(45deg); opacity:.85}
+  .navmenu{position:absolute; top:100%; right:0; transform:translateY(-6px); min-width:184px; display:flex; flex-direction:column; gap:2px; padding:8px; background:#fff; border:1px solid var(--line); border-radius:9px; box-shadow:0 16px 38px -16px rgba(52,0,77,.28); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:30}
+  .navgroup:hover>.navmenu, .navgroup:focus-within>.navmenu{opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0)}
+  .navmenu a{padding:7px 11px; border-radius:6px; white-space:nowrap; color:var(--body); text-decoration:none}
+  .navmenu a:hover{background:var(--soft); color:var(--purple)}
+  .navtoggle{display:none; appearance:none; -webkit-appearance:none; border:0; background:transparent; width:42px; height:42px; border-radius:9px; align-items:center; justify-content:center; cursor:pointer; padding:0; color:var(--ink)}
+  .navtoggle:hover{background:var(--soft)}
+  .navtoggle .bars{position:relative; width:20px; height:14px; display:block}
+  .navtoggle .bars span{position:absolute; left:0; right:0; height:2px; border-radius:2px; background:currentColor; transition:transform .2s ease, opacity .15s ease, top .2s ease}
+  .navtoggle .bars span:nth-child(1){top:0}
+  .navtoggle .bars span:nth-child(2){top:6px}
+  .navtoggle .bars span:nth-child(3){top:12px}
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(1){top:6px; transform:rotate(45deg)}
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(2){opacity:0}
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(3){top:6px; transform:rotate(-45deg)}
+  .navmobile{position:fixed; left:0; right:0; top:62px; bottom:0; background:rgba(255,255,255,.98); backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); z-index:25; overflow-y:auto; padding:6px 0 48px; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-8px); transition:opacity .2s ease, transform .2s ease}
+  .navmobile.open{opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0)}
+  .navmobile .mgroup{border-bottom:1px solid var(--line)}
+  .navmobile .mtop{display:block; font-family:"Archivo"; font-weight:800; font-size:18px; color:var(--ink); letter-spacing:-.01em; padding:17px 28px 7px; text-decoration:none}
+  .navmobile .mtop.active{color:var(--purple)}
+  .navmobile .msub{display:flex; flex-direction:column; padding:0 28px 14px}
+  .navmobile .msub a{padding:9px 0; color:var(--body); font-family:"Archivo"; font-weight:600; font-size:15px; text-decoration:none}
+  .navmobile .msub a:hover{color:var(--purple)}
+  body.navlock{overflow:hidden}
+  @media(max-width:1000px){.wordmark .sub{display:none}}
+  @media(max-width:900px){.nav{display:none} .navtoggle{display:inline-flex}}
+  @media(min-width:901px){.navmobile{display:none}}
 </style>
 </head>
 <body>
 
-<header class="site">
-  <div class="site-in">
-    <a class="brand" href="index.html" aria-label="Flight Deck home">
-      <span class="fd-logo"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span></span>
-    </a>
-    <div class="site-meta">
-      <span class="mono site-doc" style="font-size:11px;letter-spacing:.06em">Strategy · Jun 2025</span>
-      <span class="staff">Staff only</span>
+<div class="bar"><div class="wrap">
+  <a href="index.html" class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span><span class="sub">Claude adoption</span></a>
+  <nav class="nav">
+    <div class="navgroup">
+      <a href="start.html" class="navtop" aria-haspopup="true">Start</a>
+      <div class="navmenu" role="menu">
+        <a href="start.html#you" role="menuitem">Set up you</a>
+        <a href="start.html#brains" role="menuitem">The Brains</a>
+        <a href="start.html#memory" role="menuitem">Memory</a>
+        <a href="start.html#adopt" role="menuitem">Make it stick</a>
+      </div>
     </div>
-  </div>
-</header>
+    <div class="navgroup">
+      <a href="design-systems.html" class="navtop" aria-haspopup="true">Design Systems</a>
+      <div class="navmenu" role="menu">
+        <a href="ds-airship.html" role="menuitem">Airship</a>
+        <a href="ds-toggle.html" role="menuitem">Toggle</a>
+        <a href="ds-flightdeck.html" role="menuitem">Flight Deck</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="power-tools.html" class="navtop" aria-haspopup="true">Power tools</a>
+      <div class="navmenu" role="menu">
+        <a href="power-tools.html#craft" role="menuitem">Context</a>
+        <a href="power-tools.html#styles" role="menuitem">Styles</a>
+        <a href="power-tools.html#skills" role="menuitem">Skills</a>
+        <a href="power-tools.html#artifacts" role="menuitem">Artifacts</a>
+        <a href="power-tools.html#cowork" role="menuitem">Cowork</a>
+        <a href="power-tools.html#ladder" role="menuitem">Which tool, when</a>
+        <a href="power-tools.html#connectors" role="menuitem">Connectors</a>
+        <a href="power-tools.html#scorecard" role="menuitem">Scorecard</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="ideas.html" class="navtop" aria-haspopup="true">Ideas</a>
+      <div class="navmenu" role="menu">
+        <a href="idea-ccm.html" role="menuitem">Community Content Manager</a>
+        <a href="idea-lookout.html" role="menuitem">Airship Lookout</a>
+        <a href="idea-scv.html" role="menuitem">Single Customer View</a>
+        <a href="idea-contact-profile.html" role="menuitem">Contact Profile</a>
+        <a href="idea-actions.html" role="menuitem">Airship Actions</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="repackaging.html" class="navtop" aria-haspopup="true">Repackaging</a>
+      <div class="navmenu" role="menu">
+        <a href="repackaging.html#repackaging" role="menuitem">Cheers by Airship</a>
+        <a href="professionals-community.html" role="menuitem">Professionals Community</a>
+        <a href="partnerships.html" role="menuitem">Partnerships</a>
+        <a href="https://danbrookman-blip.github.io/repackaging/" target="_blank" rel="noopener" role="menuitem">Airship Repackaged</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="dashboards.html" class="navtop" aria-haspopup="true">Dashboards</a>
+      <div class="navmenu" role="menu">
+        <a href="dash-sales.html" role="menuitem">Sales</a>
+        <a href="dash-customer-success.html" role="menuitem">Customer Success</a>
+        <a href="dash-product.html" role="menuitem">Product</a>
+        <a href="dash-marketing.html" role="menuitem">Marketing</a>
+        <a href="dash-engineering.html" role="menuitem">Engineering</a>
+      </div>
+    </div>
+  </nav>
+</div></div>
 
 <main class="wrap" id="top">
 
@@ -610,6 +715,7 @@
   </div>
 </footer>
 
+<script src="assets/site.js"></script>
 <script>
   // Opt in to motion only when allowed.
   (function(){
