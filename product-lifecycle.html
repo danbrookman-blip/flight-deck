@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Product Lifecycle &middot; Playbook &middot; flight&middot;deck</title>
+<meta name="description" content="From idea to in-market. How an idea travels from a customer request, interview, competitor or the team, through an AI-led build, to a release that nobody meets by surprise. One pipeline across Airship and Toggle. Internal, staff only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Baloo+2:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16101D;
+    --ink-2:#211829;
+    --ink-3:#2c2236;
+    --paper:#FBFAFC;
+    --paper-2:#FFFFFF;
+    --paper-3:#F3F1F7;
+    --line:rgba(22,16,29,.10);
+    --line-2:rgba(22,16,29,.07);
+    --line-dark:rgba(255,255,255,.13);
+    --muted:rgba(22,16,29,.60);
+    --muted-dark:rgba(255,255,255,.64);
+    --flight-1:#A31DC6;
+    --flight-2:#C840EC;
+    --deck-1:#3B7BF7;
+    --deck-2:#6FA0FF;
+    --coral:#FB5B4B;
+    --green:#1FA971;
+    --airship:#8d00d4;
+    --toggle:#1770FD;
+    --flight-grad:linear-gradient(135deg,#A31DC6,#C840EC);
+    --deck-grad:linear-gradient(135deg,#3B7BF7,#6FA0FF);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --sans:'Archivo',system-ui,sans-serif;
+    --round:'Baloo 2',var(--sans);
+    /* Flight Deck shared-nav tokens (additive: names the shared bar relies on) */
+    --structure:'Archivo',system-ui,-apple-system,sans-serif;
+    --accent:'Baloo 2',system-ui,sans-serif;
+    --grad-flight:linear-gradient(120deg,#A31DC6,#C840EC);
+    --grad-deck:linear-gradient(120deg,#6FA0FF,#3B7BF7);
+    --grad-bridge:linear-gradient(120deg,#A31DC6 0%,#C840EC 44%,#3B7BF7 100%);
+    --body:#4a4250;
+    --purple:#A31DC6;
+    --soft:#f8f5fc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ============ Flight Deck shared nav (inlined; behaviour lives in assets/site.js) ============ */
+  .wordmark { display:inline-flex; align-items:center; font-family:var(--structure); font-weight:800; letter-spacing:-.015em; line-height:1; font-size:21px; text-decoration:none }
+  .wordmark .fl { background:var(--grad-flight); -webkit-background-clip:text; background-clip:text; color:transparent }
+  .wordmark .dk { font-family:var(--accent); font-weight:700; text-transform:lowercase; letter-spacing:0; background:var(--grad-deck); -webkit-background-clip:text; background-clip:text; color:transparent }
+  .wordmark .dot { flex:none; width:.19em; height:.19em; border-radius:.04em; background:var(--coral); margin:0 .2em; transform:translateY(.34em) }
+  .wordmark .sub { font-family:var(--structure); font-weight:700; font-size:12px; letter-spacing:.01em; color:var(--muted); margin-left:12px; padding-left:13px; border-left:1px solid var(--line); text-transform:none }
+  .bar { position:sticky; top:0; z-index:50; background:rgba(255,255,255,.9); backdrop-filter:saturate(140%) blur(6px); -webkit-backdrop-filter:saturate(140%) blur(6px) }
+  .bar::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--grad-bridge) }
+  .bar .wrap { display:flex; align-items:center; justify-content:space-between; height:62px; padding:0 28px }
+  .nav { display:flex; gap:22px; font-family:var(--structure); font-weight:600; font-size:13.5px }
+  .nav a { color:var(--body); text-decoration:none }
+  .nav a:hover { color:var(--purple) }
+  .navgroup { position:relative; display:flex; align-items:center }
+  .navtop { display:inline-flex; align-items:center; gap:6px; padding:21px 0; cursor:pointer; white-space:nowrap; position:relative }
+  .navtop.active::before { content:""; position:absolute; left:0; right:13px; bottom:8px; height:2px; border-radius:2px; background:var(--grad-bridge) }
+  .navgroup>.navtop::after { content:""; width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-2px) rotate(45deg); opacity:.5; transition:transform .15s ease, opacity .15s ease }
+  .navgroup:hover>.navtop::after, .navgroup:focus-within>.navtop::after { transform:translateY(1px) rotate(45deg); opacity:.85 }
+  .navmenu { position:absolute; top:100%; right:0; transform:translateY(-6px); min-width:184px; display:flex; flex-direction:column; gap:2px; padding:8px; background:#fff; border:1px solid var(--line); border-radius:9px; box-shadow:0 16px 38px -16px rgba(52,0,77,.28); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:60 }
+  .navgroup:hover>.navmenu, .navgroup:focus-within>.navmenu { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) }
+  .navmenu a { padding:7px 11px; border-radius:6px; white-space:nowrap; color:var(--body); text-decoration:none }
+  .navmenu a:hover { background:var(--soft); color:var(--purple) }
+  .navtoggle { display:none; appearance:none; -webkit-appearance:none; border:0; background:transparent; width:42px; height:42px; border-radius:9px; align-items:center; justify-content:center; cursor:pointer; padding:0; color:var(--ink) }
+  .navtoggle:hover { background:var(--soft) }
+  .navtoggle .bars { position:relative; width:20px; height:14px; display:block }
+  .navtoggle .bars span { position:absolute; left:0; right:0; height:2px; border-radius:2px; background:currentColor; transition:transform .2s ease, opacity .15s ease, top .2s ease }
+  .navtoggle .bars span:nth-child(1) { top:0 }
+  .navtoggle .bars span:nth-child(2) { top:6px }
+  .navtoggle .bars span:nth-child(3) { top:12px }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(1) { top:6px; transform:rotate(45deg) }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(2) { opacity:0 }
+  .navtoggle[aria-expanded="true"] .bars span:nth-child(3) { top:6px; transform:rotate(-45deg) }
+  .navmobile { position:fixed; left:0; right:0; top:62px; bottom:0; background:rgba(255,255,255,.98); backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); z-index:55; overflow-y:auto; padding:6px 0 48px; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-8px); transition:opacity .2s ease, transform .2s ease }
+  .navmobile.open { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) }
+  .navmobile .mgroup { border-bottom:1px solid var(--line) }
+  .navmobile .mtop { display:block; font-family:var(--structure); font-weight:800; font-size:18px; color:var(--ink); letter-spacing:-.01em; padding:17px 28px 7px; text-decoration:none }
+  .navmobile .mtop.active { color:var(--purple) }
+  .navmobile .msub { display:flex; flex-direction:column; padding:0 28px 14px }
+  .navmobile .msub a { padding:9px 0; color:var(--body); font-family:var(--structure); font-weight:600; font-size:15px; text-decoration:none }
+  .navmobile .msub a:hover { color:var(--purple) }
+  body.navlock { overflow:hidden }
+  @media(max-width:1000px) { .wordmark .sub { display:none } }
+  @media(max-width:900px) { .nav { display:none } .navtoggle { display:inline-flex } }
+  @media(min-width:901px) { .navmobile { display:none } }
+
+  /* ---------- layout ---------- */
+  section{padding:84px 28px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .scrolltarget{scroll-margin-top:78px}
+  .dark{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+  .dark .muted{color:var(--muted-dark)}
+  .muted{color:var(--muted)}
+
+  /* ---------- eyebrow + headings ---------- */
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .dark .eyebrow{color:var(--muted-dark)}
+  .eyebrow .sq{width:7px;height:7px;background:var(--coral);border-radius:2px;display:inline-block;flex:none}
+  h1{font-family:var(--sans);font-weight:800;font-size:clamp(38px,6vw,68px);line-height:1.02;letter-spacing:-.025em}
+  h2{font-family:var(--sans);font-weight:800;font-size:clamp(28px,3.6vw,42px);line-height:1.06;letter-spacing:-.02em}
+  h3{font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.01em}
+  .lead{font-size:clamp(16px,1.5vw,19px);max-width:760px;color:var(--muted);margin-top:18px}
+  .dark .lead{color:var(--muted-dark)}
+  .sec-head{max-width:820px;margin-bottom:44px}
+  .sec-head .lead{margin-top:16px}
+
+  /* ---------- radar motif ---------- */
+  .radar{position:absolute;pointer-events:none;opacity:.9}
+  .radar circle{fill:none;stroke:rgba(255,255,255,.10)}
+  .radar .dot{fill:var(--coral)}
+  .radar .sweep{stroke:rgba(200,64,236,.35)}
+
+  /* ---------- hero ---------- */
+  .hero{padding-top:96px;padding-bottom:96px}
+  .hero .wrap{position:relative;z-index:2}
+  .hero h1{margin-top:8px;max-width:14ch}
+  .hero .lead{color:var(--muted-dark);max-width:720px}
+  .hero .tag{font-family:var(--round);font-weight:600;font-size:clamp(17px,1.8vw,22px);margin-top:30px;color:#fff}
+  .hero .tag b{background:var(--flight-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:16px;overflow:hidden;margin-top:48px}
+  .hero-stats .stat{background:var(--ink);padding:24px 22px}
+  .stat .n{font-family:var(--round);font-weight:700;font-size:40px;line-height:1;background:var(--deck-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .l{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted-dark);margin-top:10px;line-height:1.4}
+  @media(max-width:760px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- spine ---------- */
+  .spine{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+  .spine .node{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:18px 14px;position:relative}
+  .spine .num{font-family:var(--round);font-weight:700;font-size:13px;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;background:var(--deck-grad);margin-bottom:12px}
+  .spine .node.build .num{background:var(--flight-grad)}
+  .spine .node.gatenode .num{background:var(--coral);border-radius:7px}
+  .spine .t{font-weight:700;font-size:14px;letter-spacing:-.01em}
+  .spine .d{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .spine-band{display:grid;grid-template-columns:3fr 5fr;gap:12px;margin-bottom:14px}
+  .band{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 14px;border-radius:10px;color:#fff}
+  .band.b1{background:var(--flight-grad)}
+  .band.b2{background:var(--deck-grad)}
+  @media(max-width:980px){.spine{grid-template-columns:repeat(4,1fr)}.spine-band{display:none}}
+  @media(max-width:560px){.spine{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- generic cards ---------- */
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;padding:26px}
+  .dark .card{background:var(--ink-2);border-color:var(--line-dark)}
+  .card .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .dark .card .kicker{color:var(--muted-dark)}
+  .card h3{margin-bottom:8px}
+  .card p{font-size:14.5px;color:var(--muted);line-height:1.5}
+  .dark .card p{color:var(--muted-dark)}
+  .badge-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--round);font-weight:700;font-size:17px;margin-bottom:16px}
+  .bi-deck{background:var(--deck-grad)}
+  .bi-flight{background:var(--flight-grad)}
+  .bi-coral{background:var(--coral);border-radius:11px}
+
+  /* ---------- loop strip ---------- */
+  .loop{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .loop .step{border:1px solid var(--line-dark);border-radius:16px;padding:22px;background:var(--ink-2)}
+  .loop .step .h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .loop .b{font-family:var(--round);font-weight:700;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+  .loop .ai .b{background:var(--deck-grad)}
+  .loop .gate .b{background:var(--coral);border-radius:9px}
+  .loop .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-dark)}
+  .loop .step strong{font-size:15.5px;display:block}
+  .loop .step p{font-size:13px;color:var(--muted-dark);margin-top:6px}
+  @media(max-width:820px){.loop{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.loop{grid-template-columns:1fr}}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;border:1px solid var(--line-dark);border-radius:999px;padding:9px 15px;color:var(--muted-dark)}
+  .chip b{color:#fff;font-family:var(--sans);font-weight:600}
+  .linkline{margin-top:26px;font-size:14px;color:var(--muted-dark)}
+  .linkline a{color:var(--deck-2);text-decoration:none;border-bottom:1px solid rgba(111,160,255,.4)}
+
+  /* ---------- tables ---------- */
+  .tablewrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--paper-2)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:16px 18px;background:var(--paper-3);border-bottom:1px solid var(--line)}
+  tbody td{padding:15px 18px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody td:first-child{font-weight:600}
+  .tier-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:6px;white-space:nowrap;display:inline-block}
+  .tt-major{background:rgba(163,29,198,.12);color:var(--flight-1)}
+  .tt-minor{background:rgba(59,123,247,.12);color:var(--deck-1)}
+  .tt-maint{background:rgba(22,16,29,.07);color:var(--muted)}
+  .tt-hotfix{background:rgba(251,91,75,.13);color:#d8442c}
+  .yes{color:var(--green);font-weight:700}
+  .none{color:rgba(22,16,29,.30)}
+  .part{color:var(--muted);font-size:13px}
+  .brandchip{font-family:var(--round);font-weight:700;font-size:12px;padding:3px 11px;border-radius:7px;color:#fff;display:inline-block}
+  .bc-air{background:var(--airship)}
+  .bc-tog{background:var(--toggle);text-transform:lowercase}
+  .scrollx{overflow-x:auto}
+  @media(max-width:760px){table{min-width:680px}}
+
+  .callout{margin-top:24px;border-left:3px solid var(--coral);background:var(--paper-3);border-radius:0 12px 12px 0;padding:18px 22px;font-size:15px}
+  .dark .callout{background:var(--ink-2)}
+  .callout b{font-weight:700}
+
+  /* ---------- audience radar ---------- */
+  .aud-top{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:44px}
+  @media(max-width:860px){.aud-top{grid-template-columns:1fr}}
+  .ringwrap{position:relative;width:100%;max-width:440px;margin:0 auto;aspect-ratio:1}
+  .ringwrap svg{width:100%;height:auto;display:block}
+  .ringwrap text{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;fill:var(--ink)}
+  .aud-list{display:grid;gap:14px}
+  .aud-card{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+  .aud-num{font-family:var(--round);font-weight:700;font-size:15px;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+  .aud-card h3{margin-bottom:5px;font-size:17px}
+  .aud-card p{font-size:14px;color:var(--muted);line-height:1.5}
+  .aud-when{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:9px}
+
+  /* ---------- gates ---------- */
+  .gates{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .gate-c{background:var(--ink-2);border:1px solid var(--line-dark);border-radius:16px;padding:22px}
+  .gate-c .gn{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:14px}
+  .gate-c .gb{width:34px;height:34px;border-radius:9px;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--round);font-weight:700;margin-bottom:14px}
+  .gate-c strong{font-size:15.5px;display:block;margin-bottom:6px}
+  .gate-c p{font-size:13px;color:var(--muted-dark);line-height:1.5}
+  @media(max-width:980px){.gates{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:600px){.gates{grid-template-columns:1fr}}
+
+  /* ---------- comms standard ---------- */
+  .comms{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:760px){.comms{grid-template-columns:1fr}}
+
+  /* ---------- from monday ---------- */
+  .monday-list{display:grid;gap:16px;margin-top:8px;max-width:840px}
+  .monday-list li{list-style:none;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;font-size:17px}
+  .monday-list .tick{width:30px;height:30px;border-radius:9px;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none;font-weight:700}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--ink);color:#fff;padding:46px 28px;border-top:1px solid var(--line-dark)}
+  footer .inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  footer .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-dark);text-align:right;line-height:1.7}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR (Flight Deck shared nav) -->
+<div class="bar"><div class="wrap">
+  <a href="index.html" class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span><span class="sub">Claude adoption</span></a>
+  <nav class="nav">
+    <div class="navgroup">
+      <a href="start.html" class="navtop" aria-haspopup="true">Start</a>
+      <div class="navmenu" role="menu">
+        <a href="start.html#you" role="menuitem">Set up you</a>
+        <a href="start.html#brains" role="menuitem">The Brains</a>
+        <a href="start.html#memory" role="menuitem">Memory</a>
+        <a href="start.html#adopt" role="menuitem">Make it stick</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="power-tools.html" class="navtop" aria-haspopup="true">Power tools</a>
+      <div class="navmenu" role="menu">
+        <a href="power-tools.html#craft" role="menuitem">Context</a>
+        <a href="power-tools.html#styles" role="menuitem">Styles</a>
+        <a href="power-tools.html#skills" role="menuitem">Skills</a>
+        <a href="power-tools.html#artifacts" role="menuitem">Artifacts</a>
+        <a href="power-tools.html#cowork" role="menuitem">Cowork</a>
+        <a href="power-tools.html#ladder" role="menuitem">Which tool, when</a>
+        <a href="power-tools.html#connectors" role="menuitem">Connectors</a>
+        <a href="power-tools.html#scorecard" role="menuitem">Scorecard</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="design-systems.html" class="navtop" aria-haspopup="true">Design Systems</a>
+      <div class="navmenu" role="menu">
+        <a href="ds-airship.html" role="menuitem">Airship</a>
+        <a href="ds-toggle.html" role="menuitem">Toggle</a>
+        <a href="ds-flightdeck.html" role="menuitem">Flight Deck</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="ideas.html" class="navtop" aria-haspopup="true">Ideas</a>
+      <div class="navmenu" role="menu">
+        <a href="idea-ccm.html" role="menuitem">Community Content Manager</a>
+        <a href="idea-lookout.html" role="menuitem">Airship Lookout</a>
+        <a href="idea-scv.html" role="menuitem">Single Customer View</a>
+        <a href="idea-contact-profile.html" role="menuitem">Contact Profile</a>
+        <a href="idea-actions.html" role="menuitem">Airship Actions</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="repackaging.html" class="navtop" aria-haspopup="true">Playbooks</a>
+      <div class="navmenu" role="menu">
+        <a href="repackaging.html#repackaging" role="menuitem">Cheers by Airship</a>
+        <a href="professionals-community.html" role="menuitem">Professionals Community</a>
+        <a href="partnerships.html" role="menuitem">Partnerships</a>
+        <a href="product-lifecycle.html" role="menuitem">Complete Product Lifecycle</a>
+        <a href="https://danbrookman-blip.github.io/repackaging/" target="_blank" rel="noopener" role="menuitem">Airship Repackaged</a>
+      </div>
+    </div>
+    <div class="navgroup">
+      <a href="dashboards.html" class="navtop" aria-haspopup="true">Dashboards</a>
+      <div class="navmenu" role="menu">
+        <a href="dash-sales.html" role="menuitem">Sales</a>
+        <a href="dash-customer-success.html" role="menuitem">Customer Success</a>
+        <a href="dash-product.html" role="menuitem">Product</a>
+        <a href="dash-marketing.html" role="menuitem">Marketing</a>
+        <a href="dash-engineering.html" role="menuitem">Engineering</a>
+      </div>
+    </div>
+  </nav>
+</div></div>
+
+<!-- HERO -->
+<section class="dark hero">
+  <svg class="radar" style="top:-60px;right:-60px;width:520px;height:520px" viewBox="0 0 520 520">
+    <circle cx="260" cy="260" r="60"/><circle cx="260" cy="260" r="120"/>
+    <circle cx="260" cy="260" r="180"/><circle cx="260" cy="260" r="240"/>
+    <line class="sweep" x1="260" y1="260" x2="430" y2="120" stroke-width="1.5"/>
+    <rect class="dot" x="424" y="114" width="12" height="12" rx="3"/>
+  </svg>
+  <div class="wrap">
+    <span class="eyebrow"><span class="sq"></span>The product lifecycle&nbsp;&nbsp;/&nbsp;&nbsp;Internal&nbsp;&nbsp;/&nbsp;&nbsp;Airship &amp; Toggle</span>
+    <h1>From idea to in&#8209;market</h1>
+    <p class="lead">How an idea travels from wherever it starts, a customer request, an interview, a competitor, an idea from the team, through an AI&#8209;led build, to a release that nobody meets by surprise. One pipeline across Airship and Toggle, so existing customers, professionals, beta partners, prospects and the wider industry all know what is coming.</p>
+    <p class="tag">On the radar. On the runway. <b>Cleared for release.</b></p>
+    <div class="hero-stats">
+      <div class="stat"><div class="n">4</div><div class="l">Tiers / runway scales to the release</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">Lanes / who gets it ready</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">Audiences / who hears, and when</div></div>
+      <div class="stat"><div class="n">2</div><div class="l">Brands / one pipeline</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE AT A GLANCE -->
+<section id="pipeline" class="scrolltarget">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>The whole journey</span>
+      <h2>One pipeline, end to end</h2>
+      <p class="lead">Every change runs the same path, whatever its size and wherever it came from. The build decides what we ship. The runway decides how the world hears about it. Nothing reaches a customer without going on the radar first, and the biggest bets, the Projects, go on it earliest.</p>
+    </div>
+    <div class="spine-band">
+      <div class="band b1">Build &nbsp;/&nbsp; the AI builds, we decide</div>
+      <div class="band b2">Broadcast &nbsp;/&nbsp; nothing lands as a surprise</div>
+    </div>
+    <div class="spine">
+      <div class="node build"><div class="num">1</div><div class="t">Raised</div><div class="d">Requests in Canny, Projects from the roadmap</div></div>
+      <div class="node build"><div class="num">2</div><div class="t">Sized</div><div class="d">Pulled into Linear, sized by complexity</div></div>
+      <div class="node build"><div class="num">3</div><div class="t">Built</div><div class="d">AI&#8209;DLC loop, human&#8209;gated throughout</div></div>
+      <div class="node"><div class="num">4</div><div class="t">On the radar</div><div class="d">Visible the moment dev starts</div></div>
+      <div class="node"><div class="num">5</div><div class="t">Tiered</div><div class="d">Runway and prep scope set</div></div>
+      <div class="node"><div class="num">6</div><div class="t">Runway</div><div class="d">Product, Marketing, CS and Sales prep in parallel</div></div>
+      <div class="node gatenode"><div class="num">7</div><div class="t">Cleared</div><div class="d">Released, customer comms out</div></div>
+      <div class="node"><div class="num">8</div><div class="t">Logged</div><div class="d">Register updated, both brands</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE WORK COMES FROM -->
+<section id="intake" class="scrolltarget" style="background:var(--paper-3)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Stage one&nbsp;&nbsp;/&nbsp;&nbsp;Where the work comes from</span>
+      <h2>Two streams, one backlog</h2>
+      <p class="lead">Work enters from several doors, not just one. It all lands in a single backlog in Linear and is sized by complexity, so nothing gets built on a hunch and nothing gets lost in someone's notes.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="kicker">Stream one&nbsp;&nbsp;/&nbsp;&nbsp;day to day</div>
+        <h3>Requests, raised in Canny</h3>
+        <p>The team and our customers raise day-to-day requests in Canny, and most of these are direct customer asks. Customer Success shepherds them so those requests get real attention rather than being buried, then they are pulled into Linear, sized, and picked up by a Pod to move quickly.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">Stream two&nbsp;&nbsp;/&nbsp;&nbsp;the bigger bets</div>
+        <h3>Projects, chosen deliberately</h3>
+        <p>Larger initiatives of one to three months. These are the bets we choose to make, not the steady flow of requests, and they come from across the business rather than a single inbox. They join the product roadmap and, once committed, are protected.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:40px 0 16px">Where Projects come from</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--ink);background:#fff">Customer intimacy interviews</span>
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--ink);background:#fff">Customer demand</span>
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--ink);background:#fff">The imagination of people across the business</span>
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--ink);background:#fff">Competitor analysis</span>
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--ink);background:#fff">The product roadmap, as it evolves</span>
+    </div>
+
+    <div class="grid g2" style="margin-top:36px">
+      <div class="card">
+        <div class="kicker">Who decides</div>
+        <h3>Stakeholders agree what we build</h3>
+        <p>The bigger bets are not one person's call. Product, Customer Success, Commercial and Marketing come together to weigh what matters and agree what goes on the roadmap. The CEO holds the final say on what we commit to, but the decision is made in the room, with the people closest to customers in it.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">Once it is in flight</div>
+        <h3>The roadmap is protected</h3>
+        <p>When a Project is committed and under way, we do not interrupt it. New ideas are logged and queued for the next decision, they do not barge into work already in flight. That is how Projects actually land, rather than stalling halfway.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMING DOWN THE TRACK -->
+<section id="track" class="scrolltarget">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Forward view&nbsp;&nbsp;/&nbsp;&nbsp;Projects</span>
+      <h2>The big ones, seen coming</h2>
+      <p class="lead">A Project is the largest build size, one to three months of work. Because it takes time, the teams that have to get it ready need to see it coming down the track early, so planning can start in good time rather than in a scramble at the end.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <div class="kicker">At roadmap commitment</div>
+        <h3>It goes on the forward view</h3>
+        <p>The moment a Project is committed to the roadmap, it is visible to every team, with a rough horizon. This is awareness, not a starting gun: teams can see it coming and plan capacity around it. No prep work begins yet.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">At build start</div>
+        <h3>Parallel planning begins</h3>
+        <p>When the Project enters build, the lanes start their prep alongside engineering rather than waiting for the handover at the end. The longer the build, the more this early, parallel start earns its place.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">On the runway</div>
+        <h3>Tier confirmed on impact</h3>
+        <p>As it nears release, the release tier is confirmed, set by how much the customer needs to hear, not by how long it took to build. From here it runs the same runway as everything else.</p>
+      </div>
+    </div>
+    <div class="callout"><b>A big build is not always a big rollout.</b> Ask Toggle was a major build that reached customers quickly and lightly, without the full two-week runway. So we decide the tier on customer impact, when the Project enters build and again as it nears the runway, and never assume it from how long the build took. Build size sets the heads-up; impact sets the tier.</div>
+  </div>
+</section>
+
+<!-- BUILD -->
+<section id="build" class="scrolltarget dark">
+  <svg class="radar" style="bottom:-120px;left:-100px;width:420px;height:420px" viewBox="0 0 420 420">
+    <circle cx="210" cy="210" r="60"/><circle cx="210" cy="210" r="120"/><circle cx="210" cy="210" r="180"/>
+    <rect class="dot" x="300" y="96" width="11" height="11" rx="3"/>
+  </svg>
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Stage two&nbsp;&nbsp;/&nbsp;&nbsp;Build</span>
+      <h2>The AI builds. We decide.</h2>
+      <p class="lead">Every change runs an AI&#8209;led loop with a person steering at the points that matter. The AI plans and executes; humans decide and validate. This is the AI&#8209;DLC development cycle in brief.</p>
+    </div>
+
+    <div class="loop">
+      <div class="step ai"><div class="h"><span class="b">1</span><span class="role">AI</span></div><strong>Proposes</strong><p>Its first&#8209;cut plan for how it will tackle the work.</p></div>
+      <div class="step gate"><div class="h"><span class="b">2</span><span class="role">You / gate</span></div><strong>Review</strong><p>Check scope and depth, change what is wrong, then let it run.</p></div>
+      <div class="step ai"><div class="h"><span class="b">3</span><span class="role">AI</span></div><strong>Executes</strong><p>Runs the approved plan, pausing at each meaningful step.</p></div>
+      <div class="step gate"><div class="h"><span class="b">4</span><span class="role">You / gate</span></div><strong>Validate</strong><p>Confirm the result against the goal it set out to meet.</p></div>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><div class="kicker">Three phases</div><h3>Inception, Construction, Operations</h3><p>Work out what to build and why, build it in Bolts, then run it and keep it healthy. Each phase hands richer context to the next.</p></div>
+      <div class="card"><div class="kicker">How work is sized</div><h3>Intent &rsaquo; Unit &rsaquo; Bolt</h3><p>One vocabulary from the goal down to the slice you build today. A Bolt runs in hours to days; a Project, the largest, is many Units across one to three months.</p></div>
+      <div class="card"><div class="kicker">Who runs it</div><h3>Pods and Mobs</h3><p>A Pod is the standing team of four to six that owns an outcome end to end. A Mob is that same team in session with the AI.</p></div>
+      <div class="card"><div class="kicker">Where it starts</div><h3>Brownfield first</h3><p>Most work is changes to Airship and Toggle, so the loop reads the existing code before it proposes anything.</p></div>
+      <div class="card"><div class="kicker">The guardrail</div><h3>Human&#8209;in&#8209;the&#8209;Loop</h3><p>A person signs off at every gate that matters. The gates only work if you actually use them, so slow down at the checkpoints.</p></div>
+      <div class="card"><div class="kicker">Adaptive depth</div><h3>Sized to the change</h3><p>A hotfix skips most stages and goes near&#8209;straight to the fix. A new feature gets the full run. Not scripted, but steered.</p></div>
+    </div>
+    <p class="linkline">That is the AI&#8209;DLC development cycle in brief. The rest of this page covers the handover from the build to the customer.</p>
+  </div>
+</section>
+
+<!-- HANDOVER + TIERS -->
+<section id="handover" class="scrolltarget">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>The handover</span>
+      <h2>The moment dev starts, it goes on the radar</h2>
+      <p class="lead">This is where build becomes broadcast. As soon as work begins, it is logged with a tier and a horizon, and every team can see it. The tier reflects how much the customer needs to hear, not how long it took to build, so a long Project can still be a light release. Big features get a full runway; small fixes still move at pace.</p>
+    </div>
+    <div class="tablewrap scrollx">
+      <table>
+        <thead><tr><th>Tier</th><th>What it is</th><th>Runway</th><th>Prep required</th><th>Who calls it</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-tag tt-major">Major feature</span></td>
+            <td>New capability, with a pricing or sales angle</td>
+            <td>2 weeks +</td>
+            <td>Full: handover deck and video, sales deck, website, social, customer email and video, Intercom article, CS enablement, sales talking points</td>
+            <td>Product proposes, CEO confirms</td>
+          </tr>
+          <tr>
+            <td><span class="tier-tag tt-minor">Minor / enhancement</span></td>
+            <td>A visible improvement to something we already do</td>
+            <td>~ 1 week</td>
+            <td>Light: one&#8209;pager, Intercom article, lighter customer email, CS note, sales heads&#8209;up</td>
+            <td>Product</td>
+          </tr>
+          <tr>
+            <td><span class="tier-tag tt-maint">Improvement / maint.</span></td>
+            <td>Under&#8209;the&#8209;hood work or a small UX change</td>
+            <td>Days</td>
+            <td>Changelog and Intercom entry, CS made aware</td>
+            <td>Product</td>
+          </tr>
+          <tr>
+            <td><span class="tier-tag tt-hotfix">Bug fix / hotfix</span></td>
+            <td>A fix, large or small</td>
+            <td>None</td>
+            <td>Logged to the register; customer note where it touched them</td>
+            <td>Engineering</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>Everything is logged, down to the smallest fix.</b> That is how a customer hears that the thing they raised is on its way.</div>
+  </div>
+</section>
+
+<!-- RUNWAY / LANES -->
+<section id="runway" class="scrolltarget" style="background:var(--paper-3)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Stage three&nbsp;&nbsp;/&nbsp;&nbsp;The runway</span>
+      <h2>Four lanes, one release</h2>
+      <p class="lead">While the work is being finished, four lanes prep in parallel, so the feature lands with impact and the team is confident to sell it. This is the product marketing engine: the prep happens on a runway, not in a last&#8209;minute scramble.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card">
+        <div class="badge-ico bi-flight">P</div>
+        <h3>Product</h3>
+        <p>Owns the feature, the handover deck and video. Sets the tier and horizon, signs off Locked, and briefs the lanes on what it does and who it is for.</p>
+        <p style="margin-top:12px;color:var(--ink);font-weight:600">Changelog &middot; register &middot; handover</p>
+      </div>
+      <div class="card">
+        <div class="badge-ico bi-deck">CS</div>
+        <h3>Customer Success</h3>
+        <p>Briefed first on what is being built and what it does, then makes customers ready: support articles written and how&#8209;to videos recorded before release.</p>
+        <p style="margin-top:12px;color:var(--ink);font-weight:600">Intercom &middot; Academy &middot; in&#8209;app &middot; training</p>
+      </div>
+      <div class="card">
+        <div class="badge-ico bi-deck">M</div>
+        <h3>Marketing</h3>
+        <p>Owns the external story and assets, and arrives with everything needed to push it across our channels: email, website, social and campaign assets.</p>
+        <p style="margin-top:12px;color:var(--ink);font-weight:600">Email &middot; website &middot; social &middot; campaigns</p>
+      </div>
+      <div class="card">
+        <div class="badge-ico bi-flight">C</div>
+        <h3>Commercial / Sales</h3>
+        <p>Owns the commercial story: whether it needs pricing, whether it joins the feature lists on the website, and telling package customers (WinFlex and similar) it is being added to their account.</p>
+        <p style="margin-top:12px;color:var(--ink);font-weight:600">Pricing &middot; feature lists &middot; talking points</p>
+      </div>
+    </div>
+
+    <h3 style="margin:46px 0 18px">What gets prepped, by tier</h3>
+    <div class="tablewrap scrollx">
+      <table>
+        <thead><tr><th>Deliverable</th><th>Major</th><th>Minor</th><th>Maint.</th><th>Hotfix</th></tr></thead>
+        <tbody>
+          <tr><td>Handover deck and video</td><td><span class="yes">&#10003;</span></td><td class="part">One&#8209;pager</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Sales deck update</td><td><span class="yes">&#10003;</span></td><td class="part">Heads&#8209;up</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Website update</td><td><span class="yes">&#10003;</span></td><td class="part">If relevant</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Social assets</td><td><span class="yes">&#10003;</span></td><td class="part">Optional</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Customer email (and video link)</td><td class="part">Full</td><td class="part">Light</td><td class="none">&ndash;</td><td class="part">If impacted</td></tr>
+          <tr><td>Intercom article</td><td><span class="yes">&#10003;</span></td><td><span class="yes">&#10003;</span></td><td><span class="yes">&#10003;</span></td><td class="part">If customer&#8209;facing</td></tr>
+          <tr><td>CS enablement / sign&#8209;off</td><td><span class="yes">&#10003;</span></td><td class="part">Note</td><td class="part">Aware</td><td class="none">&ndash;</td></tr>
+          <tr><td>Sales talking points</td><td><span class="yes">&#10003;</span></td><td class="part">Heads&#8209;up</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Pricing / feature&#8209;list update</td><td class="part">If priced</td><td class="part">If priced</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr>
+          <tr><td>Logged to the register</td><td><span class="yes">&#10003;</span></td><td><span class="yes">&#10003;</span></td><td><span class="yes">&#10003;</span></td><td><span class="yes">&#10003;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCES -->
+<section id="audiences" class="scrolltarget">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>The audiences</span>
+      <h2>Who hears about it, and when</h2>
+      <p class="lead">A release is not just shipped, it is told. Five audiences hear about what we are building, each at the right moment and depth. The closer the relationship, the earlier and deeper the conversation.</p>
+    </div>
+
+    <div class="aud-top">
+      <div class="ringwrap">
+        <svg viewBox="0 0 460 460" role="img" aria-label="Concentric audience rings from professionals at the centre to the wider industry at the edge">
+          <circle cx="230" cy="230" r="220" fill="#F3F1F7" stroke="var(--line)"/>
+          <circle cx="230" cy="230" r="176" fill="#FFFFFF" stroke="var(--line)"/>
+          <circle cx="230" cy="230" r="132" fill="#F3F1F7" stroke="var(--line)"/>
+          <circle cx="230" cy="230" r="86" fill="#FFFFFF" stroke="var(--line)"/>
+          <circle cx="230" cy="230" r="44" fill="url(#fg)" stroke="none"/>
+          <defs>
+            <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#A31DC6"/><stop offset="1" stop-color="#C840EC"/>
+            </linearGradient>
+          </defs>
+          <text x="230" y="234" text-anchor="middle" style="fill:#fff;font-size:9px;letter-spacing:.02em">Professionals</text>
+          <text x="230" y="150" text-anchor="middle">Beta users</text>
+          <text x="230" y="106" text-anchor="middle">Existing customers</text>
+          <text x="230" y="62" text-anchor="middle">Prospects</text>
+          <text x="230" y="22" text-anchor="middle">Wider industry</text>
+        </svg>
+      </div>
+      <div>
+        <p class="lead" style="margin-top:0">We do not treat every audience the same. Professionals and beta partners are brought in before release, one to one, to shape the work and carry it first. Existing customers hear it at launch. Prospects and the wider industry hear it through the channels that set the pace for the sector.</p>
+        <p class="lead">It runs across both brands. An Airship release reaches Airship customers and professionals; a Toggle release reaches Toggle's. Same pipeline, the right audience each time.</p>
+      </div>
+    </div>
+
+    <div class="aud-list">
+      <div class="aud-card">
+        <div class="aud-num" style="background:var(--flight-grad)">1</div>
+        <div>
+          <h3>Professionals</h3>
+          <p>Our super users and the network we build individually. Brought in before release, one to one, to pressure&#8209;test the feature and carry it into their venues first. First to know, first to use it.</p>
+          <div class="aud-when">When: pre&#8209;release, individually</div>
+        </div>
+      </div>
+      <div class="aud-card">
+        <div class="aud-num" style="background:var(--flight-grad)">2</div>
+        <div>
+          <h3>Beta users</h3>
+          <p>The larger projects where we want real customer feedback to shape future development. They see features early, feed back through Canny, and stay in the loop on what is coming next as a standing relationship, not a one&#8209;off.</p>
+          <div class="aud-when">When: pre&#8209;release and ongoing</div>
+        </div>
+      </div>
+      <div class="aud-card">
+        <div class="aud-num" style="background:var(--deck-grad)">3</div>
+        <div>
+          <h3>Existing customers</h3>
+          <p>Every customer hears what is coming in advance, then how to use it at release: an email, a short video and a live Intercom article. Nothing lands as a surprise.</p>
+          <div class="aud-when">When: ahead of, and at, release</div>
+        </div>
+      </div>
+      <div class="aud-card">
+        <div class="aud-num" style="background:var(--deck-grad)">4</div>
+        <div>
+          <h3>Prospects</h3>
+          <p>Know what we are building. The roadmap and new capabilities feed the sales story, so prospects buy into where Airship and Toggle are going, not only where they are today.</p>
+          <div class="aud-when">When: at release, through Sales</div>
+        </div>
+      </div>
+      <div class="aud-card">
+        <div class="aud-num" style="background:var(--coral);border-radius:9px">5</div>
+        <div>
+          <h3>The wider industry</h3>
+          <p>The bigger moments go out through our channels: website, social, the trade press and events, so the market sees the pace we are setting across hospitality.</p>
+          <div class="aud-when">When: at and after release, via channels</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMS STANDARD -->
+<section id="comms" class="scrolltarget" style="background:var(--paper-3)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Telling the customer</span>
+      <h2>The customer comms standard</h2>
+      <p class="lead">Every major and minor release tells the customer what is coming, how it works, and links a video. Calm product styling in the right brand, Airship or Toggle.</p>
+    </div>
+    <div class="comms">
+      <div class="card">
+        <div class="kicker">The email</div>
+        <h3>What is coming, and why it matters</h3>
+        <p>"Hi [name]", what is coming, when, and what is in it for them. One link to the video. Brand&#8209;correct, calm product styling.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">The video</div>
+        <h3>A short walkthrough</h3>
+        <p>What it does and how to use it. Recorded by CS during the runway, linked from both the email and the article.</p>
+      </div>
+      <div class="card">
+        <div class="kicker">The Intercom article</div>
+        <h3>The evergreen reference</h3>
+        <p>Step by step, how it works. Live before release. The reference CS points to, on the Academy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GATES -->
+<section id="gates" class="scrolltarget dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>Sign&#8209;off</span>
+      <h2>Nothing moves without sign&#8209;off</h2>
+      <p class="lead">The build has its own human gates inside the loop. These five sit on top, governing the release itself. Each one is owned by the lane that runs that step, not by one person refereeing the lot.</p>
+    </div>
+    <div class="gates">
+      <div class="gate-c"><div class="gn">Gate 1</div><div class="gb">1</div><strong>On the radar</strong><p>Product logs the item and a horizon at dev start.</p></div>
+      <div class="gate-c"><div class="gn">Gate 2</div><div class="gb">2</div><strong>Tier set</strong><p>Product proposes the tier. For a Project, the stakeholder group agrees it and the CEO has final say on what we commit to.</p></div>
+      <div class="gate-c"><div class="gn">Gate 3</div><div class="gb">3</div><strong>Locked</strong><p>QA passed, UX frozen, Product signs off. The runway starts.</p></div>
+      <div class="gate-c"><div class="gn">Gate 4</div><div class="gb">4</div><strong>Ready</strong><p>CS, Marketing and Sales each own and confirm their own readiness.</p></div>
+      <div class="gate-c"><div class="gn">Gate 5</div><div class="gb">5</div><strong>Cleared</strong><p>Product gives the go. Release, comms out, logged to the register.</p></div>
+    </div>
+    <div class="callout"><b>Who owns the call.</b> The lanes own their own gates. The CEO holds the final say on what we build and on Major releases, and breaks a genuine deadlock, used rarely, not as a routine referee. The process surfaces the decision; it does not stall on it.</div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register" class="scrolltarget">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>One source of truth</span>
+      <h2>The register, down to the last fix</h2>
+      <p class="lead">One board for both brands. Every release and fix, its stage, and what we have told customers. Designed to populate from the changelog feed.</p>
+    </div>
+    <div class="tablewrap scrollx">
+      <table>
+        <thead><tr><th>Item</th><th>Brand</th><th>Tier</th><th>Stage</th><th>Horizon</th><th>Customer comms</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Email editor enhancement</td><td><span class="brandchip bc-air">Airship</span></td><td><span class="tier-tag tt-minor">Minor</span></td><td>In runway</td><td>This week</td><td>Email + article</td><td>Product</td></tr>
+          <tr><td>New reporting capability</td><td><span class="brandchip bc-air">Airship</span></td><td><span class="tier-tag tt-major">Major</span></td><td>In QA</td><td>This month</td><td>Full launch</td><td>Product</td></tr>
+          <tr><td>Gift card flow improvement</td><td><span class="brandchip bc-tog">toggle</span></td><td><span class="tier-tag tt-minor">Minor</span></td><td>Locked</td><td>2 weeks</td><td>Email + article</td><td>Product</td></tr>
+          <tr><td>Android render fix</td><td><span class="brandchip bc-air">Airship</span></td><td><span class="tier-tag tt-hotfix">Hotfix</span></td><td>Shipped</td><td>Done</td><td>Note if impacted</td><td>Engineering</td></tr>
+          <tr><td>Integration data sync fix</td><td><span class="brandchip bc-tog">toggle</span></td><td><span class="tier-tag tt-maint">Maint.</span></td><td>In dev</td><td>This quarter</td><td>Changelog</td><td>Engineering</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>Where this goes next.</b> The register and radar become a single live board, auto&#8209;populated from dev status and the changelog, with tier&#8209;driven checklists, a view per team, and a clean "what is coming" feed we can share with customers. Vision, not committed scope. The process works on day one without it.</div>
+  </div>
+</section>
+
+<!-- FROM MONDAY -->
+<section id="monday" class="scrolltarget dark">
+  <svg class="radar" style="bottom:-140px;right:-100px;width:480px;height:480px" viewBox="0 0 480 480">
+    <circle cx="240" cy="240" r="70"/><circle cx="240" cy="240" r="140"/><circle cx="240" cy="240" r="210"/>
+    <rect class="dot" x="344" y="120" width="12" height="12" rx="3"/>
+  </svg>
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="sq"></span>From Monday</span>
+      <h2>What changes now</h2>
+    </div>
+    <ul class="monday-list">
+      <li><span class="tick">&#10003;</span><span>Every item in development goes on the radar this week, with a horizon. Committed Projects go on the forward view, even before build.</span></li>
+      <li><span class="tick">&#10003;</span><span>Product sets a tier on customer impact, not build length. The stakeholder group agrees the Projects; the CEO has final say on what we commit to.</span></li>
+      <li><span class="tick">&#10003;</span><span>Once a Project is in flight, we protect it. New ideas queue for the next decision, they do not interrupt it.</span></li>
+      <li><span class="tick">&#10003;</span><span>CS shepherds Canny requests so direct customer asks get attention, and Pods pick them up to move fast.</span></li>
+      <li><span class="tick">&#10003;</span><span>Professionals and beta partners are brought in early, by name, on the work that suits them.</span></li>
+      <li><span class="tick">&#10003;</span><span>No major release without a full runway. No release of any size unlogged. Nothing lands as a surprise.</span></li>
+    </ul>
+    <div class="hero-stats" style="margin-top:48px">
+      <div class="stat"><div class="n">3</div><div class="l">Build phases</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">Release tiers</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">Audiences</div></div>
+      <div class="stat"><div class="n">2</div><div class="l">Brands, one pipeline</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="inner">
+    <span class="wordmark"><span class="fl">flight</span><span class="dot"></span><span class="dk">deck</span></span>
+    <div class="meta">
+      Internal only. Never client&#8209;facing.<br>
+      The complete product lifecycle &middot; Version 1.1 &middot; June 2026 &middot; Owner: Dan Brookman
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
