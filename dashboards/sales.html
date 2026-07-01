@@ -1,452 +1,1003 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Weekly Sales Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Deck — Sales Dashboard</title>
 <style>
-  :root{
-    --bg:#F4F6F7; --card:#FFFFFF; --line:#E4E9EC; --line2:#EEF1F3;
-    --ink:#354B64; --muted:#7C8A9A; --faint:#9DA9B6;
-    --airship:#8d00d4; --airship2:#ec00ff;
-    --toggle:#1770FD; --toggle2:#45C1FF;
-    --print:#0ea5a0; --print2:#3fd0c9;
-    --won:#1a9e6a; --lost:#d14343; --add:#3180FF; --warn:#E08A00;
-    --radius:16px;
+  :root {
+    --ink: #16101D;
+    --ink-60: rgba(22,16,29,0.6);
+    --ink-20: rgba(22,16,29,0.12);
+    --purple-a: #A31DC6;
+    --purple-b: #C840EC;
+    --blue-a: #6FA0FF;
+    --blue-b: #3B7BF7;
+    --coral: #FB5B4B;
+    --paper: #F7F5FA;
+    --white: #ffffff;
+    --airship: #8D00D4;
+    --toggle: #1770FD;
+    --print: #FB5B4B;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(22,16,29,0.08);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:28px 24px 64px}
-  .shell{max-width:1240px;margin:0 auto}
 
-  header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px;flex-wrap:wrap}
-  h1{font-size:30px;font-weight:800;letter-spacing:-0.02em}
-  .sub{font-size:13px;color:var(--muted);margin-top:4px}
-  .controls{display:flex;align-items:center;gap:10px}
-  button.refresh{font:inherit;font-weight:600;font-size:13px;color:#fff;background:var(--ink);border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
-  button.refresh:hover{opacity:.9}
-  .synced{font-size:12px;color:var(--faint)}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .filterbar{display:flex;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
-  .filterbar label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-left:6px}
-  .filterbar label:first-child{margin-left:0}
-  select{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
-  #owner{min-width:200px} #dtype{min-width:150px}
-  .filterbar .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;margin-left:10px;cursor:pointer}
-  .filterbar .chk input{width:15px;height:15px;cursor:pointer;accent-color:var(--toggle)}
-  .filterbar .clr{font-size:12px;color:var(--toggle);cursor:pointer;font-weight:600;margin-left:4px}
-  .filterbar .clr.hidden{display:none}
+  body {
+    font-family: 'Archivo', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 14px;
+    min-height: 100vh;
+  }
 
-  .headline{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
-  @media(max-width:640px){.headline{grid-template-columns:1fr}}
-  .hstat{background:var(--card);padding:18px 20px}
-  .hstat .hl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-  .hstat .hv{font-size:30px;font-weight:800;letter-spacing:-0.02em;margin-top:6px;line-height:1}
-  .hstat .hn{font-size:12px;color:var(--faint);font-weight:600;margin-top:5px}
-  .hstat.add .hv{color:var(--add)} .hstat.won .hv{color:var(--won)} .hstat.lost .hv{color:var(--lost)}
-  .hcap{font-size:11px;color:var(--faint);margin:0 2px 22px}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px;margin-bottom:24px}
-  .c{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;position:relative;overflow:hidden}
-  .c::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
-  .c.airship::before{background:linear-gradient(90deg,var(--airship),var(--airship2))}
-  .c.toggle::before{background:linear-gradient(90deg,var(--toggle),var(--toggle2))}
-  .c.print::before{background:linear-gradient(90deg,var(--print),var(--print2))}
-  .c.other::before{background:var(--faint)}
-  .c h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-  .c.airship h2{color:var(--airship)} .c.toggle h2{color:var(--toggle)} .c.print h2{color:var(--print)} .c.other h2{color:var(--muted)}
-  .c .open{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-  .c .open .big{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1}
-  .c .open .cap{font-size:11px;color:var(--muted)}
-  .wk{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-  .wk .b{background:var(--bg);border-radius:10px;padding:8px 9px}
-  .wk .b .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-  .wk .b .v{font-size:15px;font-weight:700;margin-top:2px}
-  .wk .b .n{font-size:11px;color:var(--faint);font-weight:600}
-  .wk .b.won .v{color:var(--won)} .wk .b.lost .v{color:var(--lost)} .wk .b.add .v{color:var(--add)}
-  .tgt .row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
-  .tgt .track{height:9px;border-radius:6px;background:var(--bg);overflow:hidden}
-  .tgt .fill{height:100%;border-radius:6px}
-  .c.airship .fill{background:linear-gradient(90deg,var(--airship),var(--airship2))}
-  .c.toggle .fill{background:linear-gradient(90deg,var(--toggle),var(--toggle2))}
-  .c.print .fill{background:linear-gradient(90deg,var(--print),var(--print2))}
-  .c.other .fill{background:var(--faint)}
-  .tgt .none{font-size:11px;color:var(--faint);font-style:italic}
+  /* ── Header ─────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, var(--ink) 0%, #2A1040 100%);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
 
-  .sectionhead{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin:0 2px 10px}
-  .sectionhead .hint{font-size:12px;font-weight:500;color:var(--faint);margin-left:8px}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px 8px 12px;overflow-x:auto;margin-bottom:26px}
-  table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
-  th{text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;padding:12px 12px 10px}
-  th.l{text-align:left}
-  td{padding:11px 12px;border-top:1px solid var(--line2);vertical-align:middle}
-  td.l{text-align:left}
-  td.r{text-align:right}
-  .grp td{background:var(--bg);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-top:1px solid var(--line)}
-  .grp.airship td{color:var(--airship)} .grp.toggle td{color:var(--toggle)} .grp.print td{color:var(--print)} .grp.other td{color:var(--muted)}
-  .pname{font-weight:600}
-  tr.muted{opacity:.5}
-  .pill{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:999px;margin-left:8px;vertical-align:middle}
-  .pill.t-new{background:#e8f1ff;color:#1f6fe0}
-  .pill.t-expansion{background:#e4f6ef;color:#138a5c}
-  .pill.t-renewal{background:#fff1dd;color:#b5730a}
-  .pill.t-cold{background:#eef1f3;color:#7C8A9A}
-  .pill.t-other{background:#eef1f3;color:#7C8A9A}
-  .cell .v{font-weight:700}
-  .cell .n{font-size:11px;color:var(--faint);font-weight:600}
-  .cell.won .v{color:var(--won)} .cell.lost .v{color:var(--lost)} .cell.add .v{color:var(--add)}
-  .cell.zero .v{color:var(--faint);font-weight:600}
-  .sub td{font-weight:700;border-top:1px solid var(--line)}
-  tr.sel td{background:#eef5ff}
-  .rank{color:var(--faint);font-weight:600;width:22px;display:inline-block}
-  .tcell{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-  .tcell .mini{width:88px;height:7px;border-radius:5px;background:var(--bg);overflow:hidden}
-  .tcell .mf{height:100%;border-radius:5px;background:var(--ink)}
-  .tcell .lab{font-size:11px;color:var(--muted)}
-  .dash{color:var(--faint)}
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .wordmark .dot {
+    width: 8px; height: 8px;
+    background: var(--coral);
+    border-radius: 2px;
+    display: inline-block;
+    margin: 0 1px;
+  }
+  .wordmark .deck { color: var(--blue-a); }
 
-  .err{background:var(--card);border:1px solid #f3c9c9;border-radius:var(--radius);padding:22px;color:var(--lost);line-height:1.6}
-  .hidden{display:none}
-  .foot{font-size:11px;color:var(--faint);margin-top:-12px;line-height:1.6}
+  /* ── Date picker panel ───────────────────── */
+  .date-panel {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .date-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .date-tab {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .date-tab.active {
+    background: var(--purple-a);
+    border-color: var(--purple-a);
+    color: var(--white);
+  }
+
+  .date-tab:hover:not(.active) {
+    border-color: rgba(255,255,255,0.5);
+    color: var(--white);
+  }
+
+  /* Month picker */
+  .month-picker { display: flex; flex-direction: column; gap: 4px; }
+  .month-row { display: flex; gap: 4px; align-items: center; }
+  .year-nav {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .year-label { color: var(--white); font-weight: 700; font-size: 13px; min-width: 36px; text-align: center; }
+  .month-chips { display: flex; gap: 3px; flex-wrap: wrap; }
+  .month-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 5px;
+    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .month-chip:hover { background: rgba(255,255,255,0.18); color: var(--white); }
+  .month-chip.active { background: var(--purple-b); border-color: var(--purple-b); color: var(--white); }
+
+  /* Date range picker */
+  .range-picker { display: flex; align-items: center; gap: 6px; }
+  .range-picker label { color: rgba(255,255,255,0.6); font-size: 11px; }
+  .range-picker input[type="date"] {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    outline: none;
+  }
+  .range-picker input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.6); cursor: pointer; }
+  .range-picker input[type="date"]:focus { border-color: var(--purple-b); }
+
+  .apply-btn {
+    background: var(--purple-a);
+    border: none;
+    border-radius: 6px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .apply-btn:hover { background: var(--purple-b); }
+
+  .date-label-display {
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    text-align: right;
+  }
+
+  /* ── Controls bar ────────────────────────── */
+  .controls {
+    background: var(--white);
+    border-bottom: 1px solid var(--ink-20);
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .control-group { display: flex; align-items: center; gap: 8px; }
+  .control-label { font-size: 12px; font-weight: 600; color: var(--ink-60); }
+
+  select {
+    appearance: none;
+    background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2316101D' opacity='.4'/%3E%3C/svg%3E") no-repeat right 10px center;
+    border: 1px solid var(--ink-20);
+    border-radius: 6px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 6px 28px 6px 10px;
+    cursor: pointer;
+    outline: none;
+  }
+  select:focus { border-color: var(--purple-a); }
+
+  .toggle-switch { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .toggle-switch input { display: none; }
+  .toggle-track {
+    width: 34px; height: 18px;
+    background: var(--ink-20);
+    border-radius: 9px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    left: 2px; top: 2px;
+    width: 14px; height: 14px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-switch input:checked + .toggle-track { background: var(--purple-a); }
+  .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+  .toggle-switch span { font-size: 13px; font-weight: 500; }
+
+  .refresh-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--ink-20);
+    border-radius: 6px;
+    color: var(--ink-60);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+  }
+  .refresh-btn:hover { border-color: var(--purple-a); color: var(--purple-a); }
+  .refresh-icon { font-size: 14px; }
+
+  /* ── Main layout ─────────────────────────── */
+  .main { padding: 24px 28px; max-width: 1280px; margin: 0 auto; }
+
+  /* ── Status / error ──────────────────────── */
+  .status-bar {
+    background: var(--white);
+    border: 1px solid var(--ink-20);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--ink-60);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .status-bar.loading { border-color: var(--blue-b); }
+  .status-bar.error { border-color: var(--coral); background: #fff5f4; color: var(--coral); }
+  .status-bar.success { display: none; }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--ink-20);
+    border-top-color: var(--blue-b);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Headline band ───────────────────────── */
+  .headline-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .headline-card {
+    background: var(--white);
+    border: 1px solid var(--ink-20);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .headline-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple-a), var(--purple-b));
+  }
+  .headline-card.won::before { background: linear-gradient(90deg, #00C853, #69F0AE); }
+  .headline-card.value::before { background: linear-gradient(90deg, var(--blue-b), var(--blue-a)); }
+
+  .hc-label { font-size: 11px; font-weight: 700; color: var(--ink-60); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .hc-number { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--ink); }
+  .hc-sub { font-size: 12px; color: var(--ink-60); margin-top: 2px; }
+
+  /* ── Brand cards ─────────────────────────── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ink-60);
+    margin-bottom: 10px;
+  }
+
+  .brand-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .brand-card {
+    background: var(--white);
+    border: 1px solid var(--ink-20);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .bc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .bc-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .bc-name { font-size: 13px; font-weight: 700; }
+  .bc-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .bc-metric { font-size: 11px; color: var(--ink-60); }
+  .bc-val { font-size: 15px; font-weight: 700; }
+  .bc-divider { border: none; border-top: 1px solid var(--ink-20); margin: 8px 0; }
+
+  /* ── Pipeline table ──────────────────────── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--ink-20);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--ink-20);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title { font-size: 14px; font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--paper);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--ink-60);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--ink-20);
+  }
+  th.num { text-align: right; }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--ink-20);
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--paper); }
+
+  .pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .pill-new { background: #e8f4ff; color: var(--blue-b); }
+  .pill-renewal { background: #f0e8ff; color: var(--airship); }
+  .pill-expansion { background: #e8fff0; color: #00C853; }
+  .pill-cold { background: #fff3e8; color: #FF6D00; }
+
+  .brand-tag { font-size: 11px; font-weight: 600; }
+  .tag-airship { color: var(--airship); }
+  .tag-toggle { color: var(--toggle); }
+  .tag-print { color: var(--print); }
+  .tag-other { color: var(--ink-60); }
+
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .progress-bar-bg { flex: 1; height: 5px; background: var(--ink-20); border-radius: 3px; min-width: 60px; }
+  .progress-bar-fill { height: 100%; border-radius: 3px; }
+  .progress-pct { font-size: 11px; color: var(--ink-60); width: 36px; text-align: right; }
+
+  /* ── Owner league ────────────────────────── */
+  .rank-num { font-size: 12px; font-weight: 700; color: var(--ink-60); width: 24px; }
+  .owner-name { font-weight: 600; }
+
+  .empty-state {
+    padding: 32px;
+    text-align: center;
+    color: var(--ink-60);
+    font-size: 13px;
+  }
+
+  /* ── Footer ──────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+
+  @media (max-width: 900px) {
+    .headline-band, .brand-cards { grid-template-columns: repeat(2, 1fr); }
+    .main { padding: 16px; }
+    .header { padding: 14px 16px; }
+    .controls { padding: 8px 16px; }
+    .range-picker { flex-wrap: wrap; }
+  }
 </style>
 </head>
 <body>
-<div class="shell">
 
-  <header>
-    <div>
-      <h1>Weekly Sales Dashboard</h1>
-      <div class="sub"><span id="weekline"></span> &middot; Airship &amp; Toggle, every pipeline.</div>
-    </div>
-    <div class="controls">
-      <span class="synced" id="synced"></span>
-      <button class="refresh" id="refresh">Refresh</button>
-    </div>
-  </header>
+<header class="header">
+  <div class="wordmark">
+    flight<span class="dot"></span><span class="deck">deck</span>
+    <span style="color:rgba(255,255,255,0.35); font-weight:400; font-size:14px; margin-left:8px;">Sales Dashboard</span>
+  </div>
 
-  <div class="err hidden" id="err"></div>
-
-  <div id="app" class="hidden">
-
-    <div class="filterbar">
-      <label for="owner">Owner</label>
-      <select id="owner"><option value="">All owners</option></select>
-      <label for="dtype">Type</label>
-      <select id="dtype"><option value="">All types</option></select>
-      <label class="chk"><input type="checkbox" id="excold" checked> Exclude cold from headline</label>
-      <span class="clr hidden" id="clr">Clear filters</span>
+  <div class="date-panel">
+    <div class="date-tabs">
+      <button class="date-tab active" id="tab-month" onclick="switchTab('month')">Month</button>
+      <button class="date-tab" id="tab-range" onclick="switchTab('range')">Date range</button>
     </div>
 
-    <div class="headline" id="headline"></div>
-    <div class="hcap" id="hcap"></div>
-
-    <div class="cards" id="cards"></div>
-
-    <div class="sectionhead">Pipelines<span class="hint" id="ph"></span></div>
-    <div class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th class="l">Pipeline</th>
-            <th>Added (wk)</th>
-            <th>Won (wk)</th>
-            <th>Lost (wk)</th>
-            <th>Open pipeline</th>
-            <th>Won MTD vs target</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <!-- Month picker -->
+    <div id="picker-month" class="month-picker">
+      <div class="month-row">
+        <button class="year-nav" onclick="changeYear(-1)">&#8249;</button>
+        <span class="year-label" id="year-label">2026</span>
+        <button class="year-nav" onclick="changeYear(1)">&#8250;</button>
+        <div class="month-chips" id="month-chips"></div>
+      </div>
     </div>
 
-    <div class="sectionhead">By owner<span class="hint">whole team, this week &middot; click a name to filter the view above</span></div>
-    <div class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th class="l">Owner</th>
-            <th>Added (wk)</th>
-            <th>Won (wk)</th>
-            <th>Lost (wk)</th>
-            <th>Open pipeline</th>
-            <th>Won MTD</th>
-          </tr>
-        </thead>
-        <tbody id="owners"></tbody>
-      </table>
+    <!-- Date range picker -->
+    <div id="picker-range" class="range-picker" style="display:none;">
+      <label>From</label>
+      <input type="date" id="range-from">
+      <label>To</label>
+      <input type="date" id="range-to">
+      <button class="apply-btn" onclick="applyRange()">Apply</button>
     </div>
 
-    <div class="foot">
-      Week = the seven days to <span id="weekend2"></span>. Movements counted by when each deal was added, won or lost. Won MTD is this calendar month's won value. Open pipeline is all live deals regardless of age. When "exclude cold" is on, cold pipelines are dropped from the headline cards, the brand subtotals and the owner totals, and shown greyed in the table.
+    <div class="date-label-display" id="date-label-display">Loading...</div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <span class="control-label">Owner</span>
+    <select id="owner-filter" onchange="renderAll()">
+      <option value="all">All</option>
+    </select>
+  </div>
+  <label class="toggle-switch">
+    <input type="checkbox" id="cold-toggle" checked onchange="renderAll()">
+    <span class="toggle-track"></span>
+    <span>Exclude cold</span>
+  </label>
+  <button class="refresh-btn" onclick="loadData()">
+    <span class="refresh-icon">&#8635;</span> Refresh
+  </button>
+</div>
+
+<main class="main">
+  <div id="status" class="status-bar loading">
+    <div class="spinner"></div>
+    <span id="status-text">Connecting to Supabase...</span>
+  </div>
+
+  <!-- Headlines -->
+  <div class="headline-band" id="headlines" style="display:none;">
+    <div class="headline-card">
+      <div class="hc-label">Deals added</div>
+      <div class="hc-number" id="h-added">—</div>
+      <div class="hc-sub" id="h-added-sub"></div>
+    </div>
+    <div class="headline-card won">
+      <div class="hc-label">Deals won</div>
+      <div class="hc-number" id="h-won">—</div>
+      <div class="hc-sub" id="h-won-sub"></div>
+    </div>
+    <div class="headline-card value">
+      <div class="hc-label">Pipeline value</div>
+      <div class="hc-number" id="h-pipeline">—</div>
+      <div class="hc-sub" id="h-pipeline-sub"></div>
+    </div>
+    <div class="headline-card">
+      <div class="hc-label">Win rate (period)</div>
+      <div class="hc-number" id="h-winrate">—</div>
+      <div class="hc-sub" id="h-winrate-sub"></div>
     </div>
   </div>
 
-</div>
+  <!-- Brand cards -->
+  <div class="section-title">By brand</div>
+  <div class="brand-cards" id="brand-cards" style="display:none;"></div>
+
+  <!-- Pipelines -->
+  <div class="card" id="pipelines-card" style="display:none;">
+    <div class="card-header">
+      <span class="card-title">Pipelines</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Pipeline</th>
+          <th>Brand</th>
+          <th>Type</th>
+          <th class="num">Open deals</th>
+          <th class="num">Value</th>
+          <th class="num">Won (period)</th>
+          <th class="num">Won value</th>
+          <th>vs target</th>
+        </tr>
+      </thead>
+      <tbody id="pipelines-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Owner league -->
+  <div class="card" id="owners-card" style="display:none;">
+    <div class="card-header">
+      <span class="card-title">Owner league</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th>Owner</th>
+          <th class="num">Deals added</th>
+          <th class="num">Won</th>
+          <th class="num">Won value</th>
+          <th class="num">Open pipeline</th>
+        </tr>
+      </thead>
+      <tbody id="owners-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer class="footer">
+  Flight Deck · Internal use only · Data via Pipedrive sync · <span id="footer-updated"></span>
+</footer>
 
 <script>
-// ===== keys (baked in) =====
-const SUPABASE_URL = "https://zwiiljmyyvakyyvypvtc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_ZRAGcLTey-PLJl_67v1HLg_LdPWycXL";
-// ===========================
+// ── Config ────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://zwiiljmyyvakyyvypvtc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZRAGcLTey-PLJl_67v1HLg_LdPWycXL';
 
-const $ = s => document.querySelector(s);
-const gbp0 = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0});
-const gbpC = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',notation:'compact',maximumFractionDigits:1});
-const now = new Date();
+const LEAVERS = ['andrew', 'luci', 'sam', 'tess', 'ed', 'jack doulton', 'daniel carey', 'bryony'];
 
-function mostRecentFriday(d){
-  const x = new Date(d);
-  const diff = (x.getDay() - 5 + 7) % 7;
-  x.setDate(x.getDate() - diff); x.setHours(17,0,0,0);
-  if (x > d) x.setDate(x.getDate() - 7);
-  return x;
-}
-const weekEnd = mostRecentFriday(now);
-const weekStart = new Date(weekEnd); weekStart.setDate(weekStart.getDate()-7);
-const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-const fmtD = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
-$('#weekline').textContent = 'Week to Fri '+fmtD(weekEnd);
-$('#weekend2').textContent = 'Fri '+fmtD(weekEnd);
-
-const inWeek = iso => { if(!iso) return false; const t=new Date(iso); return t>weekStart && t<=weekEnd; };
-
-let DEALS=[], PIPES=[], OWNER='', TYPE='', EXCOLD=true, TYPEOF={};
-const ownerOf = x => x.owner_name || 'Unassigned';
-const typeLabel = t => ({new:'New',cold:'Cold',renewal:'Renewal',expansion:'Expansion'}[t] || (t? t.charAt(0).toUpperCase()+t.slice(1) : 'Other'));
-const typeClass = t => (['new','cold','renewal','expansion'].includes(t)? t : 'other');
-const isCold = name => TYPEOF[name]==='cold' || /\bcold\b/i.test(name);
-
-// --- leavers to hide from the owner list (edit freely) -----------------
-//     Full names match exactly; a lone first name (e.g. "Bryony") matches
-//     anyone whose name contains it.
-const HIDDEN_OWNERS = [
-  "Andrew Whiteley",
-  "Luci Cunningham",
-  "Sam Brown",
-  "Tess Hearn",
-  "Ed Chapman",
-  "Jack Doulton",
-  "Daniel Carey",
-  "Bryony",
-];
-const hiddenSet = new Set(HIDDEN_OWNERS.map(s=>s.toLowerCase().trim()));
-const hiddenSingles = HIDDEN_OWNERS.map(s=>s.toLowerCase().trim()).filter(s=>!s.includes(' '));
-function isHidden(o){
-  const name = String(o).toLowerCase().trim();
-  if(hiddenSet.has(name)) return true;
-  const tokens = name.split(/\s+/);
-  return hiddenSingles.some(h=>tokens.includes(h));
-}
-// -----------------------------------------------------------------------
-
-const GROUP_META = {
-  Airship:{cls:'airship',label:'Airship'},
-  Toggle:{cls:'toggle',label:'Toggle'},
-  Print:{cls:'print',label:'Print & fulfilment'},
-  Shared:{cls:'other',label:'Other / operational'}
+const BRAND_COLOURS = {
+  Airship: '#8D00D4',
+  Toggle: '#1770FD',
+  Print: '#FB5B4B',
+  Other: '#8C8C9E'
 };
-const metaFor = b => GROUP_META[b] || {cls:'other',label:b};
-function groupOrder(){
-  const present = [...new Set(PIPES.map(p=>p.brand||'Shared'))];
-  const pref = ['Airship','Toggle','Print'];
-  const others = present.filter(b=>!pref.includes(b) && b!=='Shared').sort();
-  return [...pref.filter(b=>present.includes(b)), ...others, ...(present.includes('Shared')?['Shared']:[])];
+
+// Live data derivation. The deals view's brand column is unreliable, so brand
+// and type are derived from each deal's pipeline (via v_ceo_pipelines). The map
+// is populated on load from the real pipeline rows.
+let pipeMap = {};
+
+function normalizeBrand(b) {
+  return (b === 'Airship' || b === 'Toggle') ? b : 'Other';
+}
+// Infer a deal type from the pipeline name (richer than the raw deal_type,
+// which is only new/expansion), falling back to the pipeline's default.
+function deriveType(name, fallback) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('cold')) return 'cold';
+  if (n.includes('renewal')) return 'renewal';
+  if (n.includes('cross-sell') || n.includes('cross sell')) return 'expansion';
+  if (fallback === 'expansion') return 'expansion';
+  return 'new';
 }
 
-async function rest(view){
-  const pageSize=1000; let offset=0, all=[];
-  while(true){
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${view}?select=*&limit=${pageSize}&offset=${offset}`,{
-      headers:{ apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}` }});
-    if(!r.ok) throw new Error(`${view}: ${r.status} ${await r.text()}`);
-    const batch = await r.json(); all=all.concat(batch);
-    if(batch.length<pageSize) break; offset+=pageSize;
+// ── Date state ────────────────────────────────────────────────────
+let currentTab = 'month';
+let pickerYear = new Date().getFullYear();
+let pickerMonth = new Date().getMonth(); // 0-indexed
+let dateFrom = null;
+let dateTo = null;
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function firstOfMonth(y, m) {
+  return `${y}-${String(m+1).padStart(2,'0')}-01`;
+}
+function lastOfMonth(y, m) {
+  const d = new Date(y, m+1, 0);
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatDate(iso) {
+  if (!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return `${parseInt(d)} ${MONTHS[parseInt(m)-1]} ${y}`;
+}
+
+function buildMonthChips() {
+  const chips = document.getElementById('month-chips');
+  chips.innerHTML = '';
+  const now = new Date();
+  MONTHS.forEach((label, i) => {
+    // Don't show future months
+    if (pickerYear === now.getFullYear() && i > now.getMonth()) return;
+    const btn = document.createElement('button');
+    btn.className = 'month-chip' + (i === pickerMonth && pickerYear === parseInt(document.getElementById('year-label').textContent) ? ' active' : '');
+    // recheck: active if this month+year is selected
+    btn.className = 'month-chip';
+    btn.textContent = label;
+    btn.onclick = () => selectMonth(i);
+    chips.appendChild(btn);
+  });
+  document.getElementById('year-label').textContent = pickerYear;
+  // mark active
+  const activeIdx = MONTHS.indexOf(MONTHS[pickerMonth]);
+  const allChips = chips.querySelectorAll('.month-chip');
+  // find which index matches pickerMonth, accounting for hidden futures
+  let visible = 0;
+  MONTHS.forEach((label, i) => {
+    if (pickerYear === now.getFullYear() && i > now.getMonth()) return;
+    if (i === pickerMonth) { allChips[visible].classList.add('active'); }
+    visible++;
+  });
+}
+
+function changeYear(delta) {
+  const now = new Date();
+  const newYear = pickerYear + delta;
+  if (newYear > now.getFullYear()) return;
+  if (newYear < now.getFullYear() - 3) return;
+  pickerYear = newYear;
+  buildMonthChips();
+}
+
+function selectMonth(m) {
+  pickerMonth = m;
+  dateFrom = firstOfMonth(pickerYear, m);
+  dateTo = lastOfMonth(pickerYear, m);
+  buildMonthChips();
+  updateDateLabel();
+  loadData();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-month').classList.toggle('active', tab === 'month');
+  document.getElementById('tab-range').classList.toggle('active', tab === 'range');
+  document.getElementById('picker-month').style.display = tab === 'month' ? '' : 'none';
+  document.getElementById('picker-range').style.display = tab === 'range' ? '' : 'none';
+}
+
+function applyRange() {
+  const from = document.getElementById('range-from').value;
+  const to = document.getElementById('range-to').value;
+  if (!from || !to) { alert('Select both a from and to date.'); return; }
+  if (from > to) { alert('From date must be before to date.'); return; }
+  dateFrom = from;
+  dateTo = to;
+  updateDateLabel();
+  loadData();
+}
+
+function updateDateLabel() {
+  const el = document.getElementById('date-label-display');
+  if (dateFrom && dateTo) {
+    el.textContent = `${formatDate(dateFrom)} - ${formatDate(dateTo)}`;
+  }
+}
+
+// ── Init date ─────────────────────────────────────────────────────
+function initDate() {
+  const now = new Date();
+  pickerYear = now.getFullYear();
+  pickerMonth = now.getMonth();
+  dateFrom = firstOfMonth(pickerYear, pickerMonth);
+  dateTo = lastOfMonth(pickerYear, pickerMonth);
+  buildMonthChips();
+  // Set range inputs to current month as default
+  document.getElementById('range-from').value = dateFrom;
+  document.getElementById('range-to').value = dateTo;
+  updateDateLabel();
+}
+
+// ── Supabase fetch ────────────────────────────────────────────────
+async function sbFetch(table, params = '') {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!res.ok) throw new Error(`${table}: ${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+// Page through v_ceo_deals (1000-row cap per request).
+async function fetchAllDeals() {
+  const pageSize = 1000;
+  let offset = 0, all = [];
+  while (true) {
+    const page = await sbFetch('v_ceo_deals', `select=*&order=add_time.desc&limit=${pageSize}&offset=${offset}`);
+    all = all.concat(page);
+    if (page.length < pageSize || offset > 50000) break;
+    offset += pageSize;
   }
   return all;
 }
 
-async function load(){
-  try{
-    [DEALS, PIPES] = await Promise.all([rest('v_ceo_deals'), rest('v_ceo_pipelines')]);
-    TYPEOF = {}; PIPES.forEach(p=>{ TYPEOF[p.pipeline_name]=p.default_deal_type||''; });
-    $('#app').classList.remove('hidden'); $('#err').classList.add('hidden');
-    const last = DEALS.reduce((m,d)=> d.update_time>m?d.update_time:m, '');
-    $('#synced').textContent = (last? 'Synced '+new Date(last).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' \u00b7 ':'') + DEALS.length.toLocaleString('en-GB')+' deals';
-    populateOwners(); populateTypes();
-    render();
-  }catch(e){
-    $('#err').classList.remove('hidden');
-    $('#err').textContent = 'Could not load from Supabase. '+e.message;
+// Map live columns to the shape the render code expects.
+function normalizeDeal(d) {
+  d.added_date = d.add_time ? String(d.add_time).slice(0, 10) : null;
+  d.won_date = d.won_time ? String(d.won_time).slice(0, 10) : null;
+  const pm = pipeMap[d.pipeline_name];
+  d.brand = pm ? pm.brand : 'Other';
+  d.deal_type = pm ? pm.type : deriveType(d.pipeline_name, d.deal_type);
+}
+
+// ── Main data load ────────────────────────────────────────────────
+let rawDeals = [];
+let rawPipelines = [];
+
+async function loadData() {
+  setStatus('loading', 'Loading deals...');
+  hideAll();
+
+  try {
+    // Pipelines first, so we can derive each deal's brand and type from them.
+    const pipelines = await sbFetch('v_ceo_pipelines', 'select=*');
+    rawPipelines = pipelines;
+    pipeMap = {};
+    pipelines.forEach(p => {
+      pipeMap[p.pipeline_name] = {
+        brand: normalizeBrand(p.brand),
+        type: deriveType(p.pipeline_name, p.default_deal_type),
+        target: p.monthly_target || 0
+      };
+    });
+
+    // Deals: PostgREST caps a request at 1000 rows, so page through the lot to
+    // keep open-pipeline and win-rate totals correct.
+    const deals = await fetchAllDeals();
+    deals.forEach(normalizeDeal);
+    rawDeals = deals;
+
+    // Populate owner filter
+    populateOwners(deals);
+
+    renderAll();
+    setStatus('success', '');
+  } catch(err) {
+    setStatus('error', `Error: ${err.message}. Check Supabase connection.`);
+    console.error(err);
   }
 }
 
-function populateOwners(){
-  const names = [...new Set(DEALS.map(ownerOf))].filter(o=>!isHidden(o)).sort((a,b)=>a.localeCompare(b));
-  $('#owner').innerHTML = `<option value="">All owners</option>` + names.map(o=>`<option>${escapeHtml(o)}</option>`).join('');
-  $('#owner').value = OWNER;
+function populateOwners(deals) {
+  const sel = document.getElementById('owner-filter');
+  const current = sel.value;
+  const owners = new Set();
+  deals.forEach(d => {
+    if (d.owner_name && !isLeaver(d.owner_name)) owners.add(d.owner_name);
+  });
+  sel.innerHTML = '<option value="all">All</option>';
+  [...owners].sort().forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o; opt.textContent = o;
+    sel.appendChild(opt);
+  });
+  if (current !== 'all') sel.value = current;
 }
-function populateTypes(){
-  const pref = ['new','expansion','renewal','cold'];
-  const present = [...new Set(PIPES.map(p=>p.default_deal_type).filter(Boolean))];
-  present.sort((a,b)=>{ const ia=pref.indexOf(a), ib=pref.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b); });
-  $('#dtype').innerHTML = `<option value="">All types</option>` + present.map(t=>`<option value="${t}">${typeLabel(t)}</option>`).join('');
-  $('#dtype').value = TYPE;
+
+function isLeaver(name) {
+  if (!name) return false;
+  const lower = name.toLowerCase();
+  return LEAVERS.some(l => lower === l || lower.startsWith(l.split(' ')[0] + ' ') || lower === l);
 }
 
-function aggregate(d){
-  const sum = arr => arr.reduce((s,x)=>s+(+x.value||0),0);
-  const added = d.filter(x=>inWeek(x.add_time));
-  const won   = d.filter(x=>x.status==='won'  && inWeek(x.won_time));
-  const lost  = d.filter(x=>x.status==='lost' && inWeek(x.lost_time));
-  const open  = d.filter(x=>x.status==='open');
-  const wonMtd= sum(d.filter(x=>x.status==='won' && x.won_time && new Date(x.won_time)>=monthStart));
-  return {addedN:added.length,addedV:sum(added),wonN:won.length,wonV:sum(won),
-          lostN:lost.length,lostV:sum(lost),openN:open.length,openV:sum(open),wonMtd};
+function filterDeals(deals) {
+  const excludeCold = document.getElementById('cold-toggle').checked;
+  const owner = document.getElementById('owner-filter').value;
+
+  return deals.filter(d => {
+    // Date: deal added OR won in window
+    const addedIn = d.added_date && d.added_date >= dateFrom && d.added_date <= dateTo;
+    const wonIn = d.won_date && d.won_date >= dateFrom && d.won_date <= dateTo;
+    if (!addedIn && !wonIn) return false;
+
+    if (excludeCold && d.deal_type === 'cold') return false;
+    if (owner !== 'all' && d.owner_name !== owner) return false;
+    return true;
+  });
 }
-function dealsForPipeline(name){
-  let d = DEALS.filter(x=>x.pipeline_name===name);
-  if(OWNER) d = d.filter(x=>ownerOf(x)===OWNER);
-  return d;
+
+function renderAll() {
+  const filtered = filterDeals(rawDeals);
+  renderHeadlines(filtered);
+  renderBrandCards(filtered);
+  renderPipelines(filtered);
+  renderOwners(filtered);
+  showAll();
+  document.getElementById('footer-updated').textContent = `Updated ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
 }
-const blank = {addedN:0,addedV:0,wonN:0,wonV:0,lostN:0,lostV:0,openN:0,openV:0,wonMtd:0};
-const add = (s,x)=>({addedN:s.addedN+x.addedN,addedV:s.addedV+x.addedV,wonN:s.wonN+x.wonN,wonV:s.wonV+x.wonV,lostN:s.lostN+x.lostN,lostV:s.lostV+x.lostV,openN:s.openN+x.openN,openV:s.openV+x.openV,wonMtd:s.wonMtd+x.wonMtd});
 
-function cell(n,v,cls){
-  if(!n) return `<td class="r"><div class="cell zero"><span class="v">&ndash;</span></div></td>`;
-  return `<td class="r"><div class="cell ${cls}"><span class="v">${gbpC.format(v)}</span> <span class="n">${n}</span></div></td>`;
+// ── Headlines ─────────────────────────────────────────────────────
+function renderHeadlines(deals) {
+  const added = deals.filter(d => d.added_date >= dateFrom && d.added_date <= dateTo);
+  const won = deals.filter(d => d.won_date && d.won_date >= dateFrom && d.won_date <= dateTo);
+  const open = deals.filter(d => d.status === 'open');
+  const openVal = open.reduce((s, d) => s + (d.value || 0), 0);
+  const wonVal = won.reduce((s, d) => s + (d.value || 0), 0);
+  const addedVal = added.reduce((s, d) => s + (d.value || 0), 0);
+  const winRate = (added.length + won.length) > 0
+    ? Math.round(won.length / (added.length || 1) * 100)
+    : 0;
+
+  document.getElementById('h-added').textContent = added.length;
+  document.getElementById('h-added-sub').textContent = `£${fmt(addedVal)} total value`;
+  document.getElementById('h-won').textContent = won.length;
+  document.getElementById('h-won-sub').textContent = `£${fmt(wonVal)} total value`;
+  document.getElementById('h-pipeline').textContent = `£${fmt(openVal)}`;
+  document.getElementById('h-pipeline-sub').textContent = `${open.length} open deals`;
+  document.getElementById('h-winrate').textContent = `${winRate}%`;
+  document.getElementById('h-winrate-sub').textContent = `${won.length} won of ${added.length} added`;
 }
-function openCell(n,v){ return `<td class="r"><div class="cell"><span class="v">${gbpC.format(v)}</span> <span class="n">${n}</span></div></td>`; }
-function targetCell(wonMtd, target){
-  if(!target) return `<td class="r"><span class="dash">&ndash;</span></td>`;
-  const pct = Math.min(100, Math.round(100*wonMtd/target));
-  return `<td class="r"><div class="tcell"><span class="lab">${gbp0.format(wonMtd)} / ${gbp0.format(target)}</span><div class="mini"><div class="mf" style="width:${pct}%"></div></div></div></td>`;
+
+// ── Brand cards ───────────────────────────────────────────────────
+function renderBrandCards(deals) {
+  const brands = { Airship: {}, Toggle: {}, Other: {} };
+  Object.keys(brands).forEach(b => { brands[b] = { added:0, addedVal:0, won:0, wonVal:0, open:0, openVal:0 }; });
+
+  deals.forEach(d => {
+    const b = d.brand || 'Other';
+    const brand = brands[b] || brands['Other'];
+    if (d.added_date >= dateFrom && d.added_date <= dateTo) { brand.added++; brand.addedVal += d.value||0; }
+    if (d.won_date && d.won_date >= dateFrom && d.won_date <= dateTo) { brand.won++; brand.wonVal += d.value||0; }
+    if (d.status === 'open') { brand.open++; brand.openVal += d.value||0; }
+  });
+
+  const container = document.getElementById('brand-cards');
+  container.innerHTML = '';
+  Object.entries(brands).forEach(([name, stats]) => {
+    const colour = BRAND_COLOURS[name] || '#888';
+    container.innerHTML += `
+      <div class="brand-card">
+        <div class="bc-header">
+          <div class="bc-dot" style="background:${colour}"></div>
+          <span class="bc-name">${name}</span>
+        </div>
+        <div class="bc-row"><span class="bc-metric">Added</span><span class="bc-val">${stats.added} <small style="font-size:11px;font-weight:400;color:#888">(£${fmt(stats.addedVal)})</small></span></div>
+        <div class="bc-row"><span class="bc-metric">Won</span><span class="bc-val">${stats.won} <small style="font-size:11px;font-weight:400;color:#888">(£${fmt(stats.wonVal)})</small></span></div>
+        <hr class="bc-divider">
+        <div class="bc-row"><span class="bc-metric">Open pipeline</span><span class="bc-val">£${fmt(stats.openVal)}</span></div>
+      </div>`;
+  });
 }
-const matchesType = name => !TYPE || TYPEOF[name]===TYPE;
 
-function render(){
-  const effExcold = EXCOLD && TYPE!=='cold';
-  const anyFilter = OWNER || TYPE;
-  $('#clr').classList.toggle('hidden', !anyFilter);
-  const bits=[]; if(OWNER) bits.push(OWNER); if(TYPE) bits.push(typeLabel(TYPE).toLowerCase());
-  $('#ph').textContent = bits.length ? '\u2014 '+bits.join(' \u00b7 ') : '';
+// ── Pipelines ─────────────────────────────────────────────────────
+function renderPipelines(deals) {
+  // Build per-pipeline stats, keyed by pipeline name (deals carry the name, not an id).
+  const stats = {};
+  rawPipelines.forEach(p => {
+    const pm = pipeMap[p.pipeline_name] || {};
+    stats[p.pipeline_name] = {
+      name: p.pipeline_name, brand: pm.brand || 'Other', type: pm.type || 'new',
+      target: pm.target || 0, open: 0, openVal: 0, won: 0, wonVal: 0
+    };
+  });
 
-  const groups = groupOrder().filter(b => PIPES.some(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name)));
+  deals.forEach(d => {
+    const ps = stats[d.pipeline_name];
+    if (!ps) return;
+    if (d.status === 'open') { ps.open++; ps.openVal += d.value||0; }
+    if (d.won_date && d.won_date >= dateFrom && d.won_date <= dateTo) { ps.won++; ps.wonVal += d.value||0; }
+  });
 
-  // headline cards
-  let grand = {...blank};
-  $('#cards').innerHTML = groups.map(b=>{
-    const meta = metaFor(b);
-    const psAll = PIPES.filter(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name));
-    const hasCold = psAll.some(p=>isCold(p.pipeline_name));
-    const ps = effExcold ? psAll.filter(p=>!isCold(p.pipeline_name)) : psAll;
-    const a = ps.map(p=>aggregate(dealsForPipeline(p.pipeline_name))).reduce(add, {...blank});
-    grand = add(grand, a);
-    const target = ps.reduce((s,p)=>s+(+p.monthly_target||0),0);
-    const exNote = (effExcold && hasCold) ? ' &middot; excl. cold' : '';
-    const tgt = target
-      ? `<div class="tgt"><div class="row"><span>Won this month</span><span>${gbp0.format(a.wonMtd)} of ${gbp0.format(target)}</span></div><div class="track"><div class="fill" style="width:${Math.min(100,Math.round(100*a.wonMtd/target))}%"></div></div></div>`
-      : `<div class="tgt none">No target set</div>`;
-    return `<div class="c ${meta.cls}">
-      <h2>${meta.label}</h2>
-      <div class="open"><span class="big">${gbpC.format(a.openV)}</span><span class="cap">open pipeline &middot; ${a.openN} deals${exNote}</span></div>
-      <div class="wk">
-        <div class="b add"><div class="l">Added</div><div class="v">${gbpC.format(a.addedV)}</div><div class="n">${a.addedN} deals</div></div>
-        <div class="b won"><div class="l">Won</div><div class="v">${gbpC.format(a.wonV)}</div><div class="n">${a.wonN} deals</div></div>
-        <div class="b lost"><div class="l">Lost</div><div class="v">${gbpC.format(a.lostV)}</div><div class="n">${a.lostN} deals</div></div>
-      </div>
-      ${tgt}
-    </div>`;
-  }).join('');
+  const body = document.getElementById('pipelines-body');
+  body.innerHTML = '';
 
-  // headline band (whole business, after the current filters)
-  const plural = n => n===1?'deal':'deals';
-  $('#headline').innerHTML = `
-    <div class="hstat add"><div class="hl">Deals added this week</div><div class="hv">${gbp0.format(grand.addedV)}</div><div class="hn">${grand.addedN} ${plural(grand.addedN)}</div></div>
-    <div class="hstat won"><div class="hl">Deals won this week</div><div class="hv">${gbp0.format(grand.wonV)}</div><div class="hn">${grand.wonN} ${plural(grand.wonN)}</div></div>
-    <div class="hstat lost"><div class="hl">Deals lost this week</div><div class="hv">${gbp0.format(grand.lostV)}</div><div class="hn">${grand.lostN} ${plural(grand.lostN)}</div></div>`;
-  const caps = ['Week to Fri '+fmtD(weekEnd)];
-  if(effExcold) caps.push('excludes cold');
-  if(OWNER) caps.push(OWNER);
-  if(TYPE) caps.push(typeLabel(TYPE));
-  $('#hcap').textContent = caps.join(' \u00b7 ');
+  // Scale any monthly target to the length of the selected period.
+  const days = Math.max(1, Math.round((new Date(dateTo) - new Date(dateFrom)) / 86400000) + 1);
+  const monthFraction = days / 30;
 
-  // pipelines table
-  let html='';
-  for(const b of groups){
-    const meta = metaFor(b);
-    const psAll = PIPES.filter(p=>(p.brand||'Shared')===b && matchesType(p.pipeline_name))
-      .map(p=>({p, a:aggregate(dealsForPipeline(p.pipeline_name))}))
-      .sort((x,y)=>y.a.openV-x.a.openV);
-    if(!psAll.length) continue;
-    const hasCold = psAll.some(o=>isCold(o.p.pipeline_name));
-    html += `<tr class="grp ${meta.cls}"><td class="l" colspan="6">${meta.label}</td></tr>`;
-    for(const {p,a} of psAll){
-      const cold = isCold(p.pipeline_name);
-      const t = p.default_deal_type;
-      const pill = t ? `<span class="pill t-${typeClass(t)}">${typeLabel(t)}</span>` : '';
-      html += `<tr class="${(effExcold && cold)?'muted':''}">
-        <td class="l"><span class="pname">${escapeHtml(p.pipeline_name)}</span>${pill}</td>
-        ${cell(a.addedN,a.addedV,'add')}
-        ${cell(a.wonN,a.wonV,'won')}
-        ${cell(a.lostN,a.lostV,'lost')}
-        ${openCell(a.openN,a.openV)}
-        ${targetCell(a.wonMtd, +p.monthly_target||0)}
+  // Busiest pipelines first; hide pipelines with nothing open or won in view.
+  Object.values(stats)
+    .sort((a, b) => (b.openVal + b.wonVal) - (a.openVal + a.wonVal))
+    .forEach(ps => {
+      if (ps.open === 0 && ps.won === 0 && ps.openVal === 0) return;
+      const target = ps.target ? Math.round(ps.target * monthFraction) : null;
+      const pct = target && ps.wonVal > 0 ? Math.min(Math.round(ps.wonVal / target * 100), 150) : 0;
+      const colour = BRAND_COLOURS[ps.brand] || '#888';
+      const brandTag = `<span class="brand-tag tag-${ps.brand.toLowerCase()}">${ps.brand}</span>`;
+      const typePill = `<span class="pill pill-${ps.type}">${ps.type}</span>`;
+
+      const targetBar = target ? `
+        <div class="progress-wrap">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${Math.min(pct,100)}%;background:${colour}"></div></div>
+          <span class="progress-pct">${pct}%</span>
+        </div>` : '<span style="color:#ccc;font-size:11px;">No target</span>';
+
+      body.innerHTML += `
+        <tr>
+          <td>${ps.name}</td>
+          <td>${brandTag}</td>
+          <td>${typePill}</td>
+          <td class="num">${ps.open}</td>
+          <td class="num">£${fmt(ps.openVal)}</td>
+          <td class="num">${ps.won}</td>
+          <td class="num">£${fmt(ps.wonVal)}</td>
+          <td style="min-width:140px;">${targetBar}</td>
+        </tr>`;
+    });
+
+  if (!body.innerHTML) body.innerHTML = '<tr><td colspan="8" class="empty-state">No pipeline activity in this period</td></tr>';
+}
+
+// ── Owner league ──────────────────────────────────────────────────
+function renderOwners(deals) {
+  const stats = {};
+  deals.forEach(d => {
+    const name = d.owner_name;
+    if (!name || isLeaver(name)) return;
+    if (!stats[name]) stats[name] = { added:0, won:0, wonVal:0, openVal:0 };
+    if (d.added_date >= dateFrom && d.added_date <= dateTo) stats[name].added++;
+    if (d.won_date && d.won_date >= dateFrom && d.won_date <= dateTo) { stats[name].won++; stats[name].wonVal += d.value||0; }
+    if (d.status === 'open') stats[name].openVal += d.value||0;
+  });
+
+  const sorted = Object.entries(stats).sort((a,b) => b[1].wonVal - a[1].wonVal);
+  const body = document.getElementById('owners-body');
+  body.innerHTML = '';
+
+  if (!sorted.length) {
+    body.innerHTML = '<tr><td colspan="6" class="empty-state">No owner data for this period</td></tr>';
+    return;
+  }
+
+  sorted.forEach(([name, s], i) => {
+    body.innerHTML += `
+      <tr>
+        <td><span class="rank-num">${i+1}</span></td>
+        <td class="owner-name">${name}</td>
+        <td class="num">${s.added}</td>
+        <td class="num">${s.won}</td>
+        <td class="num">£${fmt(s.wonVal)}</td>
+        <td class="num">£${fmt(s.openVal)}</td>
       </tr>`;
-    }
-    const forTotal = effExcold ? psAll.filter(o=>!isCold(o.p.pipeline_name)) : psAll;
-    const t = forTotal.reduce((s,{a})=>add(s,a), {...blank});
-    const tg = forTotal.reduce((s,{p})=>s+(+p.monthly_target||0),0);
-    const lbl = meta.label + ' total' + ((effExcold && hasCold)?' (excl. cold)':'');
-    html += `<tr class="sub">
-      <td class="l">${lbl}</td>
-      ${cell(t.addedN,t.addedV,'add')}
-      ${cell(t.wonN,t.wonV,'won')}
-      ${cell(t.lostN,t.lostV,'lost')}
-      ${openCell(t.openN,t.openV)}
-      ${targetCell(t.wonMtd, tg)}
-    </tr>`;
-  }
-  $('#rows').innerHTML = html || `<tr><td class="l" colspan="6" style="color:var(--faint)">No pipelines match this filter.</td></tr>`;
-
-  // by-owner table: respects Type + cold exclusion, spans all owners
-  const pool = DEALS.filter(x=>matchesType(x.pipeline_name) && !(effExcold && isCold(x.pipeline_name)) && !isHidden(ownerOf(x)));
-  const names = [...new Set(pool.map(ownerOf))];
-  const rows = names.map(o=>({o, a:aggregate(pool.filter(x=>ownerOf(x)===o))}))
-    .sort((x,y)=> y.a.openV-x.a.openV);
-  let ohtml='';
-  rows.forEach(({o,a},i)=>{
-    ohtml += `<tr class="${o===OWNER?'sel':''}" data-owner="${escapeHtml(o)}" style="cursor:pointer">
-      <td class="l"><span class="rank">${i+1}</span><span class="pname">${escapeHtml(o)}</span></td>
-      ${cell(a.addedN,a.addedV,'add')}
-      ${cell(a.wonN,a.wonV,'won')}
-      ${cell(a.lostN,a.lostV,'lost')}
-      ${openCell(a.openN,a.openV)}
-      <td class="r"><div class="cell"><span class="v">${gbpC.format(a.wonMtd)}</span></div></td>
-    </tr>`;
-  });
-  const tt = rows.reduce((s,{a})=>add(s,a), {...blank});
-  ohtml += `<tr class="sub">
-    <td class="l">Team total</td>
-    ${cell(tt.addedN,tt.addedV,'add')}
-    ${cell(tt.wonN,tt.wonV,'won')}
-    ${cell(tt.lostN,tt.lostV,'lost')}
-    ${openCell(tt.openN,tt.openV)}
-    <td class="r"><div class="cell"><span class="v">${gbpC.format(tt.wonMtd)}</span></div></td>
-  </tr>`;
-  $('#owners').innerHTML = ohtml;
-
-  document.querySelectorAll('#owners tr[data-owner]').forEach(tr=>{
-    tr.addEventListener('click', ()=>{ OWNER = tr.dataset.owner===OWNER ? '' : tr.dataset.owner; $('#owner').value=OWNER; render(); });
   });
 }
 
-function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-$('#refresh').addEventListener('click',load);
-$('#owner').addEventListener('change', e=>{ OWNER=e.target.value; render(); });
-$('#dtype').addEventListener('change', e=>{ TYPE=e.target.value; render(); });
-$('#excold').addEventListener('change', e=>{ EXCOLD=e.target.checked; render(); });
-$('#clr').addEventListener('click', ()=>{ OWNER=''; TYPE=''; $('#owner').value=''; $('#dtype').value=''; render(); });
-load();
+// ── Helpers ───────────────────────────────────────────────────────
+function fmt(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'm';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+  return n.toLocaleString('en-GB');
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('status');
+  const txt = document.getElementById('status-text');
+  el.className = `status-bar ${type}`;
+  txt.textContent = msg;
+}
+
+function hideAll() {
+  ['headlines','brand-cards','pipelines-card','owners-card'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
+function showAll() {
+  document.getElementById('headlines').style.display = 'grid';
+  document.getElementById('brand-cards').style.display = 'grid';
+  ['pipelines-card','owners-card'].forEach(id => {
+    document.getElementById(id).style.display = '';
+  });
+}
+
+// ── Boot ──────────────────────────────────────────────────────────
+initDate();
+loadData();
 </script>
 </body>
 </html>
