@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airship ICP · flight·deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple:    #8D00D4;
+    --magenta:   #EC00FF;
+    --mid-purple:#D14BEA;
+    --ink:       #171819;
+    --white:     #ffffff;
+    --paper:     #FAF5FF;
+    --section-bg:#F3E8FF;
+    --rule:      #E2CEFF;
+    --card-bg:   #ffffff;
+    --mid:       #4A3060;
+    --green:     #1a6645;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--purple);
+    color: #fff;
+    padding: 64px 80px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: var(--magenta);
+    opacity: 0.18;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 220px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--mid-purple);
+    opacity: 0.15;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 18px;
+  }
+  .header h1 {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.05;
+    max-width: 640px;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .header h1 em {
+    color: var(--magenta);
+    font-style: normal;
+  }
+  .header-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .header-meta {
+    margin-top: 36px;
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 28px;
+  }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; font-weight: 600; }
+  .meta-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+  /* THRESHOLD BAND */
+  .threshold-band {
+    background: var(--ink);
+    color: #fff;
+    padding: 32px 80px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .threshold-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .threshold-headline {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  .threshold-divider {
+    width: 1px;
+    height: 56px;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .threshold-note {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    max-width: 600px;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+  .threshold-note strong { color: var(--magenta); font-weight: 700; }
+
+  /* STAT BAND */
+  .stat-band {
+    background: var(--purple);
+    color: #fff;
+    padding: 40px 80px;
+    display: flex;
+  }
+  .stat-item {
+    flex: 1;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    padding-right: 32px;
+    margin-right: 32px;
+  }
+  .stat-item:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+  .stat-number {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+    color: var(--magenta);
+    letter-spacing: -0.02em;
+  }
+  .stat-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.4; font-weight: 400; }
+
+  /* LAYOUT */
+  .section { padding: 64px 80px; }
+  .section + .section { border-top: 1px solid var(--rule); }
+  .section-alt { background: var(--section-bg); }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    max-width: 640px;
+    letter-spacing: -0.01em;
+  }
+  .section-intro {
+    color: var(--mid);
+    font-size: 15px;
+    max-width: 680px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* PROFILE GRID */
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .profile-card h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--purple);
+  }
+  .profile-card ul { list-style: none; }
+  .profile-card ul li {
+    font-size: 13.5px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .profile-card ul li:last-child { border-bottom: none; }
+  .profile-card ul li::before {
+    content: '→';
+    color: var(--purple);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* WHAT WE AREN'T PANEL */
+  .contrast-panel {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 10px;
+    padding: 40px 44px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 24px;
+  }
+  .contrast-col h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .contrast-col.yes h3 { color: #7FFFB0; }
+  .contrast-col.no h3  { color: var(--mid-purple); }
+  .contrast-divider { width: 1px; background: rgba(255,255,255,0.1); }
+  .contrast-col ul { list-style: none; }
+  .contrast-col ul li {
+    font-size: 13.5px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-weight: 400;
+  }
+  .contrast-col ul li:last-child { border-bottom: none; }
+  .contrast-col.yes ul li::before { content: '✓'; color: #7FFFB0; font-weight: 700; flex-shrink: 0; }
+  .contrast-col.no  ul li::before { content: '✗'; color: var(--mid-purple); font-weight: 700; flex-shrink: 0; }
+
+  /* BUYER PERSONAS */
+  .persona-row { display: flex; gap: 20px; margin-bottom: 20px; }
+  .persona-card {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .persona-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--purple);
+  }
+  .persona-card.secondary::before { background: var(--magenta); }
+  .persona-card.tertiary::before  { background: var(--mid-purple); }
+  .persona-card.quaternary::before{ background: var(--ink); }
+  .persona-role {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 6px;
+  }
+  .persona-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .persona-card p { font-size: 13px; color: var(--mid); line-height: 1.65; margin-bottom: 10px; font-weight: 400; }
+  .persona-cares {
+    background: var(--section-bg);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 14px;
+  }
+  .persona-cares-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+  .persona-cares ul { list-style: none; }
+  .persona-cares ul li { font-size: 12.5px; padding: 3px 0; color: var(--ink); font-weight: 500; }
+  .persona-cares ul li::before { content: '✓  '; color: var(--green); font-weight: 700; }
+
+  /* USP BAND */
+  .usp-band {
+    background: var(--purple);
+    color: #fff;
+    padding: 48px 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .usp-item {}
+  .usp-icon { font-size: 28px; margin-bottom: 12px; }
+  .usp-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .usp-item p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; font-weight: 400; }
+
+  /* DISCOVERY QUESTIONS */
+  .discovery-list { list-style: none; counter-reset: q-counter; }
+  .discovery-list li {
+    counter-increment: q-counter;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .discovery-list li:last-child { border-bottom: none; }
+  .discovery-list li::before {
+    content: counter(q-counter, decimal-leading-zero);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--purple);
+    flex-shrink: 0;
+    line-height: 1.2;
+    min-width: 32px;
+    letter-spacing: -0.02em;
+  }
+  .q-note { font-size: 12px; color: var(--mid); margin-top: 5px; font-weight: 400; line-height: 1.5; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--purple);
+    color: rgba(255,255,255,0.45);
+    padding: 28px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .footer strong { color: rgba(255,255,255,0.85); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" style="position:absolute;top:26px;right:80px;z-index:6;color:rgba(255,255,255,0.7);text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;">‹ flight·deck</a>
+  <div class="header-eyebrow">Airship · Ideal Customer Profile</div>
+  <h1>Airship <em>Ideal</em><br>Customer Profile</h1>
+  <div class="header-sub">Who we're targeting, who we're selling to, and how to recognise the right fit. This document defines Airship's ideal customer, the foundation for our sales motion, hiring decisions, and go-to-market focus.</div>
+  <div class="header-meta">
+    <div class="meta-item"><span class="meta-label">Document</span><span class="meta-value">Airship ICP</span></div>
+    <div class="meta-item"><span class="meta-label">Version</span><span class="meta-value">2026</span></div>
+    <div class="meta-item"><span class="meta-label">Audience</span><span class="meta-value">Company-Wide</span></div>
+    <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">Working Document</span></div>
+  </div>
+</div>
+
+<div class="threshold-band">
+  <div>
+    <div class="threshold-label">Sweet Spot</div>
+    <div class="threshold-headline">5–50 UK Hospitality Sites</div>
+  </div>
+  <div class="threshold-divider"></div>
+  <div class="threshold-note">Full range: <strong>2–200 locations</strong>. Airship performs best with multi-site operators who have a dedicated marketing resource, an integrated tech stack, and a genuine ambition to prove ROI through visit frequency. <strong>Size matters less than strategic intent.</strong></div>
+</div>
+
+<div class="stat-band">
+  <div class="stat-item">
+    <div class="stat-number">2–200</div>
+    <div class="stat-desc">UK hospitality locations; sweet spot 5–50 sites with marketing resource in place</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">£1M+</div>
+    <div class="stat-desc">Annual revenue per site, Airship delivers strongest ROI at food-led, dwell-time venues</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">3+</div>
+    <div class="stat-desc">Integrations required (EPOS + booking, Wi-Fi, feedback, or loyalty) for full platform value</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">4%+</div>
+    <div class="stat-desc">Target basket-level CRM engagement, requires Rewards programme or Loyalty partner</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">01 · The Customer</div>
+  <div class="section-title">Airship ICP: Business Profile</div>
+  <p class="section-intro">The ideal Airship customer is a UK hospitality operator that wants to prove marketing ROI through guest data, not just send emails. They have an integrated tech stack, a marketing resource with strategic thinking, and a genuine commitment to understanding visit frequency. Airship makes that possible.</p>
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h3>Business Characteristics</h3>
+      <ul>
+        <li>UK-based multi-site hospitality operator: restaurant groups, pubs, bars, cafes, casual dining, family brewers</li>
+        <li>2–200 locations; sweet spot 5–50 sites with dedicated marketing resource</li>
+        <li>Food-led venues with meaningful dwell time, guests visit to stay and sit down</li>
+        <li>Existing email or CRM activity, likely on a generic tool (Mailchimp, manual uploads) or fragmented across platforms</li>
+        <li>Ambition to prove marketing drives footfall, not just measure open rates</li>
+        <li>Either has a Rewards programme or a Loyalty partner, or is willing to build one</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Performance Indicators</h3>
+      <ul>
+        <li>£20k+ weekly turnover per location (£1M+ annual revenue per site)</li>
+        <li>4%+ of CRM base engaging with basket-level redemption, the benchmark for platform ROI</li>
+        <li>Active EPOS, booking, Wi-Fi, or feedback integration, at least 3 connected data sources</li>
+        <li>Marketing team runs campaigns with strategic intent, not "set and forget"</li>
+        <li>Visit frequency is a managed business metric, operators setting goals around 1.2 → 1.6 visits/year</li>
+        <li>Willing to invest in strategy, setup, and platform adoption</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Technical Profile</h3>
+      <ul>
+        <li>EPOS integration active, basket data is essential for proving ROI through Proof of Presence</li>
+        <li>At least 3 integrations total: booking, Wi-Fi, feedback, PMS, or loyalty</li>
+        <li>Own branded website with ability to place signup forms (owns the guest value exchange)</li>
+        <li>CRM data managed by the operator, not reliant on manual uploads from third parties</li>
+        <li>Open to automated journeys, segmentation, and multi-channel communication (email, SMS)</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Organisational Signals</h3>
+      <ul>
+        <li>Head of Marketing, Marketing Director, or Marketing Executive is the primary user and champion</li>
+        <li>Budget holder (MD, Finance Director, or Founder) understands marketing as a revenue driver</li>
+        <li>Not expecting the platform to "just work" without strategy, willing to invest in setup</li>
+        <li>Guest experience is a genuine business priority, ROI-focused, not just activity-focused</li>
+        <li>Open to working with Airship's team on journeys, campaigns, and automation strategy</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="section-label">01b · Boundaries</div>
+  <div class="section-title">Who We Serve, and Who We Don't</div>
+  <p class="section-intro">Being clear on who Airship is not for is as important as defining who it is for. These are the boundaries that keep us focused on operators where we can deliver real, provable value.</p>
+
+  <div class="contrast-panel">
+    <div class="contrast-col yes">
+      <h3>✓ Strong Fit</h3>
+      <ul>
+        <li>Multi-site UK restaurant groups, pubs, cafes, family brewers</li>
+        <li>EPOS + 3 or more integrations connected (or clear path)</li>
+        <li>Dedicated marketing resource with strategic thinking</li>
+        <li>Food-led venues, guests sit down and dwell</li>
+        <li>Has or is building a Rewards or Loyalty programme</li>
+        <li>£1M+ annual revenue per location</li>
+        <li>2–200 locations (sweet spot 5–50)</li>
+        <li>Wants to prove ROI through visit frequency data</li>
+      </ul>
+    </div>
+    <div class="contrast-divider"></div>
+    <div class="contrast-col no">
+      <h3>✗ Not a Fit</h3>
+      <ul>
+        <li>Hotels, stay-based vs. visit-based model not yet aligned</li>
+        <li>Competitive socialising venues</li>
+        <li>Super-enterprise (350+ locations, different product needs)</li>
+        <li>Food-to-go or delivery-only, no in-venue dwell or visit frequency loop</li>
+        <li>Late night / nightclubs</li>
+        <li>Single-site with no growth plan or under 2 locations</li>
+        <li>No EPOS, or manual-only data approach</li>
+        <li>No dedicated marketing resource and no budget for one</li>
+        <li>Outside UK hospitality</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="usp-band">
+  <div class="usp-item">
+    <div class="usp-icon">📍</div>
+    <h3>Proof of Presence (PoP)</h3>
+    <p>Visit frequency tracking baked into the platform. No other CRM can prove that a marketing campaign drove a guest through the door. PoP is Airship's most unique differentiator.</p>
+  </div>
+  <div class="usp-item">
+    <div class="usp-icon">🔗</div>
+    <h3>80+ Integrations</h3>
+    <p>We connect hospitality's fragmented tech stack better than anyone: EPOS, booking, Wi-Fi, feedback, loyalty, order &amp; pay. The breadth is a competitive moat.</p>
+  </div>
+  <div class="usp-item">
+    <div class="usp-icon">🎯</div>
+    <h3>Data Consolidation</h3>
+    <p>We turn scattered guest touchpoints into a single source of truth, managing the logic of opt-in, GDPR, and first-party data across every connected platform.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">02 · Buyer Personas</div>
+  <div class="section-title">Who We're Selling To</div>
+  <p class="section-intro">Airship has three core buyer personas. Marketing drives adoption and day-to-day use. The budget holder controls the decision. Operations and Sales benefit from the platform but rarely lead the purchase. Each needs a different angle.</p>
+
+  <div class="persona-row">
+    <div class="persona-card">
+      <div class="persona-role">Primary User & Champion</div>
+      <div class="persona-title">Head of Marketing / Marketing Director</div>
+      <p>The daily user and internal champion. Wants to run sophisticated, data-driven campaigns without being at the mercy of agency timelines or manual data exports. Measures success in visit frequency uplift and campaign attribution.</p>
+      <p>Frustrated by: no way to prove campaigns drive footfall, fragmented guest data, generic tools that don't understand hospitality.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Proof that marketing drives actual visits (PoP)</li>
+          <li>Automated journeys: birthdays, lapsed guests, welcome sequences</li>
+          <li>Segmentation based on real basket and visit data</li>
+          <li>Speed and self-service, no agency dependency</li>
+          <li>Airship AI for smarter analysis and content</li>
+        </ul>
+      </div>
+    </div>
+    <div class="persona-card secondary">
+      <div class="persona-role">Economic Buyer · Budget Decision</div>
+      <div class="persona-title">MD / Finance Director / Founder</div>
+      <p>Controls the budget. Needs to see a clear commercial case, cost per visit, revenue per campaign, frequency uplift, before committing. Airship needs to move from "marketing cost" to "revenue lever" in this conversation.</p>
+      <p>Frustrated by: marketing spend with no measurable return, tools that require expensive agency support to get value from.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>ROI, measurable revenue per campaign</li>
+          <li>Predictable flat-rate cost (not per-email billing)</li>
+          <li>Visit frequency as a board-level metric</li>
+          <li>Reducing dependence on third-party platforms</li>
+          <li>Competitive edge, what does Airship give us that others can't?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="persona-card tertiary">
+      <div class="persona-role">Secondary User · Sales &amp; Events</div>
+      <div class="persona-title">Sales Manager / Events Manager</div>
+      <p>Uses Airship to identify opportunities, fill quiet periods, and manage private dining or event enquiries. Benefits from guest intelligence without necessarily owning the platform.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Guest profiles for surprise &amp; delight or upsell</li>
+          <li>Targeted campaigns to fill predictably quiet nights</li>
+          <li>Events and experiences marketing to the right segments</li>
+          <li>Enquiry tracking and pipeline visibility</li>
+        </ul>
+      </div>
+    </div>
+    <div class="persona-card quaternary">
+      <div class="persona-role">Secondary User · Operations</div>
+      <div class="persona-title">Operations Manager / Customer Success</div>
+      <p>Relies on Airship for front-of-house insight, guest service recovery, and understanding visit patterns. Not the buyer, but a strong advocate when the platform is embedded in ops.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Guest history at a glance for service recovery</li>
+          <li>Loyalty and rewards reconciliation</li>
+          <li>Understanding repeat vs. lapsed guest patterns</li>
+          <li>Reliable, automated guest communications</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="section-label">03 · Discovery</div>
+  <div class="section-title">Questions to Confirm ICP Fit</div>
+  <p class="section-intro">These questions confirm whether the opportunity is the right fit for Airship and begin building the commercial case. The goal is to uncover the gap between what they're doing today and what Airship can prove for them.</p>
+  <ol class="discovery-list">
+    <li>
+      <div>
+        <div>How many sites do you operate, and what does your growth plan look like over the next two years?</div>
+        <div class="q-note">Establishes size and trajectory. A 10-site group with a plan to double is a stronger prospect than one static at 30.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>What technology are you currently using: EPOS, bookings, Wi-Fi, feedback, order &amp; pay? How are they connected?</div>
+        <div class="q-note">Maps the integration landscape. We need at least EPOS + 2 others for meaningful data consolidation and PoP. Fewer than 3 = amber flag.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>How are you currently doing email or CRM marketing, and how do you know if it's working?</div>
+        <div class="q-note">The "how do you know if it's working" question almost always surfaces the PoP gap. Most operators admit they can't prove it. That's the opening.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>Do you have a Rewards or Loyalty programme in place? How engaged is your CRM base with it?</div>
+        <div class="q-note">Basket-level engagement of 4%+ is the performance threshold. No Rewards and no Loyalty partner is a red flag, ask if they're open to building one.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>Who owns the guest database, and do you manage your own signup and opt-in process?</div>
+        <div class="q-note">Operators who don't own their website or manage their own signup forms can't own the value exchange. This is a structural blocker, flag early.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>What does success look like for your marketing in the next 12 months? Are you measuring visit frequency?</div>
+        <div class="q-note">Visit frequency (moving from 1.2 to 1.6 annual visits) is Airship's north star metric. Operators who aren't tracking it yet often become converts once they see PoP.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>Who in the business owns this decision, and who would need to sign off on a platform investment?</div>
+        <div class="q-note">Maps the buying process. Marketing champions it; Finance or the MD approves it. Get to the budget holder early or the deal will stall.</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<div class="footer">
+  <div><strong>Airship ICP</strong> · 2026 · Airship &amp; Toggle</div>
+  <div>Company Document</div>
+</div>
+
+</body>
+</html>

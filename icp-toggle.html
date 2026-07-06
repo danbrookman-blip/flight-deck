@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toggle ICP · flight·deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:      #3180FF;
+    --navy:      #203B53;
+    --mid-blue:  #96AACE;
+    --ink:       #171819;
+    --paper:     #F3F8FC;
+    --white:     #ffffff;
+    --rule:      #D9E1E7;
+    --card-bg:   #ffffff;
+    --section-bg:#EBF1F7;
+    --green:     #1a6645;
+    --mid:       #4A6070;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    color: #fff;
+    padding: 64px 80px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0.18;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 200px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: var(--mid-blue);
+    opacity: 0.12;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid-blue);
+    margin-bottom: 18px;
+  }
+  .header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.05;
+    max-width: 640px;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .header h1 em {
+    color: var(--blue);
+    font-style: normal;
+  }
+  .header-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .header-meta {
+    margin-top: 36px;
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 28px;
+  }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; font-weight: 600; }
+  .meta-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+  /* THRESHOLD BAND */
+  .threshold-band {
+    background: var(--blue);
+    color: #fff;
+    padding: 32px 80px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .threshold-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 6px;
+  }
+  .threshold-headline {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  .threshold-divider {
+    width: 1px;
+    height: 56px;
+    background: rgba(255,255,255,0.25);
+    flex-shrink: 0;
+  }
+  .threshold-note {
+    font-size: 14px;
+    color: rgba(255,255,255,0.88);
+    max-width: 600px;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+  .threshold-note strong { color: #fff; font-weight: 700; }
+
+  /* STAT BAND */
+  .stat-band {
+    background: var(--ink);
+    color: #fff;
+    padding: 40px 80px;
+    display: flex;
+  }
+  .stat-item {
+    flex: 1;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    padding-right: 32px;
+    margin-right: 32px;
+  }
+  .stat-item:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+  .stat-number {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+  .stat-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4; font-weight: 400; }
+
+  /* LAYOUT */
+  .section { padding: 64px 80px; }
+  .section + .section { border-top: 1px solid var(--rule); }
+  .section-alt { background: var(--section-bg); }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    max-width: 640px;
+    letter-spacing: -0.01em;
+  }
+  .section-intro {
+    color: var(--mid);
+    font-size: 15px;
+    max-width: 680px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* PROFILE GRID */
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .profile-card h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+  }
+  .profile-card ul { list-style: none; }
+  .profile-card ul li {
+    font-size: 13.5px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .profile-card ul li:last-child { border-bottom: none; }
+  .profile-card ul li::before {
+    content: '→';
+    color: var(--blue);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* BUYER PERSONAS */
+  .persona-row { display: flex; gap: 20px; margin-bottom: 20px; }
+  .persona-card {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .persona-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--blue);
+  }
+  .persona-card.secondary::before { background: var(--navy); }
+  .persona-card.tertiary::before  { background: var(--mid-blue); }
+  .persona-card.quaternary::before{ background: var(--ink); }
+  .persona-role {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 6px;
+  }
+  .persona-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .persona-card p { font-size: 13px; color: var(--mid); line-height: 1.65; margin-bottom: 10px; font-weight: 400; }
+  .persona-cares {
+    background: var(--section-bg);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 14px;
+  }
+  .persona-cares-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+  .persona-cares ul { list-style: none; }
+  .persona-cares ul li { font-size: 12.5px; padding: 3px 0; color: var(--ink); font-weight: 500; }
+  .persona-cares ul li::before { content: '✓  '; color: var(--green); font-weight: 700; }
+
+  /* DISCOVERY QUESTIONS */
+  .discovery-list { list-style: none; counter-reset: q-counter; }
+  .discovery-list li {
+    counter-increment: q-counter;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .discovery-list li:last-child { border-bottom: none; }
+  .discovery-list li::before {
+    content: counter(q-counter, decimal-leading-zero);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--blue);
+    flex-shrink: 0;
+    line-height: 1.2;
+    min-width: 32px;
+    letter-spacing: -0.02em;
+  }
+  .q-note { font-size: 12px; color: var(--mid); margin-top: 5px; font-weight: 400; line-height: 1.5; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.4);
+    padding: 28px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .footer strong { color: rgba(255,255,255,0.8); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" style="position:absolute;top:26px;right:80px;z-index:6;color:rgba(255,255,255,0.7);text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;">‹ flight·deck</a>
+  <div class="header-eyebrow">Toggle · Ideal Customer Profile</div>
+  <h1>Toggle <em>Ideal</em><br>Customer Profile</h1>
+  <div class="header-sub">Who we're targeting, who we're selling to, and how to recognise the right fit. This document defines Toggle's ideal customer, the foundation for our sales motion, hiring decisions, and go-to-market focus.</div>
+  <div class="header-meta">
+    <div class="meta-item"><span class="meta-label">Document</span><span class="meta-value">Toggle ICP</span></div>
+    <div class="meta-item"><span class="meta-label">Version</span><span class="meta-value">2026</span></div>
+    <div class="meta-item"><span class="meta-label">Audience</span><span class="meta-value">Company-Wide</span></div>
+    <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">Working Document</span></div>
+  </div>
+</div>
+
+<div class="threshold-band">
+  <div>
+    <div class="threshold-label">Enterprise Threshold</div>
+    <div class="threshold-headline">50–500 UK Hospitality Sites</div>
+  </div>
+  <div class="threshold-divider"></div>
+  <div class="threshold-note">Sweet spot: <strong>80–250 locations</strong>. The entry point for enterprise Toggle is 50 sites, where deal complexity, seasonal gifting volume, and organisational structure make the full enterprise proposition relevant. Size alone is not the deciding factor, <strong>commercial complexity and gifting ambition</strong> are the real signals.</div>
+</div>
+
+<div class="stat-band">
+  <div class="stat-item">
+    <div class="stat-number">50–500</div>
+    <div class="stat-desc">UK hospitality sites; sweet spot 80–250 locations across one or multiple brands</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">£5M+</div>
+    <div class="stat-desc">Annual gift card / voucher revenue potential, or a clear commercial path to it</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">£20k+</div>
+    <div class="stat-desc">Weekly turnover per location, Toggle delivers strongest ROI at higher-revenue venues</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">3+</div>
+    <div class="stat-desc">Active seasonal gifting peaks: Christmas, Valentine's, Mother's Day, Black Friday</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">01 · The Customer</div>
+  <div class="section-title">Toggle ICP: Business Profile</div>
+  <p class="section-intro">The ideal Toggle customer is a recognisable UK hospitality operator with scale, seasonal ambition, and a gift card programme that's either underperforming or not yet properly built. They have existing infrastructure, a commercial team, and the beginnings of a gifting story. Toggle makes it properly commercial.</p>
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h3>Business Characteristics</h3>
+      <ul>
+        <li>UK-based (primary) hospitality operator: restaurants, pub groups, hotel &amp; dining, coffee chains, experiential venues</li>
+        <li>50–500 sites; sweet spot 80–250 locations across one or multiple brands</li>
+        <li>Recognisable consumer brand with seasonal marketing activity</li>
+        <li>Existing gift card or voucher programme, likely on an inferior or generic provider</li>
+        <li>£5M+ in annual gift card / voucher revenue potential, or clear path to it</li>
+        <li>Multi-brand structure welcome, Toggle's group-level gifting handles separate branded webshops with cross-venue redemption</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Performance Indicators</h3>
+      <ul>
+        <li>£20k+ weekly turnover per location, Toggle delivers strongest ROI at higher-revenue venues</li>
+        <li>Active seasonal peaks: Christmas, Valentine's, Mother's Day, Black Friday</li>
+        <li>Interest in physical gifting, on-demand print, and greetings gift cards as a margin-positive product layer</li>
+        <li>Corporate or B2B gifting demand: staff rewards, supplier incentives, client entertainment</li>
+        <li>Operating via Tillo or another B2B distribution network, or willing to activate one</li>
+        <li>Compatible EPOS system: Zonal, Oracle Symphony, or one of 50+ integrated partners</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Technical Profile</h3>
+      <ul>
+        <li>Active EPOS integration, in-venue redemption is non-negotiable at enterprise scale</li>
+        <li>Own branded website or app with ability to embed Toggle webshop</li>
+        <li>Finance team requiring proper liability reconciliation and breakage reporting</li>
+        <li>API access appetite, enterprise operators often want Toggle embedded in their own digital estate</li>
+        <li>Open to Toggle POS Mode (tablet/mobile) for in-venue card sales if a till integration is not in place</li>
+      </ul>
+    </div>
+    <div class="profile-card">
+      <h3>Organisational Signals</h3>
+      <ul>
+        <li>Commercial Director, Head of Revenue, or CFO is the economic buyer</li>
+        <li>Marketing team runs seasonal campaigns, gifting is a commercial priority, not just a marketing one</li>
+        <li>Finance team actively manages gift card liability and breakage</li>
+        <li>Procurement team or framework, be ready with a fixed-fee commercial model and enterprise contract terms</li>
+        <li>IT or tech team who can facilitate EPOS setup and API work</li>
+        <li>Security awareness in procurement, expect a security review process at enterprise scale</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="section-label">02 · Buyer Personas</div>
+  <div class="section-title">Who We're Selling To</div>
+  <p class="section-intro">Toggle enterprise has four buyer personas. The Commercial Director or CFO controls the decision. Marketing and Operations influence it. Security or IT may gate it at procurement. Each persona needs a distinct value narrative, the same pitch won't land with all four.</p>
+
+  <div class="persona-row">
+    <div class="persona-card">
+      <div class="persona-role">Primary Buyer · Economic Decision</div>
+      <div class="persona-title">Commercial Director / CFO</div>
+      <p>Owns the P&amp;L for gift cards and experiences. Understands breakage as a revenue line. Wants predictable liability reporting, upfront cash capture, and a partner who can grow the gifting programme commercially.</p>
+      <p>Frustrated by: opaque reporting from current provider, inability to run promotions quickly, loss of breakage revenue to third-party platforms.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Upfront cash from gift card sales</li>
+          <li>Breakage revenue visibility and capture</li>
+          <li>Fixed vs. commission cost certainty</li>
+          <li>Board-level gifting reports (Board Pack Booster)</li>
+          <li>B2B/corporate channel incremental revenue</li>
+        </ul>
+      </div>
+    </div>
+    <div class="persona-card secondary">
+      <div class="persona-role">Secondary Buyer · Marketing Influence</div>
+      <div class="persona-title">Head of Marketing / Marketing Director</div>
+      <p>Runs seasonal campaigns and wants a gifting platform that responds to their pace, launching a Black Friday flash sale or a Valentine's experience in hours, not weeks.</p>
+      <p>Frustrated by: slow time-to-market, lack of branded control, no campaign performance data, inability to integrate gifting with CRM.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Speed of campaign launch</li>
+          <li>Brand control over webshop and cards</li>
+          <li>Promotional flexibility (added value, discounts, restricted validity)</li>
+          <li>Airship integration for CRM-driven gifting</li>
+          <li>Influencer gifting via Joli integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="persona-row">
+    <div class="persona-card tertiary">
+      <div class="persona-role">Tertiary · Operational Influence</div>
+      <div class="persona-title">Head of Operations / IT Director</div>
+      <p>Needs the EPOS integration to work flawlessly across all sites. Manages the rollout of new venues onto Toggle. Wants self-service tools, not manual CS dependency.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>EPOS integration reliability and uptime</li>
+          <li>Speed of new site onboarding</li>
+          <li>Self-service restock and bulk order tools</li>
+          <li>API access for internal system integration</li>
+          <li>Finance reconciliation at group level</li>
+        </ul>
+      </div>
+    </div>
+    <div class="persona-card quaternary">
+      <div class="persona-role">Gatekeeper · Procurement / Security</div>
+      <div class="persona-title">Head of IT Security / Procurement Lead</div>
+      <p>Appears later in the sales process. Their job is to reduce risk, but they can stall a deal if Toggle isn't prepared. At enterprise scale, expect a security or procurement review before contracts are signed.</p>
+      <p>Frustrated by: vendors who aren't prepared, missing documentation, unclear data handling policies.</p>
+      <div class="persona-cares">
+        <div class="persona-cares-label">Cares About</div>
+        <ul>
+          <li>Data security and PCI compliance for card payments</li>
+          <li>GDPR handling and data residency</li>
+          <li>Vendor due diligence documentation</li>
+          <li>Integration security (API, EPOS data flows)</li>
+          <li>Business continuity and uptime SLAs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">03 · Discovery</div>
+  <div class="section-title">Questions to Confirm ICP Fit</div>
+  <p class="section-intro">These questions serve two purposes: confirming the opportunity is the right fit for Toggle enterprise, and beginning to build the commercial case. Use them to uncover pain at the right level, the CFO's pain, not just the marketing manager's.</p>
+  <ol class="discovery-list">
+    <li>
+      <div>
+        <div>How many sites do you operate, and what does your growth plan look like over the next two years?</div>
+        <div class="q-note">Establishes size and trajectory. An 80-site group planning to reach 150 is a different conversation to one static at 80.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>What gift card or voucher programme do you have in place today, and who commercially owns it?</div>
+        <div class="q-note">Uncovers incumbent provider and who the real decision-maker is. If "marketing manages it," the CFO hasn't been engaged yet.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>What's your annual gift card revenue, and do you have visibility of breakage, cards sold but never redeemed?</div>
+        <div class="q-note">The breakage question often surfaces a gap: most operators have no visibility. This is CFO-level pain once uncovered.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>What EPOS system are you using across your estate: Zonal, Oracle Symphony, or something else?</div>
+        <div class="q-note">Confirms integration compatibility early. Important to establish before investing time in the commercial conversation.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>Do you currently sell gift cards through any B2B or corporate channels: staff rewards, Tillo, employee benefits platforms?</div>
+        <div class="q-note">Often untapped. Framing corporate gifting as a net-new revenue channel changes the commercial conversation.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>How quickly can you run a seasonal gifting campaign today, from decision to live?</div>
+        <div class="q-note">Surfaces frustration with the current provider. The answer is usually "weeks" or "we depend on our agency." Toggle's self-service speed is the counter.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div>Who needs to be involved in a decision like this, and does it go through a procurement or security review?</div>
+        <div class="q-note">Maps the decision process early. Surfacing the security or procurement gatekeeper early prevents late-stage delays.</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<div class="footer">
+  <div><strong>Toggle ICP</strong> · 2026 · Airship &amp; Toggle</div>
+  <div>Company Document</div>
+</div>
+
+</body>
+</html>
