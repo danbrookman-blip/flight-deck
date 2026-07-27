@@ -158,6 +158,46 @@
   }
   .stat-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4; font-weight: 400; }
 
+  /* BOUNDARY BAND */
+  .boundary-band {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 80px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .boundary-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid-blue);
+    margin-bottom: 6px;
+  }
+  .boundary-headline {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  .boundary-divider {
+    width: 1px;
+    height: 52px;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .boundary-note {
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    max-width: 640px;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+  .boundary-note strong { color: var(--blue); font-weight: 700; }
+
   /* LAYOUT */
   .section { padding: 64px 80px; }
   .section + .section { border-top: 1px solid var(--rule); }
@@ -354,6 +394,15 @@
     <div class="stat-number">Digital + Physical</div>
     <div class="stat-desc">Not just digital: physical and greetings gift cards, and physical cards too</div>
   </div>
+</div>
+
+<div class="boundary-band">
+  <div>
+    <div class="boundary-label">Where We Draw The Line</div>
+    <div class="boundary-headline">Toggle Is Not A Payment Processor</div>
+  </div>
+  <div class="boundary-divider"></div>
+  <div class="boundary-note">Toggle will <strong>never be a payment processor</strong>. Large enterprise customers often want a single end-to-end service, so be clear early about what Toggle owns, gifting and CRM engagement, and where it integrates with the payment and EPOS systems an operator already runs.</div>
 </div>
 
 <div class="section">
