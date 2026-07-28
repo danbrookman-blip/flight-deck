@@ -46,14 +46,14 @@
     header.top {
       background: var(--deep);
       color: #fff;
-      padding: 18px 0;
+      padding: 22px 0;
       position: sticky; top: 0; z-index: 20;
     }
-    header.top .wrap { display: flex; align-items: center; gap: 14px; }
-    .logo-dot { width: 34px; height: 34px; border-radius: 8px; background: var(--air-grad); flex: none;
-      display: grid; place-items: center; font-family: 'Montserrat'; font-weight: 800; color: #fff; }
-    header.top h1 { font-size: 17px; font-weight: 700; }
-    header.top .sub { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 400; }
+    header.top .wrap { display: flex; align-items: center; gap: 16px; }
+    .logo-dot { width: 38px; height: 38px; border-radius: 9px; background: var(--air-grad); flex: none;
+      display: grid; place-items: center; font-family: 'Montserrat'; font-weight: 800; color: #fff; font-size: 18px; }
+    header.top h1 { font-size: 17px; font-weight: 700; line-height: 1.25; }
+    header.top .sub { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 400; margin-top: 3px; }
     .top-actions { margin-left: auto; display: flex; gap: 8px; }
     .top-actions button { color: rgba(255,255,255,.85); font-size: 12.5px; font-weight: 500;
       padding: 7px 12px; border-radius: 7px; border: 1px solid rgba(255,255,255,.16); }
@@ -61,7 +61,7 @@
 
     main { padding: 32px 0 80px; }
 
-    .crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .crumb { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); margin-bottom: 24px; }
     .crumb button { color: var(--purple); font-weight: 600; }
     .crumb button:hover { text-decoration: underline; }
 
@@ -95,6 +95,7 @@
     .tier-voyage { background: rgba(141,0,212,.12); color: var(--purple); }
     .tier-flagship { background: rgba(236,0,255,.16); color: #b0009e; }
     .tier-blurb { font-size: 12px; color: var(--muted); margin-top: 9px; line-height: 1.4; }
+    .pform { display: grid; gap: 16px; }
     .dot { width: 7px; height: 7px; border-radius: 50%; }
     .dot-airship { background: var(--magenta); }
     .dot-toggle { background: var(--blue); }
@@ -368,59 +369,6 @@
     </div>
   </div>
 
-  <!-- Asset modal -->
-  <div class="overlay" id="assetOverlay">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="assetModalTitle">Add asset</h3>
-        <p>One deliverable for this item: its owner, stage, dates, channel and purpose.</p>
-      </div>
-      <div class="modal-body">
-        <div class="field">
-          <label>Asset name <span class="req">*</span></label>
-          <input id="assetName" placeholder="e.g. Customer email (+ video)" maxlength="120">
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Owner</label>
-            <input id="assetOwner" placeholder="e.g. Marketing" maxlength="60">
-          </div>
-          <div class="field">
-            <label>Stage</label>
-            <select id="assetStage">
-              <option>New</option>
-              <option>In progress</option>
-              <option>Blocked</option>
-              <option>Complete</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Date required</label>
-            <input id="assetReq" type="date">
-          </div>
-          <div class="field">
-            <label>Date launched</label>
-            <input id="assetLaunched" type="date">
-          </div>
-        </div>
-        <div class="field">
-          <label>Channel</label>
-          <select id="assetChannel"></select>
-        </div>
-        <div class="field">
-          <label>Purpose</label>
-          <textarea id="assetPurpose" placeholder="What is this asset for?"></textarea>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn-text" data-close>Cancel</button>
-        <button class="btn btn-primary" id="assetSave">Save asset</button>
-      </div>
-    </div>
-  </div>
-
   <input type="file" id="importFile" accept="application/json" style="display:none">
   <div class="toast" id="toast"></div>
 
@@ -446,7 +394,7 @@
     }
     function rowToAsset(r) {
       return { id: r.id, campaign_id: r.campaign_id, platform: r.platform, name: r.name,
-        owner: r.owner || "", stage: r.stage || "New", required: r.required || "", launched: r.launched || "",
+        owner: r.owner || "", assignee: r.assignee || "", stage: r.stage || "New", required: r.required || "", launched: r.launched || "",
         channel: r.channel || "", purpose: r.purpose || "" };
     }
 
@@ -500,13 +448,13 @@
       var c = campById(campId);
       var pl = c ? c.platform : "Airship";
       var r = await db.from("cp_assets").insert({ campaign_id: campId, platform: pl, name: d.name,
-        owner: d.owner, stage: d.stage, required: dOut(d.required), launched: dOut(d.launched),
+        owner: d.owner, assignee: d.assignee || "", stage: d.stage, required: dOut(d.required), launched: dOut(d.launched),
         channel: d.channel, purpose: d.purpose }).select().single();
       if (r.error) throw r.error;
       if (c) c.assets.push(rowToAsset(r.data));
     }
     async function dbUpdateAsset(id, campId, d) {
-      var r = await db.from("cp_assets").update({ name: d.name, owner: d.owner, stage: d.stage,
+      var r = await db.from("cp_assets").update({ name: d.name, owner: d.owner, assignee: d.assignee || "", stage: d.stage,
         required: dOut(d.required), launched: dOut(d.launched), channel: d.channel, purpose: d.purpose }).eq("id", id);
       if (r.error) throw r.error;
       var c = campById(campId);
@@ -632,6 +580,15 @@
     function stageBadge(s) { return '<span class="status ' + stageMeta(s).cls + '">' + esc(s || "New") + '</span>'; }
 
     function campById(id) { return state.campaigns.filter(function (c) { return c.id === id; })[0]; }
+    function channelOptions(sel) {
+      var html = '<option value=""' + (!sel ? ' selected' : '') + '>None</option>';
+      Object.keys(CHANNELS).forEach(function (g) {
+        html += '<optgroup label="' + g + '">' + CHANNELS[g].map(function (ch) {
+          return '<option' + (ch === sel ? ' selected' : '') + '>' + esc(ch) + '</option>';
+        }).join("") + '</optgroup>';
+      });
+      return html;
+    }
 
     function toast(msg) {
       var t = $("toast"); t.textContent = msg; t.classList.add("show");
@@ -685,7 +642,7 @@
           '" title="Launched: ' + esc(fmtDate(a.launched)) + '"></div>';
         return '<div class="tl-row rh-' + stageMeta(a.stage).key + '"><div class="tl-label" data-tledit="' + a.id + '">' +
           '<span class="tl-top"><span class="nm" title="' + esc(a.name) + '">' + esc(a.name) + '</span></span>' +
-          (a.owner ? '<span class="tl-owner">' + esc(a.owner) + '</span>' : '') +
+          ((a.assignee || a.owner) ? '<span class="tl-owner">' + esc(a.assignee || a.owner) + '</span>' : '') +
           '</div><div class="tl-track">' + track + '</div></div>';
       }).join("");
 
@@ -694,8 +651,8 @@
         rows +
         '</div></div>' +
         '<div class="tl-legend">' +
-          '<span><span class="lg-dot"></span> Date required</span>' +
-          '<span><span class="lg-dot filled"></span> Date launched</span>' +
+          '<span><span class="lg-dot"></span> Due date</span>' +
+          '<span><span class="lg-dot filled"></span> Launched</span>' +
           '<span><span class="lg-sw" style="background:var(--deep);width:3px"></span> Release</span>' +
           '<span><span class="lg-sw" style="background:rgba(236,0,255,.45);width:3px"></span> Today</span>' +
         '</div>' +
@@ -705,7 +662,80 @@
     /* ---------------- Render ---------------- */
     function render() {
       if (view.page === "home") renderHome();
+      else if (view.page === "asset") renderAsset();
       else renderCampaign();
+    }
+
+    function renderAsset() {
+      var c = campById(view.campaignId);
+      if (!c) { view.page = "home"; return render(); }
+      var isNew = !view.assetId;
+      var a = isNew
+        ? { name: "", owner: "", assignee: "", stage: "New", required: c.release || "", launched: "", channel: "", purpose: "" }
+        : c.assets.filter(function (x) { return x.id === view.assetId; })[0];
+      if (!a) { view.page = "campaign"; return render(); }
+
+      var maxAttr = c.release ? ' max="' + c.release + '"' : '';
+      var relNote = c.release ? 'Must be due on or before the release date, ' + esc(fmtDate(c.release)) + '.' : 'No campaign release date set yet.';
+
+      var html = '';
+      html += '<div class="crumb"><button id="crumbHome">The radar</button><span>/</span>' +
+        '<button id="crumbCamp">' + esc(c.name) + '</button><span>/</span><span>' + (isNew ? 'New asset' : esc(a.name)) + '</span></div>';
+      html += '<div class="page-head"><div>' +
+        '<h2>' + (isNew ? 'New asset' : esc(a.name)) + '</h2>' +
+        '<div style="display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap">' + platBadge(c.platform) + tierBadge(c) +
+          '<span class="size-chip">Part of ' + esc(c.name) + '</span></div>' +
+        '</div><div class="spacer"></div>' +
+        (isNew ? '' : '<button class="btn btn-ghost" id="delAsset">' + ICON.trash + 'Delete</button>') +
+        '<button class="btn btn-ghost" id="backAsset">Back</button>' +
+        '<button class="btn btn-primary" id="saveAsset">' + (isNew ? ICON.plus + 'Create asset' : 'Save changes') + '</button>' +
+        '</div>';
+      html += '<div class="panel" style="padding:24px;max-width:660px"><div class="pform">' +
+        '<div class="field"><label>Asset name <span class="req">*</span></label>' +
+          '<input id="proj_name" value="' + esc(a.name) + '" placeholder="e.g. Customer email (+ video)" maxlength="120"></div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label>Team</label><input id="proj_team" value="' + esc(a.owner) + '" placeholder="e.g. Marketing" maxlength="60"></div>' +
+          '<div class="field"><label>Assignee</label><input id="proj_assignee" value="' + esc(a.assignee || "") + '" placeholder="e.g. Priya" maxlength="60"></div>' +
+        '</div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label>Stage</label><select id="proj_stage">' +
+            ['New', 'In progress', 'Blocked', 'Complete'].map(function (s) { return '<option' + (s === a.stage ? ' selected' : '') + '>' + s + '</option>'; }).join("") + '</select></div>' +
+          '<div class="field"><label>Channel</label><select id="proj_channel">' + channelOptions(a.channel) + '</select></div>' +
+        '</div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label>Due date</label><input id="proj_due" type="date" value="' + esc(a.required) + '"' + maxAttr + '>' +
+            '<div class="tier-blurb" style="margin-top:6px">' + relNote + '</div></div>' +
+          '<div class="field"><label>Launched</label><input id="proj_launched" type="date" value="' + esc(a.launched) + '"' + maxAttr + '></div>' +
+        '</div>' +
+        '<div class="field"><label>Purpose / notes</label><textarea id="proj_purpose" placeholder="What is this asset for?">' + esc(a.purpose) + '</textarea></div>' +
+        '</div></div>';
+      $("app").innerHTML = html;
+
+      $("crumbHome").onclick = function () { view.page = "home"; render(); };
+      $("crumbCamp").onclick = function () { view.page = "campaign"; render(); };
+      $("backAsset").onclick = function () { view.page = "campaign"; render(); };
+      if ($("delAsset")) $("delAsset").onclick = async function () {
+        if (!confirm('Delete asset "' + a.name + '"?')) return;
+        try { await dbDeleteAsset(a.id, c.id); view.page = "campaign"; render(); toast("Asset deleted"); }
+        catch (e) { toast("Couldn't delete: " + (e.message || "error")); }
+      };
+      $("saveAsset").onclick = async function () {
+        var name = $("proj_name").value.trim();
+        if (!name) { $("proj_name").focus(); toast("Asset name is required"); return; }
+        var due = $("proj_due").value, launched = $("proj_launched").value;
+        if (due && c.release && due > c.release) { toast("Due date must be on or before the release date (" + fmtDate(c.release) + ")"); return; }
+        if (launched && c.release && launched > c.release) { toast("Launched date can't be after the release date"); return; }
+        var data = { name: name, owner: $("proj_team").value.trim(), assignee: $("proj_assignee").value.trim(),
+          stage: $("proj_stage").value, required: due, launched: launched, channel: $("proj_channel").value, purpose: $("proj_purpose").value.trim() };
+        var btn = $("saveAsset"); btn.disabled = true;
+        try {
+          if (isNew) { await dbCreateAsset(c.id, data); toast("Asset created"); }
+          else { await dbUpdateAsset(a.id, c.id, data); toast("Saved"); }
+          view.page = "campaign"; render();
+        } catch (e) { toast("Couldn't save: " + (e.message || "error")); }
+        finally { btn.disabled = false; }
+      };
+      if (isNew) $("proj_name").focus();
     }
 
     var HORIZON_ORDER = [["week","This week"],["twoweek","Within 2 weeks"],["month","This month"],["quarter","This quarter"],["later","Later"],["none","No date"]];
@@ -713,7 +743,7 @@
     function renderHome() {
       var html = '';
       html += '<div class="page-head">' +
-        '<div><h2>The radar</h2><p>Every release and campaign on one board, by when it lands. Set a tier and the runway builds itself.</p></div>' +
+        '<div><h2>Campaigns &amp; Radar</h2><p>Every release and campaign on one board, by when it lands. Set a tier and the runway builds itself.</p></div>' +
         '<div class="spacer"></div>' +
         '<button class="btn btn-primary" id="newCamp">' + ICON.plus + 'New item</button>' +
         '</div>';
@@ -769,14 +799,14 @@
       if (view.stage !== "all") assets = assets.filter(function (a) { return (a.stage || "New") === view.stage; });
       if (view.search) {
         var q = view.search.toLowerCase();
-        assets = assets.filter(function (a) { return (a.name + " " + (a.purpose || "") + " " + (a.owner || "") + " " + (a.channel || "")).toLowerCase().indexOf(q) > -1; });
+        assets = assets.filter(function (a) { return (a.name + " " + (a.purpose || "") + " " + (a.owner || "") + " " + (a.assignee || "") + " " + (a.channel || "")).toLowerCase().indexOf(q) > -1; });
       }
       assets.sort(function (a, b) { return (a.required || "9999") < (b.required || "9999") ? -1 : 1; });
 
       var relChip = c.release ? '<span class="size-chip">' + esc(horizonOf(c.release).label) + ' · Releases ' + esc(fmtDate(c.release)) + '</span>' : '';
 
       var html = '';
-      html += '<div class="crumb"><button id="crumbHome">The radar</button><span>/</span><span>' + esc(c.name) + '</span></div>';
+      html += '<div class="crumb"><button id="crumbHome">Campaigns &amp; Radar</button><span>/</span><span>' + esc(c.name) + '</span></div>';
       html += '<div class="page-head"><div>' +
         '<h2>' + esc(c.name) + '</h2>' +
         '<div style="display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap">' + platBadge(c.platform) + tierBadge(c) + gateBadge(c.stage) + relChip + '</div>' +
@@ -810,20 +840,16 @@
         html += timelineHTML(assets, c);
       } else {
         html += '<div class="panel"><table><thead><tr>' +
-          '<th>Asset</th><th class="hide-sm">Owner</th><th>Stage</th><th>Date required</th><th>Date launched</th><th class="hide-sm">Channel</th><th></th>' +
+          '<th>Asset</th><th class="hide-sm">Team</th><th>Assignee</th><th>Stage</th><th>Due date</th>' +
           '</tr></thead><tbody>';
         assets.forEach(function (a) {
-          html += '<tr class="rh-' + stageMeta(a.stage).key + '">' +
+          html += '<tr class="reg rh-' + stageMeta(a.stage).key + '" data-openasset="' + a.id + '">' +
             '<td><div class="aname">' + esc(a.name) + '</div>' + (a.purpose ? '<div class="purpose">' + esc(a.purpose) + '</div>' : '') + '</td>' +
             '<td class="hide-sm">' + (a.owner ? esc(a.owner) : '<span style="color:#c3bccd">·</span>') + '</td>' +
+            '<td>' + (a.assignee ? esc(a.assignee) : '<span style="color:#c3bccd">Unassigned</span>') + '</td>' +
             '<td>' + stageBadge(a.stage) + '</td>' +
             '<td class="date-cell' + (a.required ? '' : ' empty') + '">' + (a.required ? fmtDate(a.required) : "Not set") + '</td>' +
-            '<td class="date-cell' + (a.launched ? '' : ' empty') + '">' + (a.launched ? fmtDate(a.launched) : "Not yet") + '</td>' +
-            '<td class="hide-sm">' + (a.channel ? esc(a.channel) : '<span style="color:#c3bccd">·</span>') + '</td>' +
-            '<td><div class="row-actions">' +
-              '<button class="icon-btn" data-edit="' + a.id + '" title="Edit">' + ICON.edit + '</button>' +
-              '<button class="icon-btn del" data-del="' + a.id + '" title="Delete">' + ICON.trash + '</button>' +
-            '</div></td></tr>';
+            '</tr>';
         });
         html += '</tbody></table></div>';
       }
@@ -846,19 +872,12 @@
       Array.prototype.forEach.call(document.querySelectorAll("[data-mode]"), function (el) {
         el.onclick = function () { view.mode = el.getAttribute("data-mode"); renderCampaign(); };
       });
+      function openAsset(id) { view.page = "asset"; view.assetId = id; render(); }
+      Array.prototype.forEach.call(document.querySelectorAll("[data-openasset]"), function (el) {
+        el.onclick = function () { openAsset(el.getAttribute("data-openasset")); };
+      });
       Array.prototype.forEach.call(document.querySelectorAll("[data-tledit]"), function (el) {
-        el.onclick = function () { var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-tledit"); })[0]; openEditAsset(a); };
-      });
-      Array.prototype.forEach.call(document.querySelectorAll("[data-edit]"), function (el) {
-        el.onclick = function () { var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-edit"); })[0]; openEditAsset(a); };
-      });
-      Array.prototype.forEach.call(document.querySelectorAll("[data-del]"), function (el) {
-        el.onclick = async function () {
-          var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-del"); })[0];
-          if (!confirm('Delete asset "' + a.name + '"?')) return;
-          try { await dbDeleteAsset(a.id, c.id); renderCampaign(); toast("Asset deleted"); }
-          catch (e) { toast("Couldn't delete: " + (e.message || "error")); }
-        };
+        el.onclick = function () { openAsset(el.getAttribute("data-tledit")); };
       });
     }
 
@@ -965,44 +984,9 @@
     Array.prototype.forEach.call(document.querySelectorAll("#campType button"), function (b) { b.onclick = function () { setCampType(b.getAttribute("data-t")); }; });
     Array.prototype.forEach.call(document.querySelectorAll("#campPlatform button"), function (b) { b.onclick = function () { setCampPlatform(b.getAttribute("data-v")); }; });
 
-    /* ---------------- Asset modal ---------------- */
-    function buildChannelSelect() {
-      var html = '<option value="">Select a channel…</option>';
-      Object.keys(CHANNELS).forEach(function (g) {
-        html += '<optgroup label="' + g + '">' + CHANNELS[g].map(function (ch) { return '<option>' + esc(ch) + '</option>'; }).join("") + '</optgroup>';
-      });
-      $("assetChannel").innerHTML = html;
-    }
-    function openNewAsset() {
-      editingAsset = null;
-      $("assetModalTitle").textContent = "Add asset";
-      var c = campById(view.campaignId);
-      $("assetName").value = ""; $("assetOwner").value = ""; $("assetStage").value = "New";
-      $("assetReq").value = (c && c.release) ? c.release : "";
-      $("assetLaunched").value = ""; $("assetChannel").value = ""; $("assetPurpose").value = "";
-      openOverlay("assetOverlay"); $("assetName").focus();
-    }
-    function openEditAsset(a) {
-      editingAsset = a.id;
-      $("assetModalTitle").textContent = "Edit asset";
-      $("assetName").value = a.name; $("assetOwner").value = a.owner || ""; $("assetStage").value = a.stage || "New";
-      $("assetReq").value = a.required || ""; $("assetLaunched").value = a.launched || "";
-      $("assetChannel").value = a.channel || ""; $("assetPurpose").value = a.purpose || "";
-      openOverlay("assetOverlay"); $("assetName").focus();
-    }
-    $("assetSave").onclick = async function () {
-      var name = $("assetName").value.trim();
-      if (!name) { $("assetName").focus(); toast("Asset name is required"); return; }
-      var data = { name: name, owner: $("assetOwner").value.trim(), stage: $("assetStage").value,
-        required: $("assetReq").value, launched: $("assetLaunched").value, channel: $("assetChannel").value, purpose: $("assetPurpose").value.trim() };
-      var btn = $("assetSave"); btn.disabled = true;
-      try {
-        if (editingAsset) { await dbUpdateAsset(editingAsset, view.campaignId, data); toast("Asset updated"); }
-        else { await dbCreateAsset(view.campaignId, data); toast("Asset added"); }
-        closeOverlays(); renderCampaign();
-      } catch (e) { toast("Couldn't save: " + (e.message || "error")); }
-      finally { btn.disabled = false; }
-    };
+    /* ---------------- Asset creation ---------------- */
+    // Each asset is its own project page; "Add asset" opens a blank one.
+    function openNewAsset() { view.page = "asset"; view.assetId = null; render(); }
 
     /* ---------------- Overlay plumbing ---------------- */
     function openOverlay(id) { $(id).classList.add("open"); }
@@ -1048,7 +1032,6 @@
     };
 
     /* ---------------- Boot ---------------- */
-    buildChannelSelect();
     $("app").innerHTML = '<div class="panel"><div class="empty-state"><div class="big">☁️</div>' +
       '<h3>Loading…</h3><p>Fetching the radar from Supabase.</p></div></div>';
     loadAll().then(render).catch(function (e) {
