@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campaign Planner · Airship + Toggle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --purple: #8d00d4;
+      --magenta: #ec00ff;
+      --deep: #34004d;
+      --blue: #3180FF;
+      --cream: #faf9f5;
+      --ink: #2a1436;
+      --muted: #6b6577;
+      --line: #ece7f1;
+      --card: #ffffff;
+      --radius: 9px;
+      --shadow: 0 1px 3px rgba(52,0,77,.06), 0 8px 24px rgba(52,0,77,.06);
+      --shadow-lg: 0 12px 48px rgba(52,0,77,.18);
+      --air-grad: linear-gradient(120deg, var(--purple), var(--magenta));
+      --both-grad: linear-gradient(120deg, var(--purple), var(--blue));
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .font-head { font-family: 'Montserrat', sans-serif; letter-spacing: -.01em; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: inherit; font-size: 14px; }
+    a { color: inherit; }
+
+    /* ---------- Layout ---------- */
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    header.top {
+      background: var(--deep);
+      color: #fff;
+      padding: 18px 0;
+      position: sticky; top: 0; z-index: 20;
+    }
+    header.top .wrap { display: flex; align-items: center; gap: 14px; }
+    .logo-dot { width: 34px; height: 34px; border-radius: 8px; background: var(--air-grad); flex: none;
+      display: grid; place-items: center; font-family: 'Montserrat'; font-weight: 800; color: #fff; }
+    header.top h1 { font-size: 17px; font-weight: 700; }
+    header.top .sub { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 400; }
+    .top-actions { margin-left: auto; display: flex; gap: 8px; }
+    .top-actions button { color: rgba(255,255,255,.85); font-size: 12.5px; font-weight: 500;
+      padding: 7px 12px; border-radius: 7px; border: 1px solid rgba(255,255,255,.16); }
+    .top-actions button:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+    main { padding: 32px 0 80px; }
+
+    .crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .crumb button { color: var(--purple); font-weight: 600; }
+    .crumb button:hover { text-decoration: underline; }
+
+    .page-head { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .page-head h2 { font-size: 26px; font-weight: 800; color: var(--deep); }
+    .page-head p { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+    .page-head .spacer { flex: 1; }
+
+    /* ---------- Buttons ---------- */
+    .btn { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13.5px;
+      padding: 10px 16px; border-radius: var(--radius); transition: .15s; white-space: nowrap; }
+    .btn-primary { background: var(--air-grad); color: #fff; box-shadow: 0 4px 14px rgba(141,0,212,.28); }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .btn-ghost { background: #fff; color: var(--deep); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .btn-ghost:hover { border-color: #d9cfe6; }
+    .btn svg { width: 16px; height: 16px; }
+
+    /* ---------- Campaign cards ---------- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .camp-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 20px; box-shadow: var(--shadow); cursor: pointer; transition: .15s; position: relative; overflow: hidden; }
+    .camp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: #e0d5ec; }
+    .camp-card .strip { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+    .camp-card h3 { font-size: 17px; font-weight: 700; color: var(--deep); margin-bottom: 4px; padding-left: 4px; }
+    .camp-card .desc { color: var(--muted); font-size: 13px; min-height: 20px; padding-left: 4px; }
+    .camp-card .meta { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-left: 4px;
+      font-size: 12px; color: var(--muted); }
+    .camp-card .meta b { color: var(--ink); font-weight: 600; }
+    .camp-card .platmix { display: flex; gap: 5px; margin-top: 14px; padding-left: 4px; }
+
+    /* ---------- Badges ---------- */
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px; letter-spacing: .01em; white-space: nowrap; }
+    .badge-airship { background: rgba(236,0,255,.10); color: var(--purple); }
+    .badge-toggle { background: rgba(49,112,255,.12); color: var(--blue); }
+    .badge-both { background: linear-gradient(120deg, rgba(141,0,212,.12), rgba(49,112,255,.12)); color: var(--deep); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .dot-airship { background: var(--magenta); }
+    .dot-toggle { background: var(--blue); }
+    .dot-both { background: linear-gradient(120deg, var(--purple), var(--blue)); }
+
+    .status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px; }
+    .st-planned { background: #eef1f6; color: #5b6472; }
+    .st-live { background: rgba(21,160,90,.12); color: #158a52; }
+    .st-due { background: rgba(230,150,0,.14); color: #b57400; }
+    .st-overdue { background: rgba(214,40,40,.12); color: #cc2a2a; }
+
+    /* ---------- Table ---------- */
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--muted); padding: 13px 16px; background: #faf8fc; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    tbody td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 13.5px; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #fcfbfe; }
+    td .aname { font-weight: 600; color: var(--deep); }
+    td .purpose { color: var(--muted); font-size: 12.5px; max-width: 260px; }
+    .date-cell { white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .date-cell.empty { color: #c3bccd; }
+    .row-actions { display: flex; gap: 4px; opacity: 0; transition: .12s; }
+    tr:hover .row-actions { opacity: 1; }
+    .icon-btn { width: 30px; height: 30px; border-radius: 7px; display: grid; place-items: center; color: var(--muted); }
+    .icon-btn:hover { background: #f0eaf7; color: var(--purple); }
+    .icon-btn.del:hover { background: #fdeaea; color: #cc2a2a; }
+    .icon-btn svg { width: 15px; height: 15px; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state .big { font-size: 40px; margin-bottom: 8px; }
+    .empty-state h3 { color: var(--deep); font-size: 17px; margin-bottom: 6px; }
+    .empty-state p { margin-bottom: 18px; }
+
+    /* ---------- Filter bar ---------- */
+    .filterbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .filterbar input.search { flex: 1; min-width: 180px; padding: 9px 13px; border: 1px solid var(--line);
+      border-radius: var(--radius); background: #fff; }
+    .filterbar input.search:focus { outline: none; border-color: var(--purple); }
+    .chip { font-size: 12.5px; font-weight: 600; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--line);
+      background: #fff; color: var(--muted); }
+    .chip.active { background: var(--deep); color: #fff; border-color: var(--deep); }
+    .stage-filter { font-size: 12.5px; font-weight: 600; padding: 7px 30px 7px 13px; border-radius: 20px;
+      border: 1px solid var(--line); background: #fff; color: var(--muted); cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6577' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; }
+    .stage-filter:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(141,0,212,.12); }
+    .stage-filter.active { background-color: var(--deep); color: #fff; border-color: var(--deep);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); }
+
+    /* ---------- Modal ---------- */
+    .overlay { position: fixed; inset: 0; background: rgba(42,10,55,.42); backdrop-filter: blur(3px);
+      display: none; align-items: flex-start; justify-content: center; z-index: 50; padding: 40px 20px; overflow-y: auto; }
+    .overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 540px; box-shadow: var(--shadow-lg);
+      animation: pop .18s ease; }
+    @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+    .modal-head { padding: 22px 24px 0; }
+    .modal-head h3 { font-size: 19px; font-weight: 700; color: var(--deep); }
+    .modal-head p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .modal-body { padding: 20px 24px; display: grid; gap: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .field label .req { color: var(--magenta); }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--ink); }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(141,0,212,.12); }
+    .field textarea { resize: vertical; min-height: 60px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .seg { display: flex; gap: 8px; }
+    .seg button { flex: 1; padding: 10px; border-radius: var(--radius); border: 1.5px solid var(--line); background: #fff;
+      font-weight: 600; font-size: 13px; color: var(--muted); transition: .12s; }
+    .seg button.on[data-v="Airship"] { border-color: var(--purple); background: rgba(236,0,255,.07); color: var(--purple); }
+    .seg button.on[data-v="Toggle"] { border-color: var(--blue); background: rgba(49,112,255,.08); color: var(--blue); }
+    .seg button.on[data-v="Both"] { border-color: var(--deep); background: rgba(52,0,77,.06); color: var(--deep); }
+    .modal-foot { padding: 16px 24px 22px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--line); }
+    .modal-foot .btn-text { color: var(--muted); font-weight: 600; padding: 10px 12px; }
+    .modal-foot .btn-text:hover { color: var(--ink); }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--deep); color: #fff; padding: 11px 20px; border-radius: 30px; font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: .25s; z-index: 100; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ---------- View toggle ---------- */
+    .viewseg { display: inline-flex; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 3px; box-shadow: var(--shadow); }
+    .viewseg button { font-size: 12.5px; font-weight: 600; color: var(--muted); padding: 6px 13px; border-radius: 6px; }
+    .viewseg button.on { background: var(--deep); color: #fff; }
+
+    /* ---------- Timeline ---------- */
+    .tl { padding: 22px 20px 8px; }
+    .tl-scroll { overflow-x: auto; }
+    .tl-inner { min-width: 620px; }
+    .tl-axis { display: grid; grid-template-columns: 210px 1fr; height: 26px; margin-bottom: 4px; }
+    .tl-scale { position: relative; }
+    .tl-tick { position: absolute; top: 0; transform: translateX(-50%); font-size: 11px; color: var(--muted);
+      font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .tl-row { display: grid; grid-template-columns: 210px 1fr; align-items: center; }
+    .tl-row + .tl-row { border-top: 1px solid var(--line); }
+    .tl-label { padding: 0 14px 0 2px; display: flex; align-items: center; gap: 8px; min-width: 0; cursor: pointer; }
+    .tl-label:hover .nm { color: var(--purple); }
+    .tl-label .nm { font-weight: 600; font-size: 13px; color: var(--deep); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; }
+    .tl-track { position: relative; height: 46px; }
+    .tl-gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+    .tl-today { position: absolute; top: -4px; bottom: 0; width: 2px; background: rgba(236,0,255,.45); z-index: 1; }
+    .tl-bar { position: absolute; top: 50%; transform: translateY(-50%); height: 5px; border-radius: 3px; z-index: 2; opacity: .55; }
+    .tl-dot { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 15px; height: 15px; border-radius: 50%;
+      border: 2.5px solid currentColor; background: #fff; z-index: 3; }
+    .tl-dot.filled { background: currentColor; box-shadow: 0 0 0 3px rgba(255,255,255,.9); }
+    .c-Airship { color: var(--magenta); }
+    .c-Toggle { color: var(--blue); }
+    .c-Both { color: var(--purple); }
+    .tl-legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 16px 4px 6px; margin-top: 8px;
+      border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    .tl-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .lg-dot { width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--deep); background: #fff; }
+    .lg-dot.filled { background: var(--deep); }
+    .lg-sw { width: 12px; height: 12px; border-radius: 4px; }
+
+    /* ---------- Stage badges + highlights ---------- */
+    .stg-new { background: #eef1f6; color: #5b6472; }
+    .stg-progress { background: rgba(37,99,235,.12); color: #2563eb; }
+    .stg-blocked { background: rgba(214,40,40,.13); color: #cc2a2a; }
+    .stg-complete { background: rgba(21,160,90,.13); color: #158a52; }
+
+    tbody tr.rh-new td:first-child { box-shadow: inset 3px 0 0 #b8c0cc; }
+    tbody tr.rh-progress td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
+    tbody tr.rh-blocked td:first-child { box-shadow: inset 3px 0 0 #cc2a2a; }
+    tbody tr.rh-complete td:first-child { box-shadow: inset 3px 0 0 #158a52; }
+    tbody tr.rh-blocked { background: rgba(214,40,40,.045); }
+    tbody tr.rh-complete { background: rgba(21,160,90,.035); }
+    tbody tr.rh-progress { background: rgba(37,99,235,.03); }
+
+    .tl-row.rh-new { box-shadow: inset 3px 0 0 #b8c0cc; }
+    .tl-row.rh-progress { box-shadow: inset 3px 0 0 #2563eb; background: rgba(37,99,235,.03); }
+    .tl-row.rh-blocked { box-shadow: inset 3px 0 0 #cc2a2a; background: rgba(214,40,40,.045); }
+    .tl-row.rh-complete { box-shadow: inset 3px 0 0 #158a52; background: rgba(21,160,90,.035); }
+
+    .tl-label { flex-direction: column; align-items: flex-start; gap: 2px; justify-content: center; }
+    .tl-top { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; }
+    .tl-owner { font-size: 11px; color: var(--muted); padding-left: 15px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+    .camp-card .meta .blocked { color: #cc2a2a; font-weight: 600; }
+
+    @media (max-width: 680px) {
+      .field-row { grid-template-columns: 1fr; }
+      thead th.hide-sm, td.hide-sm { display: none; }
+      .page-head h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="logo-dot">C</div>
+      <div>
+        <h1>Campaign Planner</h1>
+        <div class="sub">Airship + Toggle</div>
+      </div>
+      <div class="top-actions">
+        <button id="btnExport">Export</button>
+        <button id="btnImport">Import</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+
+  <!-- Campaign modal -->
+  <div class="overlay" id="campOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="campModalTitle">New campaign</h3>
+        <p>Group the assets that ship together for one push.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Campaign name <span class="req">*</span></label>
+          <input id="campName" placeholder="e.g. Summer Rewards Relaunch" maxlength="80">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="campDesc" placeholder="What is this campaign trying to achieve?"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-text" data-close>Cancel</button>
+        <button class="btn btn-primary" id="campSave">Save campaign</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Asset modal -->
+  <div class="overlay" id="assetOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="assetModalTitle">Add asset</h3>
+        <p>One deliverable: its platform, owner, stage, dates, channel and purpose.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Platform <span class="req">*</span></label>
+          <div class="seg" id="assetPlatform">
+            <button type="button" data-v="Airship">Airship</button>
+            <button type="button" data-v="Toggle">Toggle</button>
+            <button type="button" data-v="Both">Both</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Asset name <span class="req">*</span></label>
+          <input id="assetName" placeholder="e.g. Launch email: welcome offer" maxlength="120">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Owner</label>
+            <input id="assetOwner" placeholder="e.g. Priya" maxlength="60">
+          </div>
+          <div class="field">
+            <label>Stage</label>
+            <select id="assetStage">
+              <option>New</option>
+              <option>In progress</option>
+              <option>Blocked</option>
+              <option>Complete</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Date required</label>
+            <input id="assetReq" type="date">
+          </div>
+          <div class="field">
+            <label>Date launched</label>
+            <input id="assetLaunched" type="date">
+          </div>
+        </div>
+        <div class="field">
+          <label>Channel</label>
+          <select id="assetChannel">
+            <option value="">Select a channel…</option>
+            <option>Email</option>
+            <option>SMS</option>
+            <option>Push notification</option>
+            <option>App</option>
+            <option>In-store</option>
+            <option>Social</option>
+            <option>Web</option>
+            <option>Print</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Purpose</label>
+          <textarea id="assetPurpose" placeholder="What is this asset for? e.g. Drive first redemption of the welcome voucher."></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-text" data-close>Cancel</button>
+        <button class="btn btn-primary" id="assetSave">Save asset</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------------- Supabase (the shared database) ---------------- */
+    var SUPABASE_URL = "https://zwiiljmyyvakyyvypvtc.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_ZRAGcLTey-PLJl_67v1HLg_LdPWycXL";
+    var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var state = { campaigns: [] };   // in-memory cache mirroring the DB
+    var view = { page: "home", campaignId: null, filter: "all", stage: "all", search: "", mode: "table" };
+    var editingAsset = null;   // asset id being edited, or null
+    var editingCamp = null;    // campaign id being edited, or null
+
+    function dOut(v) { return v ? v : null; }   // '' -> null for nullable date columns
+    function rowToCampaign(r) { return { id: r.id, name: r.name, desc: r.description || "", created: r.created_at, assets: [] }; }
+    function rowToAsset(r) {
+      return { id: r.id, campaign_id: r.campaign_id, platform: r.platform, name: r.name,
+        owner: r.owner || "", stage: r.stage || "New", required: r.required || "", launched: r.launched || "",
+        channel: r.channel || "", purpose: r.purpose || "" };
+    }
+
+    async function loadAll() {
+      var cRes = await db.from("cp_campaigns").select("*").order("created_at", { ascending: false });
+      var aRes = await db.from("cp_assets").select("*").order("created_at", { ascending: true });
+      if (cRes.error) throw cRes.error;
+      if (aRes.error) throw aRes.error;
+      var byId = {};
+      state.campaigns = cRes.data.map(function (r) { var c = rowToCampaign(r); byId[c.id] = c; return c; });
+      aRes.data.forEach(function (r) { var a = rowToAsset(r); if (byId[a.campaign_id]) byId[a.campaign_id].assets.push(a); });
+    }
+
+    function assetPayload(campId, d) {
+      var p = { platform: d.platform, name: d.name, owner: d.owner, stage: d.stage,
+        required: dOut(d.required), launched: dOut(d.launched), channel: d.channel, purpose: d.purpose };
+      if (campId) p.campaign_id = campId;
+      return p;
+    }
+    async function dbCreateCampaign(name, desc) {
+      var r = await db.from("cp_campaigns").insert({ name: name, description: desc }).select().single();
+      if (r.error) throw r.error;
+      var c = rowToCampaign(r.data); state.campaigns.unshift(c); return c;
+    }
+    async function dbUpdateCampaign(id, name, desc) {
+      var r = await db.from("cp_campaigns").update({ name: name, description: desc }).eq("id", id);
+      if (r.error) throw r.error;
+      var c = campById(id); if (c) { c.name = name; c.desc = desc; }
+    }
+    async function dbDeleteCampaign(id) {
+      var r = await db.from("cp_campaigns").delete().eq("id", id);
+      if (r.error) throw r.error;
+      state.campaigns = state.campaigns.filter(function (x) { return x.id !== id; });
+    }
+    async function dbCreateAsset(campId, d) {
+      var r = await db.from("cp_assets").insert(assetPayload(campId, d)).select().single();
+      if (r.error) throw r.error;
+      var c = campById(campId); if (c) c.assets.push(rowToAsset(r.data));
+    }
+    async function dbUpdateAsset(id, campId, d) {
+      var r = await db.from("cp_assets").update(assetPayload(null, d)).eq("id", id);
+      if (r.error) throw r.error;
+      var c = campById(campId);
+      if (c) { var a = c.assets.filter(function (x) { return x.id === id; })[0];
+        if (a) Object.keys(d).forEach(function (k) { a[k] = d[k]; }); }
+    }
+    async function dbDeleteAsset(id, campId) {
+      var r = await db.from("cp_assets").delete().eq("id", id);
+      if (r.error) throw r.error;
+      var c = campById(campId); if (c) c.assets = c.assets.filter(function (x) { return x.id !== id; });
+    }
+
+    /* ---------------- Helpers ---------------- */
+    var $ = function (id) { return document.getElementById(id); };
+    function esc(s) { return (s == null ? "" : String(s)).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+    function fmtDate(d) {
+      if (!d) return "";
+      var parts = d.split("-");
+      var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      return dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    }
+    function todayISO() {
+      var n = new Date();
+      return n.getFullYear() + "-" + String(n.getMonth() + 1).padStart(2, "0") + "-" + String(n.getDate()).padStart(2, "0");
+    }
+    function statusOf(a) {
+      if (a.launched) return { cls: "st-live", label: "Launched" };
+      if (a.required && a.required < todayISO()) return { cls: "st-overdue", label: "Overdue" };
+      if (a.required) return { cls: "st-planned", label: "Planned" };
+      return { cls: "st-planned", label: "Planned" };
+    }
+    function platBadge(p) {
+      var map = { Airship: "badge-airship", Toggle: "badge-toggle", Both: "badge-both" };
+      var dot = { Airship: "dot-airship", Toggle: "dot-toggle", Both: "dot-both" };
+      return '<span class="badge ' + map[p] + '"><span class="dot ' + dot[p] + '"></span>' + esc(p) + '</span>';
+    }
+    var STAGE_META = {
+      "New": { key: "new", cls: "stg-new" },
+      "In progress": { key: "progress", cls: "stg-progress" },
+      "Blocked": { key: "blocked", cls: "stg-blocked" },
+      "Complete": { key: "complete", cls: "stg-complete" }
+    };
+    function stageMeta(s) { return STAGE_META[s] || STAGE_META["New"]; }
+    function stageBadge(s) { return '<span class="status ' + stageMeta(s).cls + '">' + esc(s || "New") + '</span>'; }
+
+    function campById(id) { return state.campaigns.filter(function (c) { return c.id === id; })[0]; }
+
+    function toast(msg) {
+      var t = $("toast"); t.textContent = msg; t.classList.add("show");
+      clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove("show"); }, 2200);
+    }
+
+    /* ---------------- Icons ---------------- */
+    var ICON = {
+      plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+      edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+      trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>',
+      back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>'
+    };
+
+    /* ---------------- Timeline ---------------- */
+    function dnum(iso) { var p = iso.split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000; }
+    function dayToISO(n) {
+      var d = new Date(n * 86400000);
+      return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
+    }
+    function fmtShort(iso) {
+      var p = iso.split("-");
+      return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+    }
+
+    function timelineHTML(assets) {
+      var dates = [];
+      assets.forEach(function (a) { if (a.required) dates.push(dnum(a.required)); if (a.launched) dates.push(dnum(a.launched)); });
+      if (!dates.length) {
+        return '<div class="panel"><div class="empty-state"><div class="big">📆</div>' +
+          '<h3>No dates to plot</h3><p>Add a required or launched date to an asset to see it on the timeline.</p></div></div>';
+      }
+      var min = Math.min.apply(null, dates), max = Math.max.apply(null, dates);
+      var pad = Math.max(2, Math.round((max - min) * 0.06));
+      min -= pad; max += pad;
+      if (max - min < 6) { min -= 3; max += 3; }
+      var span = max - min;
+      var pct = function (n) { return ((n - min) / span * 100).toFixed(3) + "%"; };
+
+      // evenly spaced axis ticks + gridlines
+      var ticks = 6, tickHTML = "", glHTML = "";
+      for (var i = 0; i <= ticks; i++) {
+        var frac = i / ticks, left = (frac * 100).toFixed(3) + "%";
+        tickHTML += '<div class="tl-tick" style="left:' + left + '">' + fmtShort(dayToISO(Math.round(min + frac * span))) + '</div>';
+        glHTML += '<div class="tl-gl" style="left:' + left + '"></div>';
+      }
+      var today = dnum(todayISO());
+      var todayHTML = (today >= min && today <= max) ? '<div class="tl-today" style="left:' + pct(today) + '"></div>' : "";
+
+      var rows = assets.map(function (a) {
+        var track = glHTML + todayHTML;
+        if (a.required && a.launched) {
+          var lo = Math.min(dnum(a.required), dnum(a.launched)), hi = Math.max(dnum(a.required), dnum(a.launched));
+          track += '<div class="tl-bar c-' + a.platform + '" style="left:' + pct(lo) + ';width:' +
+            ((hi - lo) / span * 100).toFixed(3) + '%;background:currentColor"></div>';
+        }
+        if (a.required) track += '<div class="tl-dot c-' + a.platform + '" style="left:' + pct(dnum(a.required)) +
+          '" title="Required: ' + esc(fmtDate(a.required)) + '"></div>';
+        if (a.launched) track += '<div class="tl-dot filled c-' + a.platform + '" style="left:' + pct(dnum(a.launched)) +
+          '" title="Launched: ' + esc(fmtDate(a.launched)) + '"></div>';
+        return '<div class="tl-row rh-' + stageMeta(a.stage).key + '"><div class="tl-label" data-tledit="' + a.id + '">' +
+          '<span class="tl-top"><span class="dot dot-' + a.platform.toLowerCase() + '"></span>' +
+          '<span class="nm" title="' + esc(a.name) + '">' + esc(a.name) + '</span></span>' +
+          (a.owner ? '<span class="tl-owner">' + esc(a.owner) + '</span>' : '') +
+          '</div>' +
+          '<div class="tl-track">' + track + '</div></div>';
+      }).join("");
+
+      return '<div class="panel"><div class="tl"><div class="tl-scroll"><div class="tl-inner">' +
+        '<div class="tl-axis"><div></div><div class="tl-scale">' + tickHTML + '</div></div>' +
+        rows +
+        '</div></div>' +
+        '<div class="tl-legend">' +
+          '<span><span class="lg-dot"></span> Date required</span>' +
+          '<span><span class="lg-dot filled"></span> Date launched</span>' +
+          '<span><span class="lg-sw" style="background:var(--magenta)"></span> Airship</span>' +
+          '<span><span class="lg-sw" style="background:var(--blue)"></span> Toggle</span>' +
+          '<span><span class="lg-sw" style="background:var(--purple)"></span> Both</span>' +
+          '<span><span class="lg-sw" style="background:rgba(236,0,255,.45);width:3px"></span> Today</span>' +
+        '</div>' +
+        '</div></div>';
+    }
+
+    /* ---------------- Render ---------------- */
+    function render() {
+      if (view.page === "home") renderHome();
+      else renderCampaign();
+    }
+
+    function renderHome() {
+      var camps = state.campaigns.slice().sort(function (a, b) { return (a.created || "") < (b.created || "") ? 1 : -1; });
+      var html = '';
+      html += '<div class="page-head">' +
+        '<div><h2>Campaigns</h2><p>Plan a campaign, add its assets, track when each one ships.</p></div>' +
+        '<div class="spacer"></div>' +
+        '<button class="btn btn-primary" id="newCamp">' + ICON.plus + 'New campaign</button>' +
+        '</div>';
+
+      if (!camps.length) {
+        html += '<div class="panel"><div class="empty-state"><div class="big">📋</div>' +
+          '<h3>No campaigns yet</h3><p>Create your first campaign to start planning assets and dates.</p>' +
+          '<button class="btn btn-primary" id="newCamp2">' + ICON.plus + 'New campaign</button></div></div>';
+      } else {
+        html += '<div class="grid">';
+        camps.forEach(function (c) {
+          var plats = {};
+          c.assets.forEach(function (a) { plats[a.platform] = true; });
+          var mix = ["Airship", "Toggle", "Both"].filter(function (p) { return plats[p]; })
+            .map(function (p) { return platBadge(p); }).join("");
+          var dates = c.assets.map(function (a) { return a.required; }).filter(Boolean).sort();
+          var range = dates.length ? fmtDate(dates[0]) + (dates.length > 1 ? " → " + fmtDate(dates[dates.length - 1]) : "") : "No dates set";
+          var strip = "var(--air-grad)";
+          if (plats.Toggle && !plats.Airship && !plats.Both) strip = "var(--blue)";
+          else if (plats.Both || (plats.Airship && plats.Toggle)) strip = "var(--both-grad)";
+          var done = c.assets.filter(function (a) { return a.stage === "Complete"; }).length;
+          var blocked = c.assets.filter(function (a) { return a.stage === "Blocked"; }).length;
+          html += '<div class="camp-card" data-camp="' + c.id + '">' +
+            '<div class="strip" style="background:' + strip + '"></div>' +
+            '<h3>' + esc(c.name) + '</h3>' +
+            '<div class="desc">' + esc(c.desc || "") + '</div>' +
+            '<div class="platmix">' + (mix || '<span class="badge" style="background:#f0eef3;color:#9990a5">No assets yet</span>') + '</div>' +
+            '<div class="meta"><span><b>' + c.assets.length + '</b> asset' + (c.assets.length === 1 ? "" : "s") + '</span>' +
+            (c.assets.length ? '<span><b>' + done + '</b>/' + c.assets.length + ' done</span>' : '') +
+            (blocked ? '<span class="blocked">' + blocked + ' blocked</span>' : '') +
+            '<span>' + esc(range) + '</span></div>' +
+            '</div>';
+        });
+        html += '</div>';
+      }
+      $("app").innerHTML = html;
+
+      var nc = $("newCamp") || $("newCamp2");
+      if ($("newCamp")) $("newCamp").onclick = openNewCampaign;
+      if ($("newCamp2")) $("newCamp2").onclick = openNewCampaign;
+      Array.prototype.forEach.call(document.querySelectorAll("[data-camp]"), function (el) {
+        el.onclick = function () { view.page = "campaign"; view.campaignId = el.getAttribute("data-camp"); view.search = ""; view.filter = "all"; render(); };
+      });
+    }
+
+    function renderCampaign() {
+      var c = campById(view.campaignId);
+      if (!c) { view.page = "home"; return render(); }
+
+      var assets = c.assets.slice();
+      if (view.filter !== "all") assets = assets.filter(function (a) { return a.platform === view.filter; });
+      if (view.stage !== "all") assets = assets.filter(function (a) { return (a.stage || "New") === view.stage; });
+      if (view.search) {
+        var q = view.search.toLowerCase();
+        assets = assets.filter(function (a) {
+          return (a.name + " " + (a.purpose || "") + " " + (a.channel || "")).toLowerCase().indexOf(q) > -1;
+        });
+      }
+      assets.sort(function (a, b) { return (a.required || "9999") < (b.required || "9999") ? -1 : 1; });
+
+      var html = '';
+      html += '<div class="crumb"><button id="crumbHome">Campaigns</button><span>/</span><span>' + esc(c.name) + '</span></div>';
+      html += '<div class="page-head">' +
+        '<div><h2>' + esc(c.name) + '</h2><p>' + esc(c.desc || "No description") + '</p></div>' +
+        '<div class="spacer"></div>' +
+        '<button class="btn btn-ghost" id="editCamp">' + ICON.edit + 'Edit</button>' +
+        '<button class="btn btn-ghost del-camp" id="delCamp">' + ICON.trash + 'Delete</button>' +
+        '<button class="btn btn-primary" id="newAsset">' + ICON.plus + 'Add asset</button>' +
+        '</div>';
+
+      // filter bar
+      html += '<div class="filterbar">' +
+        '<div class="viewseg">' +
+          '<button data-mode="table" class="' + (view.mode === "table" ? "on" : "") + '">Table</button>' +
+          '<button data-mode="timeline" class="' + (view.mode === "timeline" ? "on" : "") + '">Timeline</button>' +
+        '</div>' +
+        '<input class="search" id="assetSearch" placeholder="Search assets, purpose, channel…" value="' + esc(view.search) + '">' +
+        ['all', "Airship", "Toggle", "Both"].map(function (f) {
+          return '<button class="chip' + (view.filter === f ? " active" : "") + '" data-filter="' + f + '">' +
+            (f === "all" ? "All platforms" : f) + '</button>';
+        }).join("") +
+        '<select class="stage-filter' + (view.stage !== "all" ? " active" : "") + '" id="stageFilter">' +
+          ['all', "New", "In progress", "Blocked", "Complete"].map(function (s) {
+            return '<option value="' + s + '"' + (view.stage === s ? " selected" : "") + '>' +
+              (s === "all" ? "All stages" : s) + '</option>';
+          }).join("") +
+        '</select>' +
+        '</div>';
+
+      if (!c.assets.length) {
+        html += '<div class="panel"><div class="empty-state"><div class="big">🗂️</div>' +
+          '<h3>No assets yet</h3><p>Add the first deliverable for this campaign.</p>' +
+          '<button class="btn btn-primary" id="newAsset2">' + ICON.plus + 'Add asset</button></div></div>';
+      } else if (!assets.length) {
+        html += '<div class="panel"><div class="empty-state"><h3>No matches</h3><p>Nothing matches your filter or search.</p></div></div>';
+      } else if (view.mode === "timeline") {
+        html += timelineHTML(assets);
+      } else {
+        html += '<div class="panel"><table><thead><tr>' +
+          '<th>Platform</th><th>Asset</th><th class="hide-sm">Owner</th><th>Stage</th><th>Date required</th><th>Date launched</th>' +
+          '<th class="hide-sm">Channel</th><th></th></tr></thead><tbody>';
+        assets.forEach(function (a) {
+          html += '<tr class="rh-' + stageMeta(a.stage).key + '">' +
+            '<td>' + platBadge(a.platform) + '</td>' +
+            '<td><div class="aname">' + esc(a.name) + '</div>' +
+              (a.purpose ? '<div class="purpose">' + esc(a.purpose) + '</div>' : '') + '</td>' +
+            '<td class="hide-sm">' + (a.owner ? esc(a.owner) : '<span style="color:#c3bccd">·</span>') + '</td>' +
+            '<td>' + stageBadge(a.stage) + '</td>' +
+            '<td class="date-cell' + (a.required ? '' : ' empty') + '">' + (a.required ? fmtDate(a.required) : "Not set") + '</td>' +
+            '<td class="date-cell' + (a.launched ? '' : ' empty') + '">' + (a.launched ? fmtDate(a.launched) : "Not yet") + '</td>' +
+            '<td class="hide-sm">' + esc(a.channel || "·") + '</td>' +
+            '<td><div class="row-actions">' +
+              '<button class="icon-btn" data-edit="' + a.id + '" title="Edit">' + ICON.edit + '</button>' +
+              '<button class="icon-btn del" data-del="' + a.id + '" title="Delete">' + ICON.trash + '</button>' +
+            '</div></td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      $("app").innerHTML = html;
+
+      $("crumbHome").onclick = function () { view.page = "home"; render(); };
+      $("editCamp").onclick = function () { openEditCampaign(c); };
+      $("delCamp").onclick = async function () {
+        if (!confirm('Delete "' + c.name + '" and all its assets? This cannot be undone.')) return;
+        try { await dbDeleteCampaign(c.id); view.page = "home"; render(); toast("Campaign deleted"); }
+        catch (e) { toast("Couldn't delete: " + (e.message || "error")); }
+      };
+      if ($("newAsset")) $("newAsset").onclick = openNewAsset;
+      if ($("newAsset2")) $("newAsset2").onclick = openNewAsset;
+      if ($("assetSearch")) {
+        var s = $("assetSearch");
+        s.oninput = function () { view.search = s.value; renderCampaign(); s2 = $("assetSearch"); s2.focus(); s2.setSelectionRange(s2.value.length, s2.value.length); };
+      }
+      Array.prototype.forEach.call(document.querySelectorAll("[data-filter]"), function (el) {
+        el.onclick = function () { view.filter = el.getAttribute("data-filter"); renderCampaign(); };
+      });
+      if ($("stageFilter")) $("stageFilter").onchange = function () { view.stage = this.value; renderCampaign(); };
+      Array.prototype.forEach.call(document.querySelectorAll("[data-mode]"), function (el) {
+        el.onclick = function () { view.mode = el.getAttribute("data-mode"); renderCampaign(); };
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-tledit]"), function (el) {
+        el.onclick = function () { var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-tledit"); })[0]; openEditAsset(a); };
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-edit]"), function (el) {
+        el.onclick = function () { var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-edit"); })[0]; openEditAsset(a); };
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-del]"), function (el) {
+        el.onclick = async function () {
+          var a = c.assets.filter(function (x) { return x.id === el.getAttribute("data-del"); })[0];
+          if (!confirm('Delete asset "' + a.name + '"?')) return;
+          try { await dbDeleteAsset(a.id, c.id); renderCampaign(); toast("Asset deleted"); }
+          catch (e) { toast("Couldn't delete: " + (e.message || "error")); }
+        };
+      });
+    }
+
+    /* ---------------- Campaign modal ---------------- */
+    function openNewCampaign() {
+      editingCamp = null;
+      $("campModalTitle").textContent = "New campaign";
+      $("campName").value = ""; $("campDesc").value = "";
+      openOverlay("campOverlay"); $("campName").focus();
+    }
+    function openEditCampaign(c) {
+      editingCamp = c.id;
+      $("campModalTitle").textContent = "Edit campaign";
+      $("campName").value = c.name; $("campDesc").value = c.desc || "";
+      openOverlay("campOverlay"); $("campName").focus();
+    }
+    $("campSave").onclick = async function () {
+      var name = $("campName").value.trim();
+      if (!name) { $("campName").focus(); toast("Campaign name is required"); return; }
+      var desc = $("campDesc").value.trim();
+      var btn = $("campSave"); btn.disabled = true;
+      try {
+        if (editingCamp) {
+          await dbUpdateCampaign(editingCamp, name, desc); toast("Campaign updated");
+        } else {
+          var nc = await dbCreateCampaign(name, desc);
+          view.page = "campaign"; view.campaignId = nc.id; toast("Campaign created");
+        }
+        closeOverlays(); render();
+      } catch (e) { toast("Couldn't save: " + (e.message || "error")); }
+      finally { btn.disabled = false; }
+    };
+
+    /* ---------------- Asset modal ---------------- */
+    var selectedPlatform = "Airship";
+    function setPlatform(v) {
+      selectedPlatform = v;
+      Array.prototype.forEach.call(document.querySelectorAll("#assetPlatform button"), function (b) {
+        b.classList.toggle("on", b.getAttribute("data-v") === v);
+      });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll("#assetPlatform button"), function (b) {
+      b.onclick = function () { setPlatform(b.getAttribute("data-v")); };
+    });
+
+    function openNewAsset() {
+      editingAsset = null;
+      $("assetModalTitle").textContent = "Add asset";
+      setPlatform("Airship");
+      $("assetName").value = ""; $("assetOwner").value = ""; $("assetStage").value = "New";
+      $("assetReq").value = ""; $("assetLaunched").value = "";
+      $("assetChannel").value = ""; $("assetPurpose").value = "";
+      openOverlay("assetOverlay"); $("assetName").focus();
+    }
+    function openEditAsset(a) {
+      editingAsset = a.id;
+      $("assetModalTitle").textContent = "Edit asset";
+      setPlatform(a.platform);
+      $("assetName").value = a.name; $("assetOwner").value = a.owner || ""; $("assetStage").value = a.stage || "New";
+      $("assetReq").value = a.required || "";
+      $("assetLaunched").value = a.launched || ""; $("assetChannel").value = a.channel || "";
+      $("assetPurpose").value = a.purpose || "";
+      openOverlay("assetOverlay"); $("assetName").focus();
+    }
+    $("assetSave").onclick = async function () {
+      var name = $("assetName").value.trim();
+      if (!name) { $("assetName").focus(); toast("Asset name is required"); return; }
+      var data = {
+        platform: selectedPlatform,
+        name: name,
+        owner: $("assetOwner").value.trim(),
+        stage: $("assetStage").value,
+        required: $("assetReq").value,
+        launched: $("assetLaunched").value,
+        channel: $("assetChannel").value,
+        purpose: $("assetPurpose").value.trim()
+      };
+      var btn = $("assetSave"); btn.disabled = true;
+      try {
+        if (editingAsset) { await dbUpdateAsset(editingAsset, view.campaignId, data); toast("Asset updated"); }
+        else { await dbCreateAsset(view.campaignId, data); toast("Asset added"); }
+        closeOverlays(); renderCampaign();
+      } catch (e) { toast("Couldn't save: " + (e.message || "error")); }
+      finally { btn.disabled = false; }
+    };
+
+    /* ---------------- Overlay plumbing ---------------- */
+    function openOverlay(id) { $(id).classList.add("open"); }
+    function closeOverlays() {
+      Array.prototype.forEach.call(document.querySelectorAll(".overlay"), function (o) { o.classList.remove("open"); });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(".overlay"), function (o) {
+      o.addEventListener("click", function (e) { if (e.target === o) closeOverlays(); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-close]"), function (b) { b.onclick = closeOverlays; });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeOverlays(); });
+
+    /* ---------------- Export / Import ---------------- */
+    $("btnExport").onclick = function () {
+      var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "campaign-plan-" + todayISO() + ".json";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url); toast("Exported JSON");
+    };
+    $("btnImport").onclick = function () { $("importFile").click(); };
+    $("importFile").onchange = function (e) {
+      var file = e.target.files[0]; if (!file) return;
+      var reader = new FileReader();
+      reader.onload = async function () {
+        var data;
+        try { data = JSON.parse(reader.result); } catch (err) { toast("That file isn't a valid plan export"); return; }
+        if (!data || !Array.isArray(data.campaigns)) { toast("That file isn't a valid plan export"); return; }
+        if (!confirm("Add " + data.campaigns.length + " campaign(s) from this file into the shared database?")) return;
+        try {
+          for (var i = 0; i < data.campaigns.length; i++) {
+            var c = data.campaigns[i];
+            var nc = await dbCreateCampaign(c.name || "Untitled", c.desc || c.description || "");
+            var assets = c.assets || [];
+            for (var j = 0; j < assets.length; j++) {
+              var a = assets[j];
+              await dbCreateAsset(nc.id, {
+                platform: a.platform || "Airship", name: a.name || "Untitled",
+                owner: a.owner || "", stage: a.stage || "New",
+                required: a.required || "", launched: a.launched || "",
+                channel: a.channel || "", purpose: a.purpose || ""
+              });
+            }
+          }
+          view.page = "home"; render(); toast("Imported " + data.campaigns.length + " campaign(s)");
+        } catch (err) { toast("Import failed: " + (err.message || "error")); }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    };
+
+    /* ---------------- Boot ---------------- */
+    $("app").innerHTML = '<div class="panel"><div class="empty-state"><div class="big">☁️</div>' +
+      '<h3>Loading…</h3><p>Fetching your campaigns from Supabase.</p></div></div>';
+    loadAll().then(render).catch(function (e) {
+      $("app").innerHTML = '<div class="panel"><div class="empty-state"><div class="big">⚠️</div>' +
+        '<h3>Couldn\'t reach the database</h3><p>' + esc(e.message || "Check your connection and refresh.") + '</p>' +
+        '<button class="btn btn-primary" id="retryBtn">' + ICON.plus + 'Retry</button></div></div>';
+      var rb = $("retryBtn"); if (rb) rb.onclick = function () { location.reload(); };
+    });
+  })();
+  </script>
+</body>
+</html>
