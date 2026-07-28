@@ -296,6 +296,7 @@
         <div class="sub">Airship + Toggle</div>
       </div>
       <div class="top-actions">
+        <button id="btnTeam">Team</button>
         <button id="btnExport">Export</button>
         <button id="btnImport">Import</button>
       </div>
@@ -369,6 +370,42 @@
     </div>
   </div>
 
+  <!-- User modal -->
+  <div class="overlay" id="userOverlay">
+    <div class="modal" style="max-width:460px">
+      <div class="modal-head">
+        <h3 id="userModalTitle">New user</h3>
+        <p>People you can assign work to. Their name shows up in the assignee dropdown.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Name <span class="req">*</span></label>
+          <input id="userName" placeholder="e.g. Priya Shah" maxlength="80">
+        </div>
+        <div class="field">
+          <label>Airship email</label>
+          <input id="userEmail" type="email" placeholder="e.g. priya.shah@airship.co.uk" maxlength="120">
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input id="userRole" list="roleList" placeholder="e.g. Marketing" maxlength="60">
+          <datalist id="roleList">
+            <option value="Leadership"></option>
+            <option value="Customer"></option>
+            <option value="Product &amp; Engineering"></option>
+            <option value="Sales &amp; Partnerships"></option>
+            <option value="Marketing"></option>
+            <option value="Finance &amp; Ops"></option>
+          </datalist>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-text" data-close>Cancel</button>
+        <button class="btn btn-primary" id="userSave">Save</button>
+      </div>
+    </div>
+  </div>
+
   <input type="file" id="importFile" accept="application/json" style="display:none">
   <div class="toast" id="toast"></div>
 
@@ -381,10 +418,11 @@
     var SUPABASE_KEY = "sb_publishable_ZRAGcLTey-PLJl_67v1HLg_LdPWycXL";
     var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    var state = { campaigns: [] };
+    var state = { campaigns: [], users: [] };
     var view = { page: "home", campaignId: null, stage: "all", search: "", mode: "table" };
     var editingAsset = null;
     var editingCamp = null;
+    var editingUser = null;
 
     function dOut(v) { return v ? v : null; }
     function rowToCampaign(r) {
@@ -398,14 +436,40 @@
         channel: r.channel || "", purpose: r.purpose || "" };
     }
 
+    function rowToUser(r) {
+      return { id: r.id, name: r.name, email: r.email || "", role: r.role || "", created: r.created_at };
+    }
+
     async function loadAll() {
       var cRes = await db.from("cp_campaigns").select("*").order("created_at", { ascending: false });
       var aRes = await db.from("cp_assets").select("*").order("created_at", { ascending: true });
+      var uRes = await db.from("cp_users").select("*").order("name", { ascending: true });
       if (cRes.error) throw cRes.error;
       if (aRes.error) throw aRes.error;
+      if (uRes.error) throw uRes.error;
       var byId = {};
       state.campaigns = cRes.data.map(function (r) { var c = rowToCampaign(r); byId[c.id] = c; return c; });
       aRes.data.forEach(function (r) { var a = rowToAsset(r); if (byId[a.campaign_id]) byId[a.campaign_id].assets.push(a); });
+      state.users = (uRes.data || []).map(rowToUser);
+    }
+
+    async function dbCreateUser(d) {
+      var r = await db.from("cp_users").insert({ name: d.name, email: d.email || "", role: d.role || "" }).select().single();
+      if (r.error) throw r.error;
+      state.users.push(rowToUser(r.data));
+      state.users.sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
+    }
+    async function dbUpdateUser(id, d) {
+      var r = await db.from("cp_users").update({ name: d.name, email: d.email || "", role: d.role || "" }).eq("id", id);
+      if (r.error) throw r.error;
+      var u = state.users.filter(function (x) { return x.id === id; })[0];
+      if (u) { u.name = d.name; u.email = d.email || ""; u.role = d.role || ""; }
+      state.users.sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
+    }
+    async function dbDeleteUser(id) {
+      var r = await db.from("cp_users").delete().eq("id", id);
+      if (r.error) throw r.error;
+      state.users = state.users.filter(function (x) { return x.id !== id; });
     }
 
     async function dbCreateCampaign(d, items) {
@@ -580,6 +644,18 @@
     function stageBadge(s) { return '<span class="status ' + stageMeta(s).cls + '">' + esc(s || "New") + '</span>'; }
 
     function campById(id) { return state.campaigns.filter(function (c) { return c.id === id; })[0]; }
+    function userOptions(sel) {
+      var html = '<option value=""' + (!sel ? ' selected' : '') + '>Unassigned</option>';
+      var names = {};
+      state.users.forEach(function (u) {
+        names[u.name] = true;
+        var label = u.role ? u.name + " · " + u.role : u.name;
+        html += '<option value="' + esc(u.name) + '"' + (u.name === sel ? ' selected' : '') + '>' + esc(label) + '</option>';
+      });
+      // Preserve a hand-typed assignee that isn't (yet) in the user list.
+      if (sel && !names[sel]) html += '<option value="' + esc(sel) + '" selected>' + esc(sel) + ' (not in team list)</option>';
+      return html;
+    }
     function channelOptions(sel) {
       var html = '<option value=""' + (!sel ? ' selected' : '') + '>None</option>';
       Object.keys(CHANNELS).forEach(function (g) {
@@ -663,7 +739,56 @@
     function render() {
       if (view.page === "home") renderHome();
       else if (view.page === "asset") renderAsset();
+      else if (view.page === "users") renderUsers();
       else renderCampaign();
+    }
+
+    function renderUsers() {
+      var html = '';
+      html += '<div class="crumb"><button id="crumbHome">Campaigns &amp; Radar</button><span>/</span><span>Team</span></div>';
+      html += '<div class="page-head">' +
+        '<div><h2>Team</h2><p>Add the people you assign work to. Their name feeds the assignee dropdown on every asset.</p></div>' +
+        '<div class="spacer"></div>' +
+        '<button class="btn btn-primary" id="newUser">' + ICON.plus + 'New user</button>' +
+        '</div>';
+
+      if (!state.users.length) {
+        html += '<div class="panel"><div class="empty-state"><div class="big">👥</div>' +
+          '<h3>No one here yet</h3><p>Add your first team member to start assigning work.</p>' +
+          '<button class="btn btn-primary" id="newUser2">' + ICON.plus + 'New user</button></div></div>';
+      } else {
+        html += '<div class="panel"><table><thead><tr>' +
+          '<th>Name</th><th>Airship email</th><th>Role</th><th style="width:1%"></th>' +
+          '</tr></thead><tbody>';
+        state.users.forEach(function (u) {
+          html += '<tr>' +
+            '<td><div class="aname">' + esc(u.name) + '</div></td>' +
+            '<td>' + (u.email ? '<a href="mailto:' + esc(u.email) + '" style="color:var(--purple)">' + esc(u.email) + '</a>' : '<span style="color:#c3bccd">·</span>') + '</td>' +
+            '<td>' + (u.role ? '<span class="size-chip">' + esc(u.role) + '</span>' : '<span style="color:#c3bccd">·</span>') + '</td>' +
+            '<td><div class="row-actions">' +
+              '<button class="icon-btn" data-edituser="' + u.id + '" title="Edit">' + ICON.edit + '</button>' +
+              '<button class="icon-btn del" data-deluser="' + u.id + '" title="Delete">' + ICON.trash + '</button>' +
+            '</div></td>' +
+            '</tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      $("app").innerHTML = html;
+
+      $("crumbHome").onclick = function () { view.page = "home"; render(); };
+      if ($("newUser")) $("newUser").onclick = openNewUser;
+      if ($("newUser2")) $("newUser2").onclick = openNewUser;
+      Array.prototype.forEach.call(document.querySelectorAll("[data-edituser]"), function (el) {
+        el.onclick = function () { var u = state.users.filter(function (x) { return x.id === el.getAttribute("data-edituser"); })[0]; if (u) openEditUser(u); };
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-deluser]"), function (el) {
+        el.onclick = async function () {
+          var u = state.users.filter(function (x) { return x.id === el.getAttribute("data-deluser"); })[0]; if (!u) return;
+          if (!confirm('Remove "' + u.name + '" from the team? Assets already assigned to them keep the name.')) return;
+          try { await dbDeleteUser(u.id); renderUsers(); toast("User removed"); }
+          catch (e) { toast("Couldn't delete: " + (e.message || "error")); }
+        };
+      });
     }
 
     function renderAsset() {
@@ -695,7 +820,7 @@
           '<input id="proj_name" value="' + esc(a.name) + '" placeholder="e.g. Customer email (+ video)" maxlength="120"></div>' +
         '<div class="field-row">' +
           '<div class="field"><label>Team</label><input id="proj_team" value="' + esc(a.owner) + '" placeholder="e.g. Marketing" maxlength="60"></div>' +
-          '<div class="field"><label>Assignee</label><input id="proj_assignee" value="' + esc(a.assignee || "") + '" placeholder="e.g. Priya" maxlength="60"></div>' +
+          '<div class="field"><label>Assignee</label><select id="proj_assignee">' + userOptions(a.assignee || "") + '</select></div>' +
         '</div>' +
         '<div class="field-row">' +
           '<div class="field"><label>Stage</label><select id="proj_stage">' +
@@ -987,6 +1112,35 @@
     /* ---------------- Asset creation ---------------- */
     // Each asset is its own project page; "Add asset" opens a blank one.
     function openNewAsset() { view.page = "asset"; view.assetId = null; render(); }
+
+    /* ---------------- User modal ---------------- */
+    function openNewUser() {
+      editingUser = null;
+      $("userModalTitle").textContent = "New user";
+      $("userName").value = ""; $("userEmail").value = ""; $("userRole").value = "";
+      openOverlay("userOverlay"); $("userName").focus();
+    }
+    function openEditUser(u) {
+      editingUser = u.id;
+      $("userModalTitle").textContent = "Edit user";
+      $("userName").value = u.name; $("userEmail").value = u.email || ""; $("userRole").value = u.role || "";
+      openOverlay("userOverlay"); $("userName").focus();
+    }
+    $("userSave").onclick = async function () {
+      var name = $("userName").value.trim();
+      if (!name) { $("userName").focus(); toast("Name is required"); return; }
+      var email = $("userEmail").value.trim();
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { $("userEmail").focus(); toast("That email doesn't look right"); return; }
+      var d = { name: name, email: email, role: $("userRole").value.trim() };
+      var btn = $("userSave"); btn.disabled = true;
+      try {
+        if (editingUser) { await dbUpdateUser(editingUser, d); toast("User updated"); }
+        else { await dbCreateUser(d); toast("User added"); }
+        closeOverlays(); renderUsers();
+      } catch (e) { toast("Couldn't save: " + (e.message || "error")); }
+      finally { btn.disabled = false; }
+    };
+    $("btnTeam").onclick = function () { view.page = "users"; render(); };
 
     /* ---------------- Overlay plumbing ---------------- */
     function openOverlay(id) { $(id).classList.add("open"); }
