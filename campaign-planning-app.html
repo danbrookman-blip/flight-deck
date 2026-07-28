@@ -90,6 +90,11 @@
     .tier-minor { background: rgba(141,0,212,.12); color: var(--purple); }
     .tier-improvement { background: rgba(49,112,255,.12); color: var(--blue); }
     .tier-hotfix { background: rgba(214,40,40,.13); color: #cc2a2a; }
+    .tier-hop { background: #eef1f6; color: #5b6472; }
+    .tier-flight { background: rgba(49,112,255,.12); color: var(--blue); }
+    .tier-voyage { background: rgba(141,0,212,.12); color: var(--purple); }
+    .tier-flagship { background: rgba(236,0,255,.16); color: #b0009e; }
+    .tier-blurb { font-size: 12px; color: var(--muted); margin-top: 9px; line-height: 1.4; }
     .dot { width: 7px; height: 7px; border-radius: 50%; }
     .dot-airship { background: var(--magenta); }
     .dot-toggle { background: var(--blue); }
@@ -179,7 +184,9 @@
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .seg { display: flex; gap: 8px; flex-wrap: wrap; }
     .seg button { flex: 1; min-width: 70px; padding: 10px; border-radius: var(--radius); border: 1.5px solid var(--line); background: #fff;
-      font-weight: 600; font-size: 13px; color: var(--muted); transition: .12s; }
+      font-weight: 600; font-size: 13px; color: var(--muted); transition: .12s; cursor: pointer; }
+    .seg button:focus { outline: none; }
+    .seg button:focus-visible { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(141,0,212,.12); }
     .seg button.on[data-v="Airship"] { border-color: var(--purple); background: rgba(236,0,255,.07); color: var(--purple); }
     .seg button.on[data-v="Toggle"] { border-color: var(--blue); background: rgba(49,112,255,.08); color: var(--blue); }
     .seg button.on[data-v="Both"] { border-color: var(--deep); background: rgba(52,0,77,.06); color: var(--deep); }
@@ -329,12 +336,8 @@
         </div>
         <div class="field" id="campTierField">
           <label>Tier</label>
-          <div class="seg sizes" id="campTier">
-            <button type="button" data-s="Major">Major</button>
-            <button type="button" data-s="Minor">Minor</button>
-            <button type="button" data-s="Improvement">Improvement</button>
-            <button type="button" data-s="Hotfix">Hotfix</button>
-          </div>
+          <div class="seg sizes" id="campTier"></div>
+          <div class="tier-blurb" id="campTierBlurb"></div>
         </div>
         <div class="field-row">
           <div class="field">
@@ -535,12 +538,40 @@
       Improvement: ["Intercom article","CS enablement / sign-off","Logged to the register"],
       Hotfix: ["Logged to the register"]
     };
-    // Marketing channels (Owned / Earned / Paid)
+    // Marketing channels (Owned / Earned / Paid) — used for the asset Channel field
     var CHANNELS = {
       Owned: ["Website and landing pages","Blog","Newsletter","Intercom","Email - cold database","LinkedIn Profile Banner","LinkedIn Post","Signatures","Webinars","Instagram"],
       Earned: ["PR and press","Propel editorial","UKHospitality","Partner channels","Awards"],
       Paid: ["Propel banner ads (contracted - see file 06)","LinkedIn ads and retargeting","Sponsorships and event presence"]
     };
+
+    // Tiers per type, with the SQL-expectation blurb shown when picked
+    var TIERS = {
+      Product: [
+        { key: "Major", blurb: "New capability with a pricing or sales angle. Full runway." },
+        { key: "Minor", blurb: "A visible improvement to something we already do." },
+        { key: "Improvement", blurb: "Under-the-hood work or a small UX change." },
+        { key: "Hotfix", blurb: "A fix, large or small." }
+      ],
+      Marketing: [
+        { key: "Hop", blurb: "Brand presence, no SQLs expected. You run these because silence costs you, not because they convert." },
+        { key: "Flight", blurb: "Single-digit SQLs, warm or inbound." },
+        { key: "Voyage", blurb: "10 to 30 SQLs, built to generate them." },
+        { key: "Flagship", blurb: "50+ SQLs, quarter-defining." }
+      ]
+    };
+    // Marketing deliverables per tier (the preset for each)
+    var MKT_DELIVERABLES = {
+      Hop: ["Pinch Punch","Techie tile","National days","Client news","Testimonials"],
+      Flight: ["New client announcement","Case study","Partner tile","Press release","Guest blog"],
+      Voyage: ["Webinar / fireside chat (+ follow-up chain)","Propel eshot to 20,600","Sponsored message","Thought leadership placement","UKH benefit slot"],
+      Flagship: ["Big annual push","Conference presence (4 delegates)","Discount-led proposition","PR wave off primary data"]
+    };
+    function tierBlurb(type, tier) {
+      var arr = TIERS[type] || [];
+      for (var i = 0; i < arr.length; i++) if (arr[i].key === tier) return arr[i].blurb;
+      return "";
+    }
 
     /* ---------------- Helpers ---------------- */
     var $ = function (id) { return document.getElementById(id); };
@@ -581,11 +612,12 @@
       var dot = { Airship: "dot-airship", Toggle: "dot-toggle", Both: "dot-both" };
       return '<span class="badge ' + map[p] + '"><span class="dot ' + dot[p] + '"></span>' + esc(p) + '</span>';
     }
-    var TIER_CLS = { Major: "tier-major", Minor: "tier-minor", Improvement: "tier-improvement", Hotfix: "tier-hotfix" };
+    var TIER_CLS = { Major: "tier-major", Minor: "tier-minor", Improvement: "tier-improvement", Hotfix: "tier-hotfix",
+      Hop: "tier-hop", Flight: "tier-flight", Voyage: "tier-voyage", Flagship: "tier-flagship" };
     function tierBadge(c) {
-      if (c.type === "Marketing") return '<span class="badge badge-marketing">Marketing</span>';
       var cls = TIER_CLS[c.tier] || "tier-minor";
-      return '<span class="badge ' + cls + '">' + esc(c.tier || "Untiered") + '</span>';
+      var label = c.tier || (c.type === "Marketing" ? "Marketing" : "Untiered");
+      return '<span class="badge ' + cls + '">' + esc(label) + '</span>';
     }
     var GATE_CLS = { "On the radar": "gate-radar", "Tier set": "gate-tier", "Locked": "gate-locked", "In runway": "gate-runway", "Cleared": "gate-cleared" };
     function gateBadge(s) { return '<span class="gate ' + (GATE_CLS[s] || "gate-radar") + '">' + esc(s || "On the radar") + '</span>'; }
@@ -838,26 +870,31 @@
     function setCampType(t) {
       selectedCampType = t;
       Array.prototype.forEach.call(document.querySelectorAll("#campType button"), function (b) { b.classList.toggle("on", b.getAttribute("data-t") === t); });
-      if (t === "Product") {
-        $("campTierField").style.display = "";
-        $("campChecklistLabel").textContent = "Runway deliverables";
-        $("campChecklistHint").textContent = "Pre-ticked by tier. Each ticked item becomes an asset, assigned to its owning team.";
-        setCampTier(selectedCampTier || "Minor");
-      } else {
-        $("campTierField").style.display = "none";
-        $("campChecklistLabel").textContent = "Channels";
-        $("campChecklistHint").textContent = "Tick the channels this campaign needs. Each one becomes an asset.";
-        if (!editingCamp) renderChannelChecklist([]);
-      }
+      $("campChecklistLabel").textContent = t === "Product" ? "Runway deliverables" : "Marketing deliverables";
+      $("campChecklistHint").textContent = "Pre-ticked by tier. Tick what this needs; each item becomes an asset.";
+      renderTierSeg(t);
+      var valid = TIERS[t].map(function (x) { return x.key; });
+      if (valid.indexOf(selectedCampTier) === -1) selectedCampTier = (t === "Product" ? "Minor" : "Hop");
+      setCampTier(selectedCampTier);
     }
     function setCampPlatform(v) {
       selectedCampPlatform = v;
       Array.prototype.forEach.call(document.querySelectorAll("#campPlatform button"), function (b) { b.classList.toggle("on", b.getAttribute("data-v") === v); });
     }
+    function renderTierSeg(t) {
+      $("campTier").innerHTML = TIERS[t].map(function (x) { return '<button type="button" data-s="' + x.key + '">' + x.key + '</button>'; }).join("");
+      Array.prototype.forEach.call($("campTier").querySelectorAll("button"), function (b) {
+        b.onclick = function () { setCampTier(b.getAttribute("data-s")); };
+      });
+    }
     function setCampTier(tier) {
       selectedCampTier = tier;
-      Array.prototype.forEach.call(document.querySelectorAll("#campTier button"), function (b) { b.classList.toggle("on", b.getAttribute("data-s") === tier); });
-      if (!editingCamp && selectedCampType === "Product") renderRunwayChecklist(TIER_PRESET[tier] || []);
+      Array.prototype.forEach.call($("campTier").querySelectorAll("button"), function (b) { b.classList.toggle("on", b.getAttribute("data-s") === tier); });
+      $("campTierBlurb").textContent = tierBlurb(selectedCampType, tier);
+      if (!editingCamp) {
+        if (selectedCampType === "Product") renderRunwayChecklist(TIER_PRESET[tier] || []);
+        else renderMarketingChecklist(tier);
+      }
     }
     function wireChecks() {
       Array.prototype.forEach.call($("campChannels").querySelectorAll("input[type=checkbox]"), function (cb) {
@@ -872,13 +909,13 @@
       }).join("") + '</div>';
       wireChecks();
     }
-    function renderChannelChecklist(ticked) {
-      var set = {}; (ticked || []).forEach(function (n) { set[n] = true; });
-      $("campChannels").innerHTML = Object.keys(CHANNELS).map(function (g) {
-        return '<div class="chk-group"><h4>' + g + '</h4><div class="chk-grid">' +
-          CHANNELS[g].map(function (ch) {
-            var on = set[ch];
-            return '<label class="chk' + (on ? ' on' : '') + '"><input type="checkbox" value="' + esc(ch) + '"' + (on ? ' checked' : '') + '><span>' + esc(ch) + '</span></label>';
+    function renderMarketingChecklist(selectedTier) {
+      var set = {}; (MKT_DELIVERABLES[selectedTier] || []).forEach(function (n) { set[n] = true; });
+      $("campChannels").innerHTML = Object.keys(MKT_DELIVERABLES).map(function (tierName) {
+        return '<div class="chk-group"><h4>' + tierName + '</h4><div class="chk-grid">' +
+          MKT_DELIVERABLES[tierName].map(function (it) {
+            var on = set[it];
+            return '<label class="chk' + (on ? ' on' : '') + '"><input type="checkbox" value="' + esc(it) + '"' + (on ? ' checked' : '') + '><span>' + esc(it) + '</span></label>';
           }).join("") + '</div></div>';
       }).join("");
       wireChecks();
@@ -887,7 +924,7 @@
       var boxes = $("campChannels").querySelectorAll("input:checked");
       return Array.prototype.map.call(boxes, function (cb) {
         if (selectedCampType === "Product") return { name: cb.value, owner: cb.getAttribute("data-owner") || "", channel: "" };
-        return { name: cb.value, owner: "", channel: cb.value };
+        return { name: cb.value, owner: "Marketing", channel: "" };
       });
     }
 
@@ -908,7 +945,7 @@
       $("campStage").value = c.stage || "On the radar";
       $("campChecklistSection").style.display = "none";
       setCampPlatform(c.platform);
-      selectedCampTier = c.tier || "Minor";
+      selectedCampTier = c.tier || ((c.type || "Product") === "Marketing" ? "Hop" : "Minor");
       setCampType(c.type || "Product");
       openOverlay("campOverlay"); $("campName").focus();
     }
@@ -916,7 +953,7 @@
       var name = $("campName").value.trim();
       if (!name) { $("campName").focus(); toast("Name is required"); return; }
       var d = { name: name, desc: $("campDesc").value.trim(), platform: selectedCampPlatform, type: selectedCampType,
-        tier: selectedCampType === "Product" ? selectedCampTier : null, stage: $("campStage").value, release: $("campRelease").value };
+        tier: selectedCampTier, stage: $("campStage").value, release: $("campRelease").value };
       var btn = $("campSave"); btn.disabled = true;
       try {
         if (editingCamp) { await dbUpdateCampaign(editingCamp, d); toast("Item updated"); }
@@ -927,7 +964,6 @@
     };
     Array.prototype.forEach.call(document.querySelectorAll("#campType button"), function (b) { b.onclick = function () { setCampType(b.getAttribute("data-t")); }; });
     Array.prototype.forEach.call(document.querySelectorAll("#campPlatform button"), function (b) { b.onclick = function () { setCampPlatform(b.getAttribute("data-v")); }; });
-    Array.prototype.forEach.call(document.querySelectorAll("#campTier button"), function (b) { b.onclick = function () { setCampTier(b.getAttribute("data-s")); }; });
 
     /* ---------------- Asset modal ---------------- */
     function buildChannelSelect() {
