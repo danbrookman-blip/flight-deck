@@ -135,7 +135,11 @@
     tbody tr:hover { background: #fcfbfe; }
     tbody tr.reg { cursor: pointer; }
     td .aname { font-weight: 600; color: var(--deep); }
-    td .purpose { color: var(--muted); font-size: 12.5px; max-width: 320px; }
+    td .purpose { color: var(--muted); font-size: 12.5px; max-width: 320px; margin-top: 2px; }
+    td .purpose a { color: var(--purple); font-weight: 600; text-decoration: none; }
+    td .purpose a:hover { text-decoration: underline; }
+    .other-tag { display: inline-block; font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--purple); background: rgba(141,0,212,.10); padding: 1px 7px; border-radius: 20px; }
     .date-cell { white-space: nowrap; font-variant-numeric: tabular-nums; }
     .date-cell.empty { color: #c3bccd; }
     .row-actions { display: flex; gap: 4px; opacity: 0; transition: .12s; }
@@ -169,12 +173,12 @@
       display: none; align-items: flex-start; justify-content: center; z-index: 50; padding: 40px 20px; overflow-y: auto; }
     .overlay.open { display: flex; }
     .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 560px; box-shadow: var(--shadow-lg);
-      animation: pop .18s ease; }
+      animation: pop .18s ease; display: flex; flex-direction: column; max-height: calc(100vh - 80px); overflow: hidden; }
     @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.98); } }
-    .modal-head { padding: 22px 24px 0; }
+    .modal-head { padding: 22px 24px 0; flex: none; }
     .modal-head h3 { font-size: 19px; font-weight: 700; color: var(--deep); }
     .modal-head p { color: var(--muted); font-size: 13px; margin-top: 3px; }
-    .modal-body { padding: 20px 24px; display: grid; gap: 16px; }
+    .modal-body { padding: 20px 24px; display: grid; gap: 16px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
     .field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
     .field label .req { color: var(--magenta); }
     .field input, .field select, .field textarea {
@@ -193,7 +197,7 @@
     .seg button.on[data-v="Both"] { border-color: var(--deep); background: rgba(52,0,77,.06); color: var(--deep); }
     .seg button.on[data-t] { border-color: var(--purple); background: rgba(141,0,212,.06); color: var(--purple); }
     .seg.sizes button.on { border-color: var(--deep); background: rgba(52,0,77,.06); color: var(--deep); }
-    .modal-foot { padding: 16px 24px 22px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--line); }
+    .modal-foot { padding: 16px 24px 22px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--line); flex: none; }
     .modal-foot .btn-text { color: var(--muted); font-weight: 600; padding: 10px 12px; }
     .modal-foot .btn-text:hover { color: var(--ink); }
 
@@ -279,11 +283,102 @@
     .tl-row.rh-blocked { box-shadow: inset 3px 0 0 #cc2a2a; background: rgba(214,40,40,.045); }
     .tl-row.rh-complete { box-shadow: inset 3px 0 0 #158a52; background: rgba(21,160,90,.035); }
 
+    /* ---------- Branch view ---------- */
+    .branchwrap { padding: 26px 26px 32px; }
+    .branch-root { margin-bottom: 4px; }
+    .broot-card { position: relative; display: inline-flex; flex-direction: column; gap: 9px;
+      min-width: 260px; max-width: 460px; padding: 16px 20px; border-radius: 14px;
+      background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); border-left: 4px solid currentColor; }
+    .broot-kick { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .broot-name { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--deep); line-height: 1.2; }
+    .broot-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .broot-foot { font-size: 12px; color: var(--muted); }
+
+    .branch-list { position: relative; margin-left: 28px; padding-top: 4px; }
+    .branch-list::before { content: ""; position: absolute; left: 0; top: -6px; bottom: 27px; width: 2px;
+      background: currentColor; opacity: .3; }
+    .branch-item { position: relative; padding-left: 30px; margin-top: 12px; }
+    .branch-item::before { content: ""; position: absolute; left: 0; top: 27px; width: 30px; height: 2px;
+      background: currentColor; opacity: .3; }
+    .branch-item::after { content: ""; position: absolute; left: -5px; top: 22px; width: 11px; height: 11px;
+      border-radius: 50%; background: #fff; border: 2.5px solid currentColor; }
+    .branch-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 13px 16px;
+      box-shadow: var(--shadow); cursor: pointer; transition: .12s; border-left: 3px solid var(--line); }
+    .branch-item:hover .branch-card { border-color: #d9cfe6; transform: translateX(2px); }
+    .branch-card.rh-new { border-left-color: #b8c0cc; }
+    .branch-card.rh-progress { border-left-color: #2563eb; }
+    .branch-card.rh-blocked { border-left-color: #cc2a2a; background: rgba(214,40,40,.03); }
+    .branch-card.rh-complete { border-left-color: #158a52; background: rgba(21,160,90,.025); }
+    .bc-top { display: flex; align-items: center; gap: 10px; }
+    .bc-title { font-weight: 600; font-size: 14px; color: var(--deep); flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .bc-chip { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: rgba(52,0,77,.07); color: var(--deep); }
+    .bc-chip.muted { background: #f2eef7; color: #a99fb5; font-weight: 600; }
+    .bc-who { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; color: var(--ink); }
+    .bc-who.muted { color: #a99fb5; font-weight: 500; }
+    .bc-who svg { width: 13px; height: 13px; }
+    .bc-due { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .branch-item.add::before, .branch-item.add::after { display: none; }
+    .branch-add { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13px;
+      color: var(--purple); padding: 11px 15px; border: 1.5px dashed #d9cfe6; border-radius: 10px; background: #fff; }
+    .branch-add:hover { border-color: var(--purple); background: rgba(141,0,212,.04); }
+    .branch-add svg { width: 15px; height: 15px; }
+
+    /* ---------- Calendar ---------- */
+    .cal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .cal-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; color: var(--deep);
+      min-width: 178px; letter-spacing: -.01em; }
+    .cal-nav { display: inline-flex; align-items: center; gap: 6px; }
+    .cal-arrow { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: var(--deep);
+      border: 1px solid var(--line); background: #fff; box-shadow: var(--shadow); }
+    .cal-arrow:hover { border-color: #d9cfe6; color: var(--purple); }
+    .cal-arrow svg { width: 16px; height: 16px; }
+    .cal-today-btn { font-size: 12.5px; font-weight: 600; color: var(--deep); padding: 8px 13px; border-radius: 8px;
+      border: 1px solid var(--line); background: #fff; box-shadow: var(--shadow); }
+    .cal-today-btn:hover { border-color: #d9cfe6; color: var(--purple); }
+    .cal-legend { margin-left: auto; display: flex; gap: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+    .cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+    .cal-grid { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+    .cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); background: #faf8fc; border-bottom: 1px solid var(--line); }
+    .cal-dow div { padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    .cal-week { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-week + .cal-week { border-top: 1px solid var(--line); }
+    .cal-cell { min-height: 112px; padding: 7px 7px 9px; border-right: 1px solid var(--line); }
+    .cal-cell:last-child { border-right: none; }
+    .cal-cell.out { background: #fbfafd; }
+    .cal-cell.out .cal-num { color: #cbc4d5; }
+    .cal-num { font-size: 12.5px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums;
+      display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 20px; }
+    .cal-cell.today .cal-num { background: var(--air-grad); color: #fff; }
+    .cal-chips { margin-top: 5px; display: flex; flex-direction: column; gap: 4px; }
+    .cal-chip { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 6px; background: #fff;
+      border: 1px solid var(--line); border-left: 3px solid var(--purple); font-size: 11.5px; font-weight: 600; color: var(--deep);
+      cursor: pointer; text-align: left; width: 100%; min-width: 0; }
+    .cal-chip:hover { border-color: #d9cfe6; box-shadow: var(--shadow); transform: translateY(-1px); }
+    .cal-chip.b-Airship { border-left-color: var(--magenta); }
+    .cal-chip.b-Toggle { border-left-color: var(--blue); }
+    .cal-chip.b-Both { border-left-color: var(--purple); }
+    .cal-chip .dot { flex: none; }
+    .cal-chip .cname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cal-chip.done { opacity: .62; }
+    .cal-chip.done .cname { text-decoration: line-through; }
+    .cal-more { font-size: 11px; font-weight: 700; color: var(--purple); padding: 3px 6px; cursor: default; }
+    .cal-nodate { margin-top: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+    .cal-nodate .lbl { font-weight: 700; color: var(--deep); }
+    .cal-nodate .cal-chip { width: auto; }
+
     @media (max-width: 680px) {
       .field-row { grid-template-columns: 1fr; }
       thead th.hide-sm, td.hide-sm { display: none; }
       .page-head h2 { font-size: 22px; }
       .chk-grid { grid-template-columns: 1fr; }
+      .cal-legend { width: 100%; margin-left: 0; }
+      .cal-cell { min-height: 76px; padding: 5px 4px 6px; }
+      .cal-num { min-width: 20px; height: 20px; font-size: 11.5px; }
+      .cal-chip { padding: 3px 5px; font-size: 10.5px; }
+      .cal-dow div { padding: 8px 4px; font-size: 10px; }
     }
   </style>
 </head>
@@ -419,7 +514,7 @@
     var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     var state = { campaigns: [], users: [] };
-    var view = { page: "home", campaignId: null, stage: "all", search: "", mode: "table" };
+    var view = { page: "home", campaignId: null, stage: "all", search: "", mode: "table", home: "radar", calY: null, calM: null };
     var editingAsset = null;
     var editingCamp = null;
     var editingUser = null;
@@ -433,7 +528,8 @@
     function rowToAsset(r) {
       return { id: r.id, campaign_id: r.campaign_id, platform: r.platform, name: r.name,
         owner: r.owner || "", assignee: r.assignee || "", stage: r.stage || "New", required: r.required || "", launched: r.launched || "",
-        channel: r.channel || "", purpose: r.purpose || "" };
+        channel: r.channel || "", purpose: r.purpose || "",
+        kind: r.kind || "Deliverable", otype: r.otype || "", department: r.department || "", notes: r.notes || "", work_url: r.work_url || "" };
     }
 
     function rowToUser(r) {
@@ -513,13 +609,15 @@
       var pl = c ? c.platform : "Airship";
       var r = await db.from("cp_assets").insert({ campaign_id: campId, platform: pl, name: d.name,
         owner: d.owner, assignee: d.assignee || "", stage: d.stage, required: dOut(d.required), launched: dOut(d.launched),
-        channel: d.channel, purpose: d.purpose }).select().single();
+        channel: d.channel, purpose: d.purpose,
+        kind: d.kind || "Deliverable", otype: d.otype || "", department: d.department || "", notes: d.notes || "", work_url: d.work_url || "" }).select().single();
       if (r.error) throw r.error;
       if (c) c.assets.push(rowToAsset(r.data));
     }
     async function dbUpdateAsset(id, campId, d) {
       var r = await db.from("cp_assets").update({ name: d.name, owner: d.owner, assignee: d.assignee || "", stage: d.stage,
-        required: dOut(d.required), launched: dOut(d.launched), channel: d.channel, purpose: d.purpose }).eq("id", id);
+        required: dOut(d.required), launched: dOut(d.launched), channel: d.channel, purpose: d.purpose,
+        kind: d.kind || "Deliverable", otype: d.otype || "", department: d.department || "", notes: d.notes || "", work_url: d.work_url || "" }).eq("id", id);
       if (r.error) throw r.error;
       var c = campById(campId);
       if (c) { var a = c.assets.filter(function (x) { return x.id === id; })[0];
@@ -665,6 +763,16 @@
       });
       return html;
     }
+    // Departments an "Other" asset can sit with.
+    var DEPARTMENTS = ["Sales", "Product", "Marketing", "Finance", "Customer Success", "Engineering", "Operations", "People", "Other"];
+    function departmentOptions(sel) {
+      var html = '<option value=""' + (!sel ? ' selected' : '') + '>Select department…</option>';
+      var known = {};
+      DEPARTMENTS.forEach(function (d) { known[d] = true;
+        html += '<option' + (d === sel ? ' selected' : '') + '>' + esc(d) + '</option>'; });
+      if (sel && !known[sel]) html += '<option value="' + esc(sel) + '" selected>' + esc(sel) + '</option>';
+      return html;
+    }
 
     function toast(msg) {
       var t = $("toast"); t.textContent = msg; t.classList.add("show");
@@ -796,7 +904,8 @@
       if (!c) { view.page = "home"; return render(); }
       var isNew = !view.assetId;
       var a = isNew
-        ? { name: "", owner: "", assignee: "", stage: "New", required: c.release || "", launched: "", channel: "", purpose: "" }
+        ? { name: "", owner: "", assignee: "", stage: "New", required: c.release || "", launched: "", channel: "", purpose: "",
+            kind: "Deliverable", otype: "", department: "", notes: "", work_url: "" }
         : c.assets.filter(function (x) { return x.id === view.assetId; })[0];
       if (!a) { view.page = "campaign"; return render(); }
 
@@ -804,7 +913,7 @@
       var relNote = c.release ? 'Must be due on or before the release date, ' + esc(fmtDate(c.release)) + '.' : 'No campaign release date set yet.';
 
       var html = '';
-      html += '<div class="crumb"><button id="crumbHome">The radar</button><span>/</span>' +
+      html += '<div class="crumb"><button id="crumbHome">Campaigns &amp; Radar</button><span>/</span>' +
         '<button id="crumbCamp">' + esc(c.name) + '</button><span>/</span><span>' + (isNew ? 'New asset' : esc(a.name)) + '</span></div>';
       html += '<div class="page-head"><div>' +
         '<h2>' + (isNew ? 'New asset' : esc(a.name)) + '</h2>' +
@@ -819,23 +928,40 @@
         '<div class="field"><label>Asset name <span class="req">*</span></label>' +
           '<input id="proj_name" value="' + esc(a.name) + '" placeholder="e.g. Customer email (+ video)" maxlength="120"></div>' +
         '<div class="field-row">' +
+          '<div class="field"><label>Asset type</label><select id="proj_kind">' +
+            ['Deliverable', 'Other'].map(function (k) { return '<option' + (k === a.kind ? ' selected' : '') + '>' + k + '</option>'; }).join("") + '</select>' +
+            '<div class="tier-blurb" style="margin-top:6px">Pick "Other" for work outside the standard runway. A type and department are required.</div></div>' +
           '<div class="field"><label>Team</label><input id="proj_team" value="' + esc(a.owner) + '" placeholder="e.g. Marketing" maxlength="60"></div>' +
-          '<div class="field"><label>Assignee</label><select id="proj_assignee">' + userOptions(a.assignee || "") + '</select></div>' +
+        '</div>' +
+        '<div id="otherFields"' + (a.kind === 'Other' ? '' : ' style="display:none"') + '>' +
+          '<div class="field-row">' +
+            '<div class="field"><label>Type <span class="req">*</span></label>' +
+              '<input id="proj_otype" value="' + esc(a.otype) + '" placeholder="e.g. Contract, research, legal doc" maxlength="80"></div>' +
+            '<div class="field"><label>Department <span class="req">*</span></label><select id="proj_department">' + departmentOptions(a.department) + '</select></div>' +
+          '</div>' +
         '</div>' +
         '<div class="field-row">' +
+          '<div class="field"><label>Assignee</label><select id="proj_assignee">' + userOptions(a.assignee || "") + '</select></div>' +
           '<div class="field"><label>Stage</label><select id="proj_stage">' +
             ['New', 'In progress', 'Blocked', 'Complete'].map(function (s) { return '<option' + (s === a.stage ? ' selected' : '') + '>' + s + '</option>'; }).join("") + '</select></div>' +
-          '<div class="field"><label>Channel</label><select id="proj_channel">' + channelOptions(a.channel) + '</select></div>' +
         '</div>' +
         '<div class="field-row">' +
+          '<div class="field"><label>Channel</label><select id="proj_channel">' + channelOptions(a.channel) + '</select></div>' +
           '<div class="field"><label>Due date</label><input id="proj_due" type="date" value="' + esc(a.required) + '"' + maxAttr + '>' +
             '<div class="tier-blurb" style="margin-top:6px">' + relNote + '</div></div>' +
-          '<div class="field"><label>Launched</label><input id="proj_launched" type="date" value="' + esc(a.launched) + '"' + maxAttr + '></div>' +
         '</div>' +
-        '<div class="field"><label>Purpose / notes</label><textarea id="proj_purpose" placeholder="What is this asset for?">' + esc(a.purpose) + '</textarea></div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label>Launched</label><input id="proj_launched" type="date" value="' + esc(a.launched) + '"' + maxAttr + '></div>' +
+          '<div class="field"></div>' +
+        '</div>' +
+        '<div class="field"><label>Purpose</label><textarea id="proj_purpose" placeholder="What is this asset for?">' + esc(a.purpose) + '</textarea></div>' +
+        '<div class="field"><label>Notes</label><textarea id="proj_notes" placeholder="Progress notes, context, anything the team should know">' + esc(a.notes) + '</textarea></div>' +
+        '<div class="field"><label>Link to completed work</label>' +
+          '<input id="proj_workurl" type="url" value="' + esc(a.work_url) + '" placeholder="https://…"></div>' +
         '</div></div>';
       $("app").innerHTML = html;
 
+      $("proj_kind").onchange = function () { $("otherFields").style.display = this.value === 'Other' ? '' : 'none'; };
       $("crumbHome").onclick = function () { view.page = "home"; render(); };
       $("crumbCamp").onclick = function () { view.page = "campaign"; render(); };
       $("backAsset").onclick = function () { view.page = "campaign"; render(); };
@@ -850,8 +976,16 @@
         var due = $("proj_due").value, launched = $("proj_launched").value;
         if (due && c.release && due > c.release) { toast("Due date must be on or before the release date (" + fmtDate(c.release) + ")"); return; }
         if (launched && c.release && launched > c.release) { toast("Launched date can't be after the release date"); return; }
+        var kind = $("proj_kind").value;
+        var otype = kind === 'Other' ? $("proj_otype").value.trim() : "";
+        var department = kind === 'Other' ? $("proj_department").value.trim() : "";
+        if (kind === 'Other' && !otype) { $("proj_otype").focus(); toast("Type is required for an Other asset"); return; }
+        if (kind === 'Other' && !department) { $("proj_department").focus(); toast("Department is required for an Other asset"); return; }
+        var workUrl = $("proj_workurl").value.trim();
+        if (workUrl && !/^https?:\/\//i.test(workUrl)) { $("proj_workurl").focus(); toast("Link must start with http:// or https://"); return; }
         var data = { name: name, owner: $("proj_team").value.trim(), assignee: $("proj_assignee").value.trim(),
-          stage: $("proj_stage").value, required: due, launched: launched, channel: $("proj_channel").value, purpose: $("proj_purpose").value.trim() };
+          stage: $("proj_stage").value, required: due, launched: launched, channel: $("proj_channel").value, purpose: $("proj_purpose").value.trim(),
+          kind: kind, otype: otype, department: department, notes: $("proj_notes").value.trim(), work_url: workUrl };
         var btn = $("saveAsset"); btn.disabled = true;
         try {
           if (isNew) { await dbCreateAsset(c.id, data); toast("Asset created"); }
@@ -866,17 +1000,24 @@
     var HORIZON_ORDER = [["week","This week"],["twoweek","Within 2 weeks"],["month","This month"],["quarter","This quarter"],["later","Later"],["none","No date"]];
 
     function renderHome() {
+      var has = state.campaigns.length > 0;
       var html = '';
       html += '<div class="page-head">' +
         '<div><h2>Campaigns &amp; Radar</h2><p>Every release and campaign on one board, by when it lands. Set a tier and the runway builds itself.</p></div>' +
         '<div class="spacer"></div>' +
+        (has ? '<div class="viewseg" style="margin-right:8px">' +
+          '<button data-home="radar" class="' + (view.home === "radar" ? "on" : "") + '">Radar</button>' +
+          '<button data-home="calendar" class="' + (view.home === "calendar" ? "on" : "") + '">Calendar</button>' +
+        '</div>' : '') +
         '<button class="btn btn-primary" id="newCamp">' + ICON.plus + 'New item</button>' +
         '</div>';
 
-      if (!state.campaigns.length) {
+      if (!has) {
         html += '<div class="panel"><div class="empty-state"><div class="big">🛰️</div>' +
           '<h3>Nothing on the radar yet</h3><p>Add the first release or campaign to start planning.</p>' +
           '<button class="btn btn-primary" id="newCamp2">' + ICON.plus + 'New item</button></div></div>';
+      } else if (view.home === "calendar") {
+        html += calendarHTML();
       } else {
         var grouped = {};
         state.campaigns.forEach(function (c) { var k = horizonOf(c.release).key; (grouped[k] = grouped[k] || []).push(c); });
@@ -911,9 +1052,108 @@
 
       if ($("newCamp")) $("newCamp").onclick = openNewCampaign;
       if ($("newCamp2")) $("newCamp2").onclick = openNewCampaign;
+      Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (el) {
+        el.onclick = function () { view.home = el.getAttribute("data-home"); renderHome(); };
+      });
       Array.prototype.forEach.call(document.querySelectorAll("[data-camp]"), function (el) {
         el.onclick = function () { view.page = "campaign"; view.campaignId = el.getAttribute("data-camp"); view.search = ""; view.stage = "all"; view.mode = "table"; render(); };
       });
+      var cp = $("calPrev"), cn = $("calNext"), ct = $("calToday");
+      if (cp) cp.onclick = function () { calShift(-1); };
+      if (cn) cn.onclick = function () { calShift(1); };
+      if (ct) ct.onclick = function () { var t = todayISO().split("-"); view.calY = +t[0]; view.calM = +t[1] - 1; renderHome(); };
+    }
+
+    /* ---------------- Calendar view ---------------- */
+    var DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+    var CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+    function calShift(delta) {
+      var m = view.calM + delta, y = view.calY;
+      while (m < 0) { m += 12; y -= 1; }
+      while (m > 11) { m -= 12; y += 1; }
+      view.calY = y; view.calM = m; renderHome();
+    }
+
+    function calChip(c) {
+      var done = c.stage === "Cleared";
+      return '<button class="cal-chip b-' + esc(c.platform) + (done ? ' done' : '') + '" data-camp="' + c.id + '" ' +
+        'title="' + esc(c.name) + ' · ' + esc(c.platform) + ' · ' + esc(c.stage) + '">' +
+        '<span class="dot dot-' + c.platform.toLowerCase() + '"></span>' +
+        '<span class="cname">' + esc(c.name) + '</span></button>';
+    }
+
+    function calendarHTML() {
+      var t = todayISO().split("-");
+      if (view.calY == null || view.calM == null) { view.calY = +t[0]; view.calM = +t[1] - 1; }
+      var y = view.calY, m = view.calM;
+
+      var byDay = {}, noDate = [];
+      state.campaigns.forEach(function (c) {
+        if (!c.release) { noDate.push(c); return; }
+        (byDay[c.release] = byDay[c.release] || []).push(c);
+      });
+      Object.keys(byDay).forEach(function (k) {
+        byDay[k].sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
+      });
+
+      var firstDow = (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7; // Monday = 0
+      var daysInMonth = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+      var startDay = Math.round(Date.UTC(y, m, 1) / 86400000) - firstDow;
+      var cells = Math.ceil((firstDow + daysInMonth) / 7) * 7;
+      var today = todayISO();
+      var monthLabel = new Date(Date.UTC(y, m, 1)).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
+
+      var head = '<div class="cal-head">' +
+        '<div class="cal-nav">' +
+          '<button class="cal-arrow" id="calPrev" title="Previous month" aria-label="Previous month">' + CHEV_L + '</button>' +
+          '<button class="cal-arrow" id="calNext" title="Next month" aria-label="Next month">' + CHEV_R + '</button>' +
+        '</div>' +
+        '<div class="cal-title">' + monthLabel + '</div>' +
+        '<button class="cal-today-btn" id="calToday">Today</button>' +
+        '<div class="cal-legend">' +
+          '<span><span class="dot dot-airship"></span> Airship</span>' +
+          '<span><span class="dot dot-toggle"></span> Toggle</span>' +
+          '<span><span class="dot dot-both"></span> Both</span>' +
+        '</div>' +
+      '</div>';
+
+      var grid = '<div class="cal-grid"><div class="cal-dow">' +
+        DOW.map(function (d) { return '<div>' + d + '</div>'; }).join("") + '</div>';
+
+      for (var i = 0; i < cells; i++) {
+        if (i % 7 === 0) grid += '<div class="cal-week">';
+        var dayNum = startDay + i;
+        var iso = dayToISO(dayNum);
+        var parts = iso.split("-");
+        var out = (+parts[1] - 1) !== m;
+        var isToday = iso === today;
+        var list = byDay[iso] || [];
+        var chips = "";
+        if (list.length) {
+          var shown = list.slice(0, 4);
+          chips = shown.map(calChip).join("");
+          if (list.length > 4) {
+            var extra = list.slice(4).map(function (c) { return c.name; }).join(", ");
+            chips += '<span class="cal-more" title="' + esc(extra) + '">+' + (list.length - 4) + ' more</span>';
+          }
+        }
+        grid += '<div class="cal-cell' + (out ? ' out' : '') + (isToday ? ' today' : '') + '">' +
+          '<span class="cal-num">' + (+parts[2]) + '</span>' +
+          (chips ? '<div class="cal-chips">' + chips + '</div>' : '') +
+          '</div>';
+        if (i % 7 === 6) grid += '</div>';
+      }
+      grid += '</div>';
+
+      var nd = "";
+      if (noDate.length) {
+        nd = '<div class="cal-nodate"><span class="lbl">No release date (' + noDate.length + '):</span>' +
+          noDate.map(calChip).join("") + '</div>';
+      }
+
+      return head + grid + nd;
     }
 
     function renderCampaign() {
@@ -924,7 +1164,7 @@
       if (view.stage !== "all") assets = assets.filter(function (a) { return (a.stage || "New") === view.stage; });
       if (view.search) {
         var q = view.search.toLowerCase();
-        assets = assets.filter(function (a) { return (a.name + " " + (a.purpose || "") + " " + (a.owner || "") + " " + (a.assignee || "") + " " + (a.channel || "")).toLowerCase().indexOf(q) > -1; });
+        assets = assets.filter(function (a) { return (a.name + " " + (a.purpose || "") + " " + (a.owner || "") + " " + (a.assignee || "") + " " + (a.channel || "") + " " + (a.otype || "") + " " + (a.department || "") + " " + (a.notes || "")).toLowerCase().indexOf(q) > -1; });
       }
       assets.sort(function (a, b) { return (a.required || "9999") < (b.required || "9999") ? -1 : 1; });
 
@@ -968,8 +1208,12 @@
           '<th>Asset</th><th class="hide-sm">Team</th><th>Assignee</th><th>Stage</th><th>Due date</th>' +
           '</tr></thead><tbody>';
         assets.forEach(function (a) {
+          var otherTag = a.kind === 'Other'
+            ? '<div class="purpose"><span class="other-tag">Other</span>' + (a.department ? ' · ' + esc(a.department) : '') + (a.otype ? ' · ' + esc(a.otype) : '') + '</div>'
+            : '';
+          var workLink = a.work_url ? '<div class="purpose"><a href="' + esc(a.work_url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">View completed work ↗</a></div>' : '';
           html += '<tr class="reg rh-' + stageMeta(a.stage).key + '" data-openasset="' + a.id + '">' +
-            '<td><div class="aname">' + esc(a.name) + '</div>' + (a.purpose ? '<div class="purpose">' + esc(a.purpose) + '</div>' : '') + '</td>' +
+            '<td><div class="aname">' + esc(a.name) + '</div>' + otherTag + (a.purpose ? '<div class="purpose">' + esc(a.purpose) + '</div>' : '') + workLink + '</td>' +
             '<td class="hide-sm">' + (a.owner ? esc(a.owner) : '<span style="color:#c3bccd">·</span>') + '</td>' +
             '<td>' + (a.assignee ? esc(a.assignee) : '<span style="color:#c3bccd">Unassigned</span>') + '</td>' +
             '<td>' + stageBadge(a.stage) + '</td>' +
