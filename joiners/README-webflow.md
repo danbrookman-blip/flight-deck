@@ -272,6 +272,19 @@ and month happily and a birth year reluctantly.
 **The WiFi splash** carries two separate opt-ins, email and SMS, as custom 22px
 checkboxes. Never bundle them into one tick.
 
+The WiFi page shows that designed card **beside the live Fydelia splash**, framed
+from `https://ondemand.fydelia.com/splash/joiners-kitchen/` and labelled "Live
+today · Fydelia". The contrast is the argument: the live one asks for first name,
+last name and email and bundles consent into a single terms tick; the design asks
+for less, and separates the two opt-ins from the terms.
+
+Two things to keep if you rebuild it. The framed page's mobile layout carries a
+410px min-width, so framing it at the 440px column width clips it — it renders at
+a 600px logical width and is scaled down (`.jo-splash-iframe`), with `site.js`
+setting the scale from the frame's measured width. And it is a third-party page
+outside our control: it can change or disappear without notice, so do not build
+anything that depends on its contents.
+
 **The footer signup** does not subscribe anybody. It forwards to the Joiners
 Club page, scrolls to the form and carries the typed email across, so the guest
 sees what they get back before they finish. That is deliberate.

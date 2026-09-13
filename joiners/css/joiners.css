@@ -870,8 +870,49 @@ button { font-family: inherit; }
 
 /* ---------------------------------------------------------------- wifi --- */
 
-.jo-splash-wrap { display: flex; justify-content: center; }
+/* Two columns at 1200px: the proposed card, and the live Fydelia splash
+   beside it. Wraps to one column when there is not room for both. */
+.jo-splash-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 48px;
+  flex-wrap: wrap;
+}
 .jo-splash { width: 100%; max-width: 440px; }
+.jo-splash-label {
+  font-family: var(--jo-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jo-ink-60);
+  margin: 0 0 14px;
+  text-align: center;
+}
+/* Third-party embed. Fixed height, because a cross-origin page cannot report
+   its own. The Fydelia splash uses a <= 620px mobile layout that still carries a
+   410px min-width inside it, so framing it at 440px clips. Instead it renders at
+   a 600px logical width - safely inside its mobile breakpoint - and is scaled to
+   fit the 440px column. 600 x 0.7333 = 440; 982 x 0.7333 = 720.
+   The scale itself is set by site.js from the frame's measured width, so it
+   stays exact at every viewport; the 0.7333 here is the desktop fallback if
+   the script does not run. */
+.jo-splash-frame {
+  border: 2px solid var(--jo-rule);
+  box-shadow: var(--jo-shadow);
+  background: var(--jo-paper);
+  width: 100%;
+  height: 720px;
+  overflow: hidden;
+}
+.jo-splash-iframe {
+  display: block;
+  width: 600px;
+  height: 982px;
+  border: 0;
+  transform: scale(var(--jo-splash-scale, 0.7333));
+  transform-origin: top left;
+}
 .jo-splash-card {
   background: var(--jo-paper);
   border: 2px solid var(--jo-rule);

@@ -315,6 +315,43 @@
     });
   }
 
+  /* ------------------------------------------- the live Fydelia embed ----- */
+
+  /* The framed splash renders at a fixed 600px logical width, because its own
+     mobile layout carries a 410px min-width and clips below roughly 500px.
+     Scale it to whatever width the column actually has, and set the frame's
+     height to match so there is no dead space under it. */
+  var SPLASH_W = 600, SPLASH_H = 982;
+
+  function fitSplash() {
+    $$('.jo-splash-frame').forEach(function (frame) {
+      var w = frame.clientWidth;
+      if (!w) return;
+      var scale = w / SPLASH_W;
+      frame.style.setProperty('--jo-splash-scale', String(scale));
+      frame.style.height = Math.round(SPLASH_H * scale) + 'px';
+    });
+  }
+
+  if ($('.jo-splash-frame')) {
+    /* Measured, not guessed: re-fit on mount, on the next frame, once the
+       fonts and the framed page have settled, and on every resize. */
+    fitSplash();
+    requestAnimationFrame(fitSplash);
+    setTimeout(fitSplash, 250);
+    $$('.jo-splash-iframe').forEach(function (f) { f.addEventListener('load', fitSplash); });
+    w.addEventListener('resize', fitSplash);
+    w.addEventListener('orientationchange', fitSplash);
+    /* Observe the column, not the frame: the frame's own height is what this
+       sets, so observing it would feed back into itself. */
+    if (w.ResizeObserver) {
+      var ro = new w.ResizeObserver(fitSplash);
+      $$('.jo-splash-frame').forEach(function (frame) {
+        if (frame.parentElement) ro.observe(frame.parentElement);
+      });
+    }
+  }
+
   /* ------------------------------------------------------- cookie sheet --- */
 
   /* A dismissible bottom sheet that never covers a call to action. */
