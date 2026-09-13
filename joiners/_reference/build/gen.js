@@ -699,68 +699,36 @@ const club = `
 </section>
 
 <section class="jo-band-paper" id="joiners-club-form">
-  <div class="jo-container-narrow jo-section">
-    <!-- Success is not a modal. The section transforms. -->
-    <div id="jo-club-success" hidden>
-      <div style="animation:joRise 300ms ease-out">
-        <div class="jo-row-12" style="align-items:flex-start">
-          <h2 class="jo-h2 jo-mb-16">Thank you, <span data-record-name>there</span>.</h2>
-          ${pin(10)}${pin(21)}${pin(22)}
-        </div>
-        <p class="jo-lead" style="font-size:20px;color:var(--jo-ink);max-width:none;margin:0 0 28px">Your first Club Friday is 3 October. Your birthday table is already in the diary for <span data-record-birthday>14 March</span>.</p>
-        <button type="button" class="jo-btn jo-btn-outline jo-btn-sm" id="jo-club-restart">Start again</button>
-      </div>
-    </div>
-
-    <div id="jo-club-formwrap">
+  <div class="jo-container jo-section jo-embed-row">
+    <div class="jo-embed-col">
       <h2 class="jo-h2 jo-mb-28">Join the Club</h2>
-      <form class="jo-field-stack" data-club-form>
-        <label class="jo-field">
-          <span class="jo-field-label">First name</span>
-          <input class="jo-input" name="name" placeholder="Sarah" autocomplete="given-name" required>
-        </label>
-        <label class="jo-field">
-          <span class="jo-field-label">Email</span>
-          <input class="jo-input" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-        </label>
-        <label class="jo-field">
-          <span class="jo-field-label">Mobile</span>
-          <input class="jo-input" type="tel" name="mobile" placeholder="07700 900000" autocomplete="tel">
-        </label>
-        <div class="jo-field-pair">
-          <label class="jo-field">
-            <span class="jo-field-label">Birthday</span>
-            <input class="jo-input" name="birthday" placeholder="14 March">
-          </label>
-          <label class="jo-field">
-            <span class="jo-field-label">Year</span>
-            <input class="jo-input" name="birthYear" placeholder="1988" inputmode="numeric">
-          </label>
-        </div>
-        <div class="jo-field-pair">
-          <label class="jo-field">
-            <span class="jo-field-label">Anniversary</span>
-            <input class="jo-input" name="anniversary" placeholder="2 October">
-          </label>
-          <label class="jo-field">
-            <span class="jo-field-label">Year</span>
-            <input class="jo-input" name="anniversaryYear" placeholder="2016" inputmode="numeric">
-          </label>
-        </div>
-        <label class="jo-field">
-          <span class="jo-field-label">Postcode</span>
-          <input class="jo-input" name="postcode" placeholder="S2 5QX" autocomplete="postal-code">
-        </label>
-        <label class="jo-field">
-          <span class="jo-field-label">Where you go most</span>
-          <select class="jo-select" name="venue">
-            ${D.VENUES.map((v) => `<option value="${esc(v.name)}">${esc(v.name)}</option>`).join('\n            ')}
-          </select>
-        </label>
-        <button type="submit" class="jo-btn jo-btn-pine" style="align-self:flex-start;padding:17px 28px;font-size:16px;min-height:52px">Join the Club</button>
-      </form>
+
+      <!-- The real Airship sign-up form. It writes straight to the contact
+           record, so the local demo form and its success state are gone: the
+           embed is a cross-origin iframe and handles its own submission and
+           confirmation. embed.js sizes it, so it needs no height of ours. -->
+      <div data-airship-form-url="https://forms.airship.co.uk/forms/6755399444000000/sign-up-form"></div>
+
       <p class="jo-sandbox jo-reveal-only jo-reveal-only-block">This is a live demonstration. Anything you enter creates a real record in a real Airship account and you will receive real emails. Delete it any time.</p>
     </div>
+
+    <!-- Pins cannot sit inside a cross-origin frame, so the joints for the
+         form sit beside it, labelled so they read on their own. -->
+    <aside class="jo-joints-aside jo-reveal-only jo-reveal-only-block">
+      <p class="jo-joints-head">The joints</p>
+      <div class="jo-joint">
+        ${pin(10)}
+        <span class="jo-joint-label">What the form writes</span>
+      </div>
+      <div class="jo-joint">
+        ${pin(21)}
+        <span class="jo-joint-label">The journeys it arms</span>
+      </div>
+      <div class="jo-joint">
+        ${pin(22)}
+        <span class="jo-joint-label">What Toggle picks up</span>
+      </div>
+    </aside>
   </div>
 </section>
 
@@ -882,17 +850,17 @@ const wifi = `
 
   <!-- The joints for this page sit alongside the splash rather than on it, so
        they stay visible and clickable over a frame we do not control. -->
-  <aside class="jo-splash-joints jo-reveal-only jo-reveal-only-block">
-    <p class="jo-splash-joints-head">The joints</p>
-    <div class="jo-splash-joint">
+  <aside class="jo-joints-aside jo-reveal-only jo-reveal-only-block">
+    <p class="jo-joints-head">The joints</p>
+    <div class="jo-joint">
       ${pin(31)}
-      <span class="jo-splash-joint-label">WiFi capture through Fydelia</span>
+      <span class="jo-joint-label">WiFi capture through Fydelia</span>
     </div>
-    <div class="jo-splash-joint">
+    <div class="jo-joint">
       ${pin(32)}
-      <span class="jo-splash-joint-label">Time-of-day patterning</span>
+      <span class="jo-joint-label">Time-of-day patterning</span>
     </div>
-    <p class="jo-sandbox jo-splash-joints-note">Live demonstration. Anything entered creates a real record. Delete it any time.</p>
+    <p class="jo-sandbox jo-joints-note">Live demonstration. Anything entered creates a real record. Delete it any time.</p>
   </aside>
 </section>`;
 
@@ -1030,7 +998,8 @@ const PAGES = [
   {file: 'places.html', key: 'places', title: 'Our four places — Joiners', description: 'Four rooms on one Sheffield street. Different rooms, same kitchen thinking.', body: places},
   {file: 'the-joiners-arms.html', key: 'arms', venue: 'arms', title: 'The Joiners Arms — Joiners', description: 'A corner pub on South Street with nine rooms upstairs. Menus, rooms and how to find us.', body: arms},
   {file: 'the-engine-room.html', key: 'engine-room', venue: 'engine-room', title: 'The Engine Room — Joiners', description: 'Cookery classes, supper clubs and private dining, twelve to sixty covers.', body: engineRoom},
-  {file: 'joiners-club.html', key: 'table', active: '', title: 'The Joiners Club — Joiners', description: 'A club with no card, no points and no app. Seven fields, under a minute.', body: club},
+  {file: 'joiners-club.html', key: 'table', active: '', title: 'The Joiners Club — Joiners', description: 'A club with no card, no points and no app. Seven fields, under a minute.', body: club,
+   scripts: '<!-- The Airship forms embed. In Webflow this can live in the page footer. -->\n<script src="https://forms.airship.co.uk/assets/js/embed.js" async></script>'},
   {file: 'contact.html', key: 'contact', title: 'Contact us — Joiners', description: 'One street, four places, one phone number.', body: contact,
    scripts: '<!-- The Airship forms embed. In Webflow this can live in the page footer. -->\n<script src="https://forms.airship.co.uk/assets/js/embed.js" async></script>'},
   {file: 'wifi.html', key: 'wifi', title: 'WiFi — Joiners', description: 'Free WiFi at all four places. Two hours, no password.', body: wifi},

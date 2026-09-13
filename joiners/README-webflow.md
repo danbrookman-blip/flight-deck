@@ -263,11 +263,41 @@ enough.
 
 In Webflow: an HTML Embed element for the div, the script in the page footer.
 
-**The Joiners Club form** is currently local-only — it writes to the visitor
-record and transforms the section. It needs wiring to Airship. Note two things
-the design is firm about: success is **not a modal**, the section transforms in
-place; and the day/year pairs are two fields, because people will give you a day
-and month happily and a birth year reluctantly.
+**The Joiners Club form is now an Airship embed too**, on `joiners-club.html`:
+
+```html
+<div data-airship-form-url="https://forms.airship.co.uk/forms/6755399444000000/sign-up-form"></div>
+<script src="https://forms.airship.co.uk/assets/js/embed.js"></script>
+```
+
+> **This URL currently returns 404** ("Airship Rewards - Voucher not found"), so
+> the frame renders an error page about 150px tall. The account id is correct —
+> `contact-us` on the same account returns 200 — so the form **slug** needs
+> replacing with the real one from Airship. That is the only change needed.
+
+The embed replaced the designed seven-field form and its success state. Three
+consequences follow from it being a cross-origin iframe, and none of them are
+bugs:
+
+- **Your Record no longer fills in from this page.** The home page's Join the
+  Club band still carries the local form, so that demonstration survives there —
+  but the brief calls Your Record "the mechanic that converts", so know that the
+  Club page no longer shows it working.
+- **The designed success state is gone** — "Thank you, {name}. Your first Club
+  Friday is 3 October." The embed handles its own confirmation.
+- **The footer signup cannot prefill it.** The visitor still arrives with
+  `?email=` on the URL; whether Airship's form reads that is a question for the
+  Airship side.
+
+If the designed form is ever rebuilt, two things it was firm about: success is
+**not a modal**, the section transforms in place; and the date fields are
+day/month and year as two separate inputs, because people give a day and month
+happily and a birth year reluctantly.
+
+**Pins beside embeds.** Pins cannot be placed inside a cross-origin frame, so the
+joints for both embeds sit alongside them (`.jo-joints-aside`, `.jo-joint`,
+`.jo-joint-label`), labelled so they read on their own. Pins 10, 21 and 22 on the
+Club form; 31 and 32 on the WiFi splash.
 
 **The WiFi page shows the live Fydelia splash**, framed from
 `https://ondemand.fydelia.com/splash/joiners-kitchen/`. The designed replacement

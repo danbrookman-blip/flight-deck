@@ -916,14 +916,15 @@ button { font-family: inherit; }
   transform-origin: top left;
 }
 
-/* The joints for the WiFi page sit beside the splash, not on it - the frame is
-   a third-party page we cannot place pins inside. Reveal-layer only. */
-.jo-splash-joints {
+/* Joints that sit beside a cross-origin frame rather than on it - pins cannot
+   be placed inside one. Used by the WiFi splash and the Club sign-up embed.
+   Reveal-layer only. */
+.jo-joints-aside {
   width: 100%;
   max-width: 260px;
   padding-top: 34px;
 }
-.jo-splash-joints-head {
+.jo-joints-head {
   font-family: var(--jo-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
@@ -931,18 +932,18 @@ button { font-family: inherit; }
   color: var(--jo-ink-60);
   margin: 0 0 18px;
 }
-.jo-splash-joint {
+.jo-joint {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 14px 0;
   border-top: 1px solid var(--jo-stone);
 }
-.jo-splash-joint-label { font-size: 15px; line-height: 1.4; font-weight: 500; }
-.jo-splash-joints-note { margin-top: 18px; }
+.jo-joint-label { font-size: 15px; line-height: 1.4; font-weight: 500; }
+.jo-joints-note { margin-top: 18px; }
 
 @media (max-width: 859px) {
-  .jo-splash-joints { max-width: 440px; padding-top: 0; }
+  .jo-joints-aside { max-width: 440px; padding-top: 0; }
 }
 .jo-splash-card {
   background: var(--jo-paper);
@@ -1135,4 +1136,21 @@ button { font-family: inherit; }
   .jo-band-brass { padding: 28px; }
   .jo-gift-copy { padding: 28px; }
   .jo-field-pair, .jo-field-pair-sm { grid-template-columns: minmax(0,1fr) 100px; }
+}
+
+/* --------------------------------------------------- embedded form row --- */
+
+/* The Airship form embed beside its joints. The form column keeps the design's
+   800px measure; the joints sit to one side and drop under it when narrow. */
+.jo-embed-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.jo-embed-col { flex: 1 1 520px; max-width: 800px; }
+
+@media (max-width: 859px) {
+  .jo-embed-row { gap: 32px; }
+  .jo-embed-col { flex: 1 1 100%; }
 }
