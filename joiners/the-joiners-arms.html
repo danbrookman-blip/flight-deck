@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Joiners Arms — Joiners</title>
+<meta name="description" content="A corner pub on South Street with nine rooms upstairs. Menus, rooms and how to find us.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:SOFT,WONK,opsz,wght@40,1,9..144,600..900&family=Inter:wght@400;500;600&family=Montserrat:wght@600&family=Manrope:wght@800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/joiners.css">
+<link rel="stylesheet" href="css/reveal.css">
+</head>
+<body class="jo-page" data-venue="arms" data-route="arms">
+
+<header class="jo-header">
+  <div class="jo-header-row">
+    <a href="index.html" class="jo-brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" focusable="false"><path d="M1 3h9l3 4 3-4h9M1 3v20h9l3-4 3 4h9V3" fill="none" stroke="#B4763A" stroke-width="1.4"></path><path d="M10 7h6v12h-6z" fill="none" stroke="#B4763A" stroke-width="1.4"></path></svg>
+      <span class="jo-brand-name">Joiners</span>
+    </a>
+
+    <div class="jo-header-actions">
+      <!-- See the joints. Keyboard shortcut J. State in sessionStorage. -->
+      <button type="button" class="jo-switch" id="jo-switch" title="Keyboard shortcut: J" aria-pressed="false">
+        <span class="jo-switch-track"><span class="jo-switch-knob"></span></span>
+        <span class="jo-switch-label">See the joints</span>
+      </button>
+
+      <div class="jo-btn-pair jo-header-ctas">
+        <a href="joiners-club.html" class="jo-btn jo-btn-brass jo-btn-sm">Join the Club</a>
+        <a href="book.html" class="jo-btn jo-btn-pine jo-btn-sm">Book a table</a>
+      </div>
+
+      <button type="button" class="jo-burger" id="jo-burger" aria-label="Menu" aria-expanded="false" aria-controls="jo-menu-panel">
+        <span class="jo-burger-bar"></span><span class="jo-burger-bar"></span><span class="jo-burger-bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="jo-nav-bar">
+    <nav class="jo-nav" aria-label="Primary">
+      <a href="places.html" class="jo-nav-link">Places</a>
+      <a href="the-joiners-arms.html#menus" class="jo-nav-link is-active">Menus</a>
+      <a href="the-joiners-arms.html#rooms" class="jo-nav-link is-active">Stay</a>
+      <a href="the-engine-room.html" class="jo-nav-link">The Engine Room</a>
+      <a href="parties.html" class="jo-nav-link">Parties</a>
+      <a href="contact.html" class="jo-nav-link">Contact</a>
+      <a href="gift-shop.html" class="jo-nav-link">Gift Shop</a>
+      <a href="wifi.html" class="jo-nav-link">WiFi</a>
+      <!-- Gated: only exists when the reveal layer is on. -->
+      <a href="the-joints.html" class="jo-nav-link jo-reveal-only jo-reveal-only-flex">The Joints</a>
+    </nav>
+  </div>
+</header>
+
+<div class="jo-menu-panel" id="jo-menu-panel">
+  <div class="jo-menu-inner">
+    <a href="places.html" class="jo-menu-link">Places</a>
+    <a href="the-joiners-arms.html" class="jo-menu-link">The Joiners Arms</a>
+    <a href="the-engine-room.html" class="jo-menu-link">The Engine Room</a>
+    <a href="gift-shop.html" class="jo-menu-link">Gift Shop</a>
+    <a href="wifi.html" class="jo-menu-link">WiFi</a>
+    <a href="parties.html" class="jo-menu-link">Parties</a>
+    <a href="joiners-club.html" class="jo-menu-link">Joiners Club</a>
+    <a href="book.html" class="jo-menu-link">Book a table</a>
+    <a href="contact.html" class="jo-menu-link">Contact us</a>
+    <a href="the-joints.html" class="jo-menu-link jo-reveal-only jo-reveal-only-block">The Joints</a>
+  </div>
+</div>
+
+<div class="jo-tip" id="jo-tip" role="status">
+  <p class="jo-tip-text">This site is built by Airship. Flip this to see how it works.</p>
+  <button type="button" class="jo-tip-btn" id="jo-tip-dismiss">Got it</button>
+</div>
+
+<main id="main">
+
+<section class="jo-vhero">
+  <div class="jo-hero-media"><div class="jo-img jo-grain jo-img-cover" data-slot="jo-arms-hero" data-shot="The Joiners Arms — South Street exterior in low light">
+            <div class="jo-img-ph">The Joiners Arms — South Street exterior in low light</div>
+          </div></div>
+  <div class="jo-vhero-scrim"></div>
+  <div class="jo-vhero-inner"><h1 class="jo-vhero-h1">The Joiners Arms</h1></div>
+</section>
+
+<!-- Rule 3: address, hours, phone and both actions are visible without scrolling. -->
+<div class="jo-infocard-wrap">
+  <div class="jo-infocard">
+    <div class="jo-infocard-col">
+      <span>16 South Street, Sheffield, S2 5QX</span>
+      <span class="jo-infocard-hours">Open today until 11pm · Kitchen 12–9pm</span>
+      <a href="tel:01142996477" class="jo-infocard-tel">0114 299 6477</a>
+    </div>
+    <div class="jo-infocard-actions">
+      <div class="jo-btn-row">
+        <a href="book.html" class="jo-btn jo-btn-pine">Book a table</a>
+        <a href="#rooms" class="jo-btn jo-btn-outline">Check rooms</a>
+      </div>
+      <div class="jo-chip-row">
+        <span class="jo-chip">Step-free entry</span>
+        <span class="jo-chip">Dog friendly</span>
+        <span class="jo-chip">Parking</span>
+        <span class="jo-chip">Allergen menu</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="jo-container jo-section-top">
+  <p class="jo-lead-wide">A corner pub on South Street with nine rooms upstairs and a fire that is lit from October. People come in off the hill wet, dogs come in muddy, and both are fine. Sunday lunch runs from noon until it goes, which on a good week is about half three. If you are staying, breakfast is at the long table and there is a boot room by the back door.</p>
+</section>
+
+<section class="jo-container jo-section" id="menus">
+  <div class="jo-section-head jo-section-head-tight">
+    <h2 class="jo-h2">Menus</h2>
+    <button type="button" class="jo-pin" data-pin="6" aria-label="Pin 6: Menu interest signal">6</button>
+  </div>
+
+  <div class="jo-tabs" role="tablist">
+    <button type="button" class="jo-tab" data-menu-tab="Lunch" role="tab" aria-selected="false">Lunch</button>
+    <button type="button" class="jo-tab" data-menu-tab="Dinner" role="tab" aria-selected="false">Dinner</button>
+    <button type="button" class="jo-tab is-active" data-menu-tab="Sunday" role="tab" aria-selected="true">Sunday</button>
+    <button type="button" class="jo-tab" data-menu-tab="Drinks" role="tab" aria-selected="false">Drinks</button>
+  </div>
+
+  <div class="jo-filter-row">
+    <span class="jo-label">Filter</span>
+    <button type="button" class="jo-filter jo-filter-diet" data-diet="V" aria-pressed="false">Vegetarian</button>
+    <button type="button" class="jo-filter jo-filter-diet" data-diet="VG" aria-pressed="false">Vegan</button>
+    <button type="button" class="jo-filter jo-filter-diet" data-diet="GF" aria-pressed="false">Gluten free</button>
+    <button type="button" class="jo-filter jo-filter-diet" data-diet="DF" aria-pressed="false">Dairy free</button>
+    <button type="button" class="jo-filter jo-filter-diet" data-diet="NF" aria-pressed="false">Nut free</button>
+  </div>
+  <p class="jo-mono-note jo-mb-24">Menus updated 2 September 2026 · Filters dim what does not match. Nothing is hidden. Tap a dish for allergens.</p>
+
+  <div class="jo-dishes" data-menu-pane="Lunch" hidden>
+    <div class="jo-dish" data-tags="V">
+      <button type="button" class="jo-dish-btn" data-dish="Lunch-0" aria-expanded="false">
+        <span class="jo-dish-name">Welsh rarebit, pickled walnut</span>
+        <span class="jo-dish-tags">V</span>
+        <span class="jo-dish-price">£9.50</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, mustard, sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="GF DF">
+      <button type="button" class="jo-dish-btn" data-dish="Lunch-1" aria-expanded="false">
+        <span class="jo-dish-name">Hathersage trout, cucumber, dill</span>
+        <span class="jo-dish-tags">GF DF</span>
+        <span class="jo-dish-price">£16.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Fish</p>
+    </div>
+    <div class="jo-dish" data-tags="VG DF">
+      <button type="button" class="jo-dish-btn" data-dish="Lunch-2" aria-expanded="false">
+        <span class="jo-dish-name">Roast squash, freekeh, sage oil</span>
+        <span class="jo-dish-tags">VG DF</span>
+        <span class="jo-dish-price">£14.50</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten</p>
+    </div>
+    <div class="jo-dish" data-tags="">
+      <button type="button" class="jo-dish-btn" data-dish="Lunch-3" aria-expanded="false">
+        <span class="jo-dish-name">Steak sandwich, onions, horseradish</span>
+        <span class="jo-dish-tags">—</span>
+        <span class="jo-dish-price">£17.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, mustard, sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="GF DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Lunch-4" aria-expanded="false">
+        <span class="jo-dish-name">Chips, beef dripping</span>
+        <span class="jo-dish-tags">GF DF NF</span>
+        <span class="jo-dish-price">£5.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: None</p>
+    </div>
+  </div>
+  <div class="jo-dishes" data-menu-pane="Dinner" hidden>
+    <div class="jo-dish" data-tags="">
+      <button type="button" class="jo-dish-btn" data-dish="Dinner-0" aria-expanded="false">
+        <span class="jo-dish-name">Grouse, bread sauce, game chips</span>
+        <span class="jo-dish-tags">—</span>
+        <span class="jo-dish-price">£29.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, celery</p>
+    </div>
+    <div class="jo-dish" data-tags="GF">
+      <button type="button" class="jo-dish-btn" data-dish="Dinner-1" aria-expanded="false">
+        <span class="jo-dish-name">Hake, mussels, cider</span>
+        <span class="jo-dish-tags">GF</span>
+        <span class="jo-dish-price">£24.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Fish, molluscs, milk, sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="V">
+      <button type="button" class="jo-dish-btn" data-dish="Dinner-2" aria-expanded="false">
+        <span class="jo-dish-name">Celeriac, hazelnut, brown butter</span>
+        <span class="jo-dish-tags">V</span>
+        <span class="jo-dish-price">£18.50</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Milk, nuts</p>
+    </div>
+    <div class="jo-dish" data-tags="GF DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Dinner-3" aria-expanded="false">
+        <span class="jo-dish-name">Hogget, turnip, mint</span>
+        <span class="jo-dish-tags">GF DF NF</span>
+        <span class="jo-dish-price">£26.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: None</p>
+    </div>
+    <div class="jo-dish" data-tags="V GF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Dinner-4" aria-expanded="false">
+        <span class="jo-dish-name">Buttermilk pudding, damsons</span>
+        <span class="jo-dish-tags">V GF NF</span>
+        <span class="jo-dish-price">£8.50</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Milk, eggs</p>
+    </div>
+  </div>
+  <div class="jo-dishes" data-menu-pane="Sunday">
+    <div class="jo-dish" data-tags="">
+      <button type="button" class="jo-dish-btn" data-dish="Sunday-0" aria-expanded="false">
+        <span class="jo-dish-name">Sirloin of Derbyshire beef</span>
+        <span class="jo-dish-tags">—</span>
+        <span class="jo-dish-price">£22.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, eggs, mustard</p>
+    </div>
+    <div class="jo-dish" data-tags="DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Sunday-1" aria-expanded="false">
+        <span class="jo-dish-name">Pork loin, crackling, apple</span>
+        <span class="jo-dish-tags">DF NF</span>
+        <span class="jo-dish-price">£20.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="VG DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Sunday-2" aria-expanded="false">
+        <span class="jo-dish-name">Whole roast onion, lentils, gravy</span>
+        <span class="jo-dish-tags">VG DF NF</span>
+        <span class="jo-dish-price">£17.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, celery</p>
+    </div>
+    <div class="jo-dish" data-tags="V">
+      <button type="button" class="jo-dish-btn" data-dish="Sunday-3" aria-expanded="false">
+        <span class="jo-dish-name">Extra Yorkshire pudding</span>
+        <span class="jo-dish-tags">V</span>
+        <span class="jo-dish-price">£2.50</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, eggs</p>
+    </div>
+    <div class="jo-dish" data-tags="V NF">
+      <button type="button" class="jo-dish-btn" data-dish="Sunday-4" aria-expanded="false">
+        <span class="jo-dish-name">Sticky toffee pudding</span>
+        <span class="jo-dish-tags">V NF</span>
+        <span class="jo-dish-price">£8.00</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten, milk, eggs</p>
+    </div>
+  </div>
+  <div class="jo-dishes" data-menu-pane="Drinks" hidden>
+    <div class="jo-dish" data-tags="VG DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Drinks-0" aria-expanded="false">
+        <span class="jo-dish-name">Abbeydale Moonshine, pint</span>
+        <span class="jo-dish-tags">VG DF NF</span>
+        <span class="jo-dish-price">£5.20</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten (barley)</p>
+    </div>
+    <div class="jo-dish" data-tags="VG DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Drinks-1" aria-expanded="false">
+        <span class="jo-dish-name">Thornbridge Jaipur, pint</span>
+        <span class="jo-dish-tags">VG DF NF</span>
+        <span class="jo-dish-price">£5.80</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Gluten (barley)</p>
+    </div>
+    <div class="jo-dish" data-tags="VG GF DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Drinks-2" aria-expanded="false">
+        <span class="jo-dish-name">Peak cider, half</span>
+        <span class="jo-dish-tags">VG GF DF NF</span>
+        <span class="jo-dish-price">£3.10</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="VG GF DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Drinks-3" aria-expanded="false">
+        <span class="jo-dish-name">House red, Cotes du Rhone, 175ml</span>
+        <span class="jo-dish-tags">VG GF DF NF</span>
+        <span class="jo-dish-price">£7.40</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: Sulphites</p>
+    </div>
+    <div class="jo-dish" data-tags="VG GF DF NF">
+      <button type="button" class="jo-dish-btn" data-dish="Drinks-4" aria-expanded="false">
+        <span class="jo-dish-name">Coffee House filter, cup</span>
+        <span class="jo-dish-tags">VG GF DF NF</span>
+        <span class="jo-dish-price">£3.20</span>
+      </button>
+      <p class="jo-dish-allergens">Allergens: None</p>
+    </div>
+  </div>
+</section>
+
+<section class="jo-container jo-section-bottom" id="rooms">
+  <div class="jo-section-head jo-section-head-tight">
+    <h2 class="jo-h2">Rooms</h2>
+    <div class="jo-row-12" style="gap:10px"><button type="button" class="jo-pin" data-pin="7" aria-label="Pin 7: Stay data and the anniversary">7</button><button type="button" class="jo-pin" data-pin="25" aria-label="Pin 25: Sell the little things">25</button></div>
+  </div>
+  <p class="jo-body jo-mb-24" style="color:var(--jo-ink-72)">Nine rooms. Rates include breakfast at the long table. Dogs £15 a stay.</p>
+  <div class="jo-grid-boxed jo-cols-3">
+    <article class="jo-card">
+      <div class="jo-img jo-grain jo-img-180" data-slot="jo-r-r1" data-shot="Room — Bank">
+            <div class="jo-img-ph">Room — Bank</div>
+          </div>
+      <div class="jo-card-body" style="padding:22px">
+        <h4 class="jo-h4" style="font-size:20px;margin:0 0 6px">Bank</h4>
+        <p class="jo-card-line" style="font-size:14px;margin:0 0 14px">Double at the front, over the road, deepest bath in the building.</p>
+        <p class="jo-mono-price" style="font-size:15px;margin:0 0 14px">From £150</p>
+        <a href="#" class="jo-link">Check availability</a>
+      </div>
+    </article>
+    <article class="jo-card">
+      <div class="jo-img jo-grain jo-img-180" data-slot="jo-r-r2" data-shot="Room — Boot Room">
+            <div class="jo-img-ph">Room — Boot Room</div>
+          </div>
+      <div class="jo-card-body" style="padding:22px">
+        <h4 class="jo-h4" style="font-size:20px;margin:0 0 6px">Boot Room</h4>
+        <p class="jo-card-line" style="font-size:14px;margin:0 0 14px">Ground floor twin, own door to the yard. Dogs welcome.</p>
+        <p class="jo-mono-price" style="font-size:15px;margin:0 0 14px">From £140</p>
+        <a href="#" class="jo-link">Check availability</a>
+      </div>
+    </article>
+    <article class="jo-card">
+      <div class="jo-img jo-grain jo-img-180" data-slot="jo-r-r3" data-shot="Room — Long View">
+            <div class="jo-img-ph">Room — Long View</div>
+          </div>
+      <div class="jo-card-body" style="padding:22px">
+        <h4 class="jo-h4" style="font-size:20px;margin:0 0 6px">Long View</h4>
+        <p class="jo-card-line" style="font-size:14px;margin:0 0 14px">Top floor, two windows, the whole city on a clear morning.</p>
+        <p class="jo-mono-price" style="font-size:15px;margin:0 0 14px">From £175</p>
+        <a href="#" class="jo-link">Check availability</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="jo-band-paper">
+  <div class="jo-container jo-section jo-gap-48 jo-cols-2">
+    <div>
+      <h2 class="jo-h2 jo-mb-24">Find us</h2>
+      <div class="jo-img jo-grain jo-img-260" data-slot="jo-arms-map" data-shot="Map — South Street, Sheffield">
+            <div class="jo-img-ph">Map — South Street, Sheffield</div>
+          </div>
+    </div>
+    <div class="jo-stack-16" style="gap:22px">
+      <div>
+        <h4 class="jo-subhead">By car</h4>
+        <p class="jo-body" style="color:rgba(27,24,21,0.75)">Ten minutes from the Parkway and five from the ring road. Free parking for sixteen cars behind the pub, two of them accessible bays next to the side door.</p>
+      </div>
+      <div>
+        <h4 class="jo-subhead">By train and tram</h4>
+        <p class="jo-body" style="color:rgba(27,24,21,0.75)">Sheffield station is an eight minute walk, up South Street and left at the top. The Sheffield Station tram stop is closer still, two minutes from the door.</p>
+      </div>
+      <div>
+        <!-- Access is written properly, in prose, not reduced to an icon. -->
+        <h4 class="jo-subhead">Access</h4>
+        <p class="jo-body" style="color:rgba(27,24,21,0.75)">Step-free entry through the side door on the car park, level throughout the bar and dining room. Accessible WC on the ground floor. The nine bedrooms are upstairs and there is no lift, so we cannot offer a step-free room. Assistance dogs and any other dog are welcome everywhere except the bedrooms marked in the room notes. Large print menus behind the bar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="jo-container jo-section">
+  <div class="jo-section-head jo-section-head-tight" style="border-bottom:0;padding-bottom:0">
+    <h2 class="jo-h3">Also ours</h2>
+    <div class="jo-row-12" style="gap:10px"><button type="button" class="jo-pin" data-pin="8" aria-label="Pin 8: Cross-venue segmentation">8</button><button type="button" class="jo-pin" data-pin="26" aria-label="Pin 26: Filling a new site from nothing">26</button></div>
+  </div>
+  <div class="jo-gap-24 jo-cols-3">
+    <a href="places.html" class="jo-xsell" data-venue-signal="kitchen">
+      <div class="jo-img jo-grain jo-img-thumb" data-slot="jo-x-kitchen" data-shot=" ">
+            <div class="jo-img-ph"> </div>
+          </div>
+      <span>
+        <span class="jo-xsell-name">Joiners Kitchen</span>
+        <span class="jo-xsell-meta">South Street</span>
+      </span>
+    </a>
+    <a href="places.html" class="jo-xsell" data-venue-signal="coffee-house">
+      <div class="jo-img jo-grain jo-img-thumb" data-slot="jo-x-coffee-house" data-shot=" ">
+            <div class="jo-img-ph"> </div>
+          </div>
+      <span>
+        <span class="jo-xsell-name">Joiners Coffee House</span>
+        <span class="jo-xsell-meta">Two doors down</span>
+      </span>
+    </a>
+    <a href="the-engine-room.html" class="jo-xsell" data-venue-signal="engine-room">
+      <div class="jo-img jo-grain jo-img-thumb" data-slot="jo-x-engine-room" data-shot=" ">
+            <div class="jo-img-ph"> </div>
+          </div>
+      <span>
+        <span class="jo-xsell-name">The Engine Room</span>
+        <span class="jo-xsell-meta">Above Joiners Kitchen</span>
+      </span>
+    </a>
+  </div>
+</section>
+</main>
+
+
+<footer class="jo-footer">
+  <div class="jo-container jo-section">
+    <div class="jo-footer-grid">
+      <div>
+        <h4 class="jo-footer-head">Our places</h4>
+        <div class="jo-footer-places">
+          <div>
+            <span class="jo-footer-venue">Joiners Kitchen</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">The Joiners Arms</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">Joiners Coffee House</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">The Engine Room</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="jo-footer-head">Site</h4>
+        <div class="jo-footer-links">
+          <a href="places.html" class="jo-footer-link">Places</a>
+          <a href="the-joiners-arms.html#menus" class="jo-footer-link">Menus</a>
+          <a href="the-joiners-arms.html#rooms" class="jo-footer-link">Stay</a>
+          <a href="gift-shop.html" class="jo-footer-link">Gift Shop</a>
+          <a href="the-engine-room.html" class="jo-footer-link">The Engine Room</a>
+          <a href="the-joints.html" class="jo-footer-link jo-reveal-only jo-reveal-only-block" style="color:#E2A63C">The Joints</a>
+          <a href="wifi.html" class="jo-footer-link">WiFi</a>
+          <a href="parties.html" class="jo-footer-link">Parties</a>
+          <a href="joiners-club.html" class="jo-footer-link">Joiners Club</a>
+          <a href="book.html" class="jo-footer-link">Book</a>
+          <a href="contact.html" class="jo-footer-link">Contact us</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="jo-footer-head">Legal</h4>
+        <div class="jo-footer-links">
+          <a href="#" class="jo-footer-link">Privacy</a>
+          <a href="#" class="jo-footer-link">Terms</a>
+          <a href="#" class="jo-footer-link">Gift card terms</a>
+          <a href="#" class="jo-footer-link">Accessibility</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="jo-row-12" style="gap:10px;margin:0 0 16px">
+          <h4 class="jo-footer-head" style="margin:0">Two emails a month</h4>
+          <button type="button" class="jo-pin" data-pin="17" aria-label="Pin 17: What the best operators actually send">17</button>
+        </div>
+        <p class="jo-footer-note">What is on, what is new, nothing else.</p>
+        <form class="jo-footer-signup" id="jo-footer-signup">
+          <label class="jo-visually-hidden" for="jo-footer-email">Email</label>
+          <input type="email" id="jo-footer-email" class="jo-footer-input" placeholder="Email" autocomplete="email">
+          <button type="submit" class="jo-btn jo-btn-brass jo-btn-sm">Sign up</button>
+        </form>
+        <p class="jo-footer-fineprint">Takes you to the Joiners Club, where you can see exactly what you get back before you finish.</p>
+      </div>
+    </div>
+
+    <!-- The only permanent break in the fiction. -->
+    <div class="jo-footer-strip">
+      <p class="jo-footer-strip-text">Joiners is a fictional hospitality group built by Airship to show what Airship and Toggle can do for operators.</p>
+      <div class="jo-lockups">
+        <img src="assets/airship.png" alt="Airship" class="jo-lockup-airship">
+        <img src="assets/toggle.png" alt="toggle" class="jo-lockup-toggle">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="jo-bookbar">
+  <a href="book.html" class="jo-bookbar-main" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Book a table</a>
+  <a href="joiners-club.html" class="jo-bookbar-alt" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Join the Club</a>
+</div>
+
+<div class="jo-cookie" id="jo-cookie">
+  <div class="jo-cookie-inner">
+    <p class="jo-cookie-text">We use cookies to keep the site working and to see which pages earn their place. Nothing is shared with anyone else.</p>
+    <div class="jo-btn-row">
+      <button type="button" class="jo-btn jo-btn-outline jo-btn-sm" data-cookie="essential">Essential only</button>
+      <button type="button" class="jo-btn jo-btn-pine jo-btn-sm" data-cookie="all">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Reveal layer chrome. One copy per page; state lives in sessionStorage. ===== -->
+<div class="jo-panel-scrim" id="jo-panel-scrim"></div>
+<aside class="jo-panel" id="jo-panel" role="dialog" aria-modal="true" aria-label="Mechanic detail" tabindex="-1">
+  <div class="jo-panel-inner">
+    <div class="jo-panel-top">
+      <img src="assets/airship.png" alt="Airship" class="jo-panel-lockup-airship">
+      <img src="assets/toggle.png" alt="toggle" class="jo-panel-lockup-toggle">
+      <button type="button" class="jo-panel-close" id="jo-panel-close" aria-label="Close panel">&#10005;</button>
+    </div>
+    <span class="jo-panel-kicker" id="jo-panel-kicker"></span>
+    <h3 class="jo-panel-title" id="jo-panel-title"></h3>
+    <p class="jo-panel-what" id="jo-panel-what"></p>
+
+    <h4 class="jo-panel-head">Data captured</h4>
+    <div class="jo-panel-fields" id="jo-panel-fields"></div>
+
+    <h4 class="jo-panel-head">What fires next</h4>
+    <div class="jo-panel-journey" id="jo-panel-journey"></div>
+
+    <div class="jo-panel-number">
+      <span class="jo-panel-number-big" id="jo-panel-number"></span>
+      <span class="jo-panel-number-label" id="jo-panel-number-label"></span>
+      <span class="jo-panel-number-src" id="jo-panel-number-src"></span>
+    </div>
+
+    <p class="jo-panel-argument" id="jo-panel-argument"></p>
+    <a href="the-engine-room.html" class="jo-panel-link">See this in the Engine Room</a>
+  </div>
+</aside>
+
+<!-- Your Record. Starts collapsed so it never covers the hero. -->
+<div class="jo-record" id="jo-record">
+  <button type="button" class="jo-record-bar" id="jo-record-bar" aria-expanded="false" aria-controls="jo-record-body">
+    <span class="jo-record-bar-title">Your record</span>
+    <span class="jo-record-bar-toggle" id="jo-record-toggle">show</span>
+  </button>
+  <div class="jo-record-body" id="jo-record-body">
+    <div id="jo-record-rows"></div>
+    <p class="jo-record-foot" id="jo-record-foot">Join the Club and watch this fill in.</p>
+    <button type="button" class="jo-record-reset" id="jo-record-reset">reset — delete this record</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+<script src="js/reveal.js"></script>
+
+</body>
+</html>

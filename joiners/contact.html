@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us — Joiners</title>
+<meta name="description" content="One street, four places, one phone number.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:SOFT,WONK,opsz,wght@40,1,9..144,600..900&family=Inter:wght@400;500;600&family=Montserrat:wght@600&family=Manrope:wght@800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/joiners.css">
+<link rel="stylesheet" href="css/reveal.css">
+</head>
+<body class="jo-page" data-route="contact">
+
+<header class="jo-header">
+  <div class="jo-header-row">
+    <a href="index.html" class="jo-brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" focusable="false"><path d="M1 3h9l3 4 3-4h9M1 3v20h9l3-4 3 4h9V3" fill="none" stroke="#B4763A" stroke-width="1.4"></path><path d="M10 7h6v12h-6z" fill="none" stroke="#B4763A" stroke-width="1.4"></path></svg>
+      <span class="jo-brand-name">Joiners</span>
+    </a>
+
+    <div class="jo-header-actions">
+      <!-- See the joints. Keyboard shortcut J. State in sessionStorage. -->
+      <button type="button" class="jo-switch" id="jo-switch" title="Keyboard shortcut: J" aria-pressed="false">
+        <span class="jo-switch-track"><span class="jo-switch-knob"></span></span>
+        <span class="jo-switch-label">See the joints</span>
+      </button>
+
+      <div class="jo-btn-pair jo-header-ctas">
+        <a href="joiners-club.html" class="jo-btn jo-btn-brass jo-btn-sm">Join the Club</a>
+        <a href="book.html" class="jo-btn jo-btn-pine jo-btn-sm">Book a table</a>
+      </div>
+
+      <button type="button" class="jo-burger" id="jo-burger" aria-label="Menu" aria-expanded="false" aria-controls="jo-menu-panel">
+        <span class="jo-burger-bar"></span><span class="jo-burger-bar"></span><span class="jo-burger-bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="jo-nav-bar">
+    <nav class="jo-nav" aria-label="Primary">
+      <a href="places.html" class="jo-nav-link">Places</a>
+      <a href="the-joiners-arms.html#menus" class="jo-nav-link">Menus</a>
+      <a href="the-joiners-arms.html#rooms" class="jo-nav-link">Stay</a>
+      <a href="the-engine-room.html" class="jo-nav-link">The Engine Room</a>
+      <a href="parties.html" class="jo-nav-link">Parties</a>
+      <a href="contact.html" class="jo-nav-link is-active">Contact</a>
+      <a href="gift-shop.html" class="jo-nav-link">Gift Shop</a>
+      <a href="wifi.html" class="jo-nav-link">WiFi</a>
+      <!-- Gated: only exists when the reveal layer is on. -->
+      <a href="the-joints.html" class="jo-nav-link jo-reveal-only jo-reveal-only-flex">The Joints</a>
+    </nav>
+  </div>
+</header>
+
+<div class="jo-menu-panel" id="jo-menu-panel">
+  <div class="jo-menu-inner">
+    <a href="places.html" class="jo-menu-link">Places</a>
+    <a href="the-joiners-arms.html" class="jo-menu-link">The Joiners Arms</a>
+    <a href="the-engine-room.html" class="jo-menu-link">The Engine Room</a>
+    <a href="gift-shop.html" class="jo-menu-link">Gift Shop</a>
+    <a href="wifi.html" class="jo-menu-link">WiFi</a>
+    <a href="parties.html" class="jo-menu-link">Parties</a>
+    <a href="joiners-club.html" class="jo-menu-link">Joiners Club</a>
+    <a href="book.html" class="jo-menu-link">Book a table</a>
+    <a href="contact.html" class="jo-menu-link">Contact us</a>
+    <a href="the-joints.html" class="jo-menu-link jo-reveal-only jo-reveal-only-block">The Joints</a>
+  </div>
+</div>
+
+<div class="jo-tip" id="jo-tip" role="status">
+  <p class="jo-tip-text">This site is built by Airship. Flip this to see how it works.</p>
+  <button type="button" class="jo-tip-btn" id="jo-tip-dismiss">Got it</button>
+</div>
+
+<main id="main">
+
+<section class="jo-container jo-section">
+  <h1 class="jo-h1 jo-mb-16">Contact us</h1>
+  <p class="jo-lead jo-mb-48">One street, four places, one phone number. If it is urgent, ring. If it is a booking, book. Everything else, the form below reaches a named person.</p>
+
+  <div class="jo-grid-boxed jo-cols-2" style="margin-bottom:var(--jo-section-pad)">
+    <div style="background:var(--jo-paper);padding:32px">
+      <h2 class="jo-h3 jo-mb-24">Ring or walk in</h2>
+      <div class="jo-contact-stack">
+        <a href="tel:01142996477" class="jo-contact-tel">0114 299 6477</a>
+        <span>16 South Street, Sheffield, S2 5QX</span>
+        <a href="mailto:hello@joiners.example" style="color:var(--jo-oak);text-decoration:none">hello@joiners.example</a>
+      </div>
+      <div class="jo-contact-hours">
+        <div class="jo-contact-hours-row">
+          <span style="font-size:15px;font-weight:500">Joiners Kitchen</span>
+          <span class="jo-card-hours">Open until 11pm</span>
+        </div>
+        <div class="jo-contact-hours-row">
+          <span style="font-size:15px;font-weight:500">The Joiners Arms</span>
+          <span class="jo-card-hours">Open until 11pm</span>
+        </div>
+        <div class="jo-contact-hours-row">
+          <span style="font-size:15px;font-weight:500">Joiners Coffee House</span>
+          <span class="jo-card-hours">Closed</span>
+        </div>
+        <div class="jo-contact-hours-row">
+          <span style="font-size:15px;font-weight:500">The Engine Room</span>
+          <span class="jo-card-hours">Classes and events by arrangement</span>
+        </div>
+      </div>
+    </div>
+    <div class="jo-img jo-grain jo-img-320" data-slot="jo-contact-map" data-shot="Map — 16 South Street, Sheffield">
+            <div class="jo-img-ph">Map — 16 South Street, Sheffield</div>
+          </div>
+  </div>
+
+  <div class="jo-cols-2" style="display:grid;gap:var(--jo-section-pad)">
+    <div>
+      <div class="jo-section-head jo-section-head-tight">
+        <h2 class="jo-h3">Send us something</h2>
+        <button type="button" class="jo-pin" data-pin="34" aria-label="Pin 34: A contact form is a form, not a mailto">34</button>
+      </div>
+      <!-- Real Airship form. In Webflow this is an HTML Embed; the script tag
+           can live in the page footer. It writes straight to the contact record. -->
+      <div data-airship-form-url="https://forms.airship.co.uk/forms/6755399444000000/contact-us" style="min-height:200px"></div>
+      <p class="jo-small jo-mt-18" style="color:rgba(27,24,21,0.7)">This form is a real Airship form. It writes straight to the contact record.</p>
+    </div>
+
+    <div>
+      <h2 class="jo-h3 jo-section-head jo-section-head-tight" style="margin-bottom:0">Straight to the right place</h2>
+      <div>
+        <div class="jo-route">
+          <h4 class="jo-route-title">Book a table</h4>
+          <p class="jo-route-body">Four taps and you are done. Faster than we can answer the phone at seven.</p>
+          <a href="book.html" class="jo-link">Go to booking</a>
+        </div>
+        <div class="jo-route">
+          <h4 class="jo-route-title">A party, twelve to sixty</h4>
+          <p class="jo-route-body">The Engine Room, party menus, Christmas. Tell us the numbers and we come back with a plan and a price.</p>
+          <a href="parties.html" class="jo-link">Parties</a>
+        </div>
+        <div class="jo-route">
+          <h4 class="jo-route-title">Classes and supper clubs</h4>
+          <p class="jo-route-body">The full diary, what is left and what has gone.</p>
+          <a href="the-engine-room.html" class="jo-link">The Engine Room</a>
+        </div>
+        <div class="jo-route">
+          <h4 class="jo-route-title">Gift cards and vouchers</h4>
+          <p class="jo-route-body">Balances, expiry, a card that will not scan. All of it is in the shop.</p>
+          <a href="gift-shop.html" class="jo-link">Gift Shop</a>
+        </div>
+        <div class="jo-route">
+          <h4 class="jo-route-title">Join the Joiners Club</h4>
+          <p class="jo-route-body">Your birthday and your special day remembered, competitions and rewards.</p>
+          <a href="joiners-club.html" class="jo-link">Joiners Club</a>
+        </div>
+      </div>
+      <div class="jo-note-box">
+        <h4 class="jo-subhead" style="margin:0 0 10px">Access and dietary</h4>
+        <p class="jo-body" style="font-size:15px;color:rgba(27,24,21,0.78)">Step-free entry through the side door on the car park, level throughout the bar and dining room, accessible WC on the ground floor. Tell us at the point of booking what you need and it will be on the table note, not in somebody's head.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+
+<footer class="jo-footer">
+  <div class="jo-container jo-section">
+    <div class="jo-footer-grid">
+      <div>
+        <h4 class="jo-footer-head">Our places</h4>
+        <div class="jo-footer-places">
+          <div>
+            <span class="jo-footer-venue">Joiners Kitchen</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">The Joiners Arms</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">Joiners Coffee House</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+          <div>
+            <span class="jo-footer-venue">The Engine Room</span>
+            <span>16 South Street, Sheffield, S2 5QX</span>
+            <span>0114 299 6477</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="jo-footer-head">Site</h4>
+        <div class="jo-footer-links">
+          <a href="places.html" class="jo-footer-link">Places</a>
+          <a href="the-joiners-arms.html#menus" class="jo-footer-link">Menus</a>
+          <a href="the-joiners-arms.html#rooms" class="jo-footer-link">Stay</a>
+          <a href="gift-shop.html" class="jo-footer-link">Gift Shop</a>
+          <a href="the-engine-room.html" class="jo-footer-link">The Engine Room</a>
+          <a href="the-joints.html" class="jo-footer-link jo-reveal-only jo-reveal-only-block" style="color:#E2A63C">The Joints</a>
+          <a href="wifi.html" class="jo-footer-link">WiFi</a>
+          <a href="parties.html" class="jo-footer-link">Parties</a>
+          <a href="joiners-club.html" class="jo-footer-link">Joiners Club</a>
+          <a href="book.html" class="jo-footer-link">Book</a>
+          <a href="contact.html" class="jo-footer-link">Contact us</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="jo-footer-head">Legal</h4>
+        <div class="jo-footer-links">
+          <a href="#" class="jo-footer-link">Privacy</a>
+          <a href="#" class="jo-footer-link">Terms</a>
+          <a href="#" class="jo-footer-link">Gift card terms</a>
+          <a href="#" class="jo-footer-link">Accessibility</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="jo-row-12" style="gap:10px;margin:0 0 16px">
+          <h4 class="jo-footer-head" style="margin:0">Two emails a month</h4>
+          <button type="button" class="jo-pin" data-pin="17" aria-label="Pin 17: What the best operators actually send">17</button>
+        </div>
+        <p class="jo-footer-note">What is on, what is new, nothing else.</p>
+        <form class="jo-footer-signup" id="jo-footer-signup">
+          <label class="jo-visually-hidden" for="jo-footer-email">Email</label>
+          <input type="email" id="jo-footer-email" class="jo-footer-input" placeholder="Email" autocomplete="email">
+          <button type="submit" class="jo-btn jo-btn-brass jo-btn-sm">Sign up</button>
+        </form>
+        <p class="jo-footer-fineprint">Takes you to the Joiners Club, where you can see exactly what you get back before you finish.</p>
+      </div>
+    </div>
+
+    <!-- The only permanent break in the fiction. -->
+    <div class="jo-footer-strip">
+      <p class="jo-footer-strip-text">Joiners is a fictional hospitality group built by Airship to show what Airship and Toggle can do for operators.</p>
+      <div class="jo-lockups">
+        <img src="assets/airship.png" alt="Airship" class="jo-lockup-airship">
+        <img src="assets/toggle.png" alt="toggle" class="jo-lockup-toggle">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="jo-bookbar">
+  <a href="book.html" class="jo-bookbar-main" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Book a table</a>
+  <a href="joiners-club.html" class="jo-bookbar-alt" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Join the Club</a>
+</div>
+
+<div class="jo-cookie" id="jo-cookie">
+  <div class="jo-cookie-inner">
+    <p class="jo-cookie-text">We use cookies to keep the site working and to see which pages earn their place. Nothing is shared with anyone else.</p>
+    <div class="jo-btn-row">
+      <button type="button" class="jo-btn jo-btn-outline jo-btn-sm" data-cookie="essential">Essential only</button>
+      <button type="button" class="jo-btn jo-btn-pine jo-btn-sm" data-cookie="all">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Reveal layer chrome. One copy per page; state lives in sessionStorage. ===== -->
+<div class="jo-panel-scrim" id="jo-panel-scrim"></div>
+<aside class="jo-panel" id="jo-panel" role="dialog" aria-modal="true" aria-label="Mechanic detail" tabindex="-1">
+  <div class="jo-panel-inner">
+    <div class="jo-panel-top">
+      <img src="assets/airship.png" alt="Airship" class="jo-panel-lockup-airship">
+      <img src="assets/toggle.png" alt="toggle" class="jo-panel-lockup-toggle">
+      <button type="button" class="jo-panel-close" id="jo-panel-close" aria-label="Close panel">&#10005;</button>
+    </div>
+    <span class="jo-panel-kicker" id="jo-panel-kicker"></span>
+    <h3 class="jo-panel-title" id="jo-panel-title"></h3>
+    <p class="jo-panel-what" id="jo-panel-what"></p>
+
+    <h4 class="jo-panel-head">Data captured</h4>
+    <div class="jo-panel-fields" id="jo-panel-fields"></div>
+
+    <h4 class="jo-panel-head">What fires next</h4>
+    <div class="jo-panel-journey" id="jo-panel-journey"></div>
+
+    <div class="jo-panel-number">
+      <span class="jo-panel-number-big" id="jo-panel-number"></span>
+      <span class="jo-panel-number-label" id="jo-panel-number-label"></span>
+      <span class="jo-panel-number-src" id="jo-panel-number-src"></span>
+    </div>
+
+    <p class="jo-panel-argument" id="jo-panel-argument"></p>
+    <a href="the-engine-room.html" class="jo-panel-link">See this in the Engine Room</a>
+  </div>
+</aside>
+
+<!-- Your Record. Starts collapsed so it never covers the hero. -->
+<div class="jo-record" id="jo-record">
+  <button type="button" class="jo-record-bar" id="jo-record-bar" aria-expanded="false" aria-controls="jo-record-body">
+    <span class="jo-record-bar-title">Your record</span>
+    <span class="jo-record-bar-toggle" id="jo-record-toggle">show</span>
+  </button>
+  <div class="jo-record-body" id="jo-record-body">
+    <div id="jo-record-rows"></div>
+    <p class="jo-record-foot" id="jo-record-foot">Join the Club and watch this fill in.</p>
+    <button type="button" class="jo-record-reset" id="jo-record-reset">reset — delete this record</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+<script src="js/reveal.js"></script>
+<!-- The Airship forms embed. In Webflow this can live in the page footer. -->
+<script src="https://forms.airship.co.uk/assets/js/embed.js" async></script>
+</body>
+</html>

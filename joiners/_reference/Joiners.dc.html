@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-7eb65fbe-5cf1-4b33-b5fa-2254bde40090/styles.css">
+<script src="_ds/modernist-7eb65fbe-5cf1-4b33-b5fa-2254bde40090/_ds_bundle.js"></script>
+<script src="./image-slot.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:SOFT,WONK,opsz,wght@40,1,9..144,600..900&family=Inter:wght@400;500;600&family=Montserrat:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#1B1815; --oak:#B4763A; --pine:#22403A; --sawdust:#F5EFE4; --paper:#FFFDF9;
+  --brass:#E2A63C; --stone:#D8D0C2; --signal:#C0392B;
+  --purple:#8D00D4; --magenta:#EC00FF; --tblue:#1770FD; --cyan:#45C1FF;
+  --shadow:0 2px 12px rgba(27,24,21,0.08);
+  --color-bg:#F5EFE4; --color-surface:#FFFDF9; --color-text:#1B1815;
+  --color-accent:#B4763A; --color-divider:rgba(27,24,21,0.40);
+  --font-heading:"Fraunces",Georgia,serif; --font-body:"Inter",system-ui,sans-serif;
+  --radius-sm:0px; --radius-md:0px; --radius-lg:0px;
+}
+body{margin:0;background:#F5EFE4;color:#1B1815;font-family:"Inter",system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"Fraunces",Georgia,serif;font-variation-settings:"SOFT" 40,"WONK" 1;margin:0;letter-spacing:-0.01em;text-wrap:pretty}
+p{margin:0}
+a{color:#B4763A;text-underline-offset:3px}
+a:hover{color:#8A5828}
+button{font-family:inherit}
+:focus-visible{outline:2px solid #B4763A;outline-offset:2px}
+::selection{background:rgba(226,166,60,0.35)}
+@keyframes joPulse{0%{box-shadow:0 0 0 0 currentColor}70%{box-shadow:0 0 0 12px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
+@keyframes joSlide{from{transform:translateX(24px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes joRise{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F5EFE4;position:relative">
+
+<div style="position:sticky;top:0;zIndex:60;background:#FFFDF9;borderBottom:2px solid rgba(27,24,21,0.4)">
+  <div style="maxWidth:1200px;margin:0 auto;padding:0 24px;display:flex;alignItems:center;gap:20px;minHeight:72px">
+    <a href="#" onClick="{{ goHome }}" style="display:flex;alignItems:center;gap:10px;textDecoration:none;color:#1B1815;flexShrink:0">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M1 3h9l3 4 3-4h9M1 3v20h9l3-4 3 4h9V3" fill="none" stroke="#B4763A" stroke-width="1.4"></path><path d="M10 7h6v12h-6z" fill="none" stroke="#B4763A" stroke-width="1.4"></path></svg>
+      <span style="fontFamily:'Fraunces',Georgia,serif;fontVariationSettings:'SOFT' 40,'WONK' 1;fontWeight:800;fontSize:24px;letterSpacing:-0.02em">Joiners</span>
+    </a>
+
+    <div style="marginLeft:auto;display:flex;alignItems:center;gap:20px;flexShrink:0">
+      <div style="display:flex;gap:2px;background:#1B1815;padding:2px;flexShrink:0">
+        <button onClick="{{ setPhone }}" title="Preview at 390px" style="background:{{ phoneBg }};color:{{ phoneFg }};border:0;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;padding:8px 10px;cursor:pointer">390</button>
+        <button onClick="{{ setDesktop }}" title="Preview at 1440px" style="background:{{ deskBg }};color:{{ deskFg }};border:0;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;padding:8px 10px;cursor:pointer">1440</button>
+      </div>
+      <button onClick="{{ toggleReveal }}" title="Keyboard shortcut: J" style="display:flex;alignItems:center;gap:10px;background:transparent;border:0;padding:8px 0;cursor:pointer;minHeight:44px">
+        <span style="width:38px;height:20px;border:1px solid #B4763A;background:{{ switchTrack }};position:relative;display:block;flexShrink:0;transition:background 200ms ease-out">
+          <span style="position:absolute;top:2px;left:{{ switchKnob }};width:14px;height:14px;background:{{ switchKnobBg }};transition:left 200ms ease-out"></span>
+        </span>
+        <span style="fontSize:13px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#1B1815;whiteSpace:nowrap">See the joints</span>
+      </button>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;alignItems:center;gap:2px;flexShrink:0">
+          <button onClick="{{ goTable }}" style="background:#E2A63C;color:#1B1815;border:0;padding:13px 20px;fontSize:14px;fontWeight:600;letterSpacing:0.02em;cursor:pointer;minHeight:46px;whiteSpace:nowrap" style-hover="background:#CF9530">Join the Club</button>
+          <button onClick="{{ goBook }}" style="background:#22403A;color:#FFFDF9;border:0;padding:13px 20px;fontSize:14px;fontWeight:600;letterSpacing:0.02em;cursor:pointer;minHeight:46px;whiteSpace:nowrap" style-hover="background:#1A322D">Book a table</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ compact }}">
+        <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flexDirection:column;justifyContent:center;alignItems:center;gap:5px;width:46px;height:46px;background:transparent;border:1px solid #1B1815;cursor:pointer;flexShrink:0" style-hover="background:#F5EFE4">
+          <span style="display:block;width:20px;height:2px;background:#1B1815"></span>
+          <span style="display:block;width:20px;height:2px;background:#1B1815"></span>
+          <span style="display:block;width:20px;height:2px;background:#1B1815"></span>
+        </button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+    <div style="borderTop:1px solid #D8D0C2">
+      <nav style="maxWidth:1200px;margin:0 auto;padding:0 24px;display:flex;alignItems:stretch;gap:32px;flexWrap:wrap">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="7">
+          <a href="#" onClick="{{ n.go }}" style="display:flex;alignItems:center;padding:14px 0;fontSize:15px;fontWeight:{{ n.weight }};color:#1B1815;textDecoration:none;whiteSpace:nowrap;borderBottom:2px solid {{ n.rule }};marginBottom:-2px;transition:border-color 200ms ease-out" style-hover="borderBottomColor:#B4763A">{{ n.label }}</a>
+        </sc-for>
+        <sc-if value="{{ showWhatsOnLink }}">
+          <a href="#" onClick="{{ goWhatsOn }}" style="display:flex;alignItems:center;padding:14px 0;fontSize:15px;fontWeight:600;color:#1B1815;textDecoration:none;whiteSpace:nowrap;borderBottom:2px solid {{ whatsOnRule }};marginBottom:-2px" style-hover="borderBottomColor:#E2A63C">The Joints</a>
+        </sc-if>
+      </nav>
+    </div>
+  </sc-if>
+</div>
+
+<sc-if value="{{ menuOpen }}">
+  <div style="position:sticky;top:72px;zIndex:59;background:#FFFDF9;borderBottom:2px solid rgba(27,24,21,0.4);animation:joRise 200ms ease-out">
+    <div style="maxWidth:1200px;margin:0 auto;padding:8px 24px 20px;display:flex;flexDirection:column">
+      <sc-for list="{{ menuLinks }}" as="m" hint-placeholder-count="8">
+        <a href="#" onClick="{{ m.go }}" style="display:block;padding:16px 0;borderBottom:1px solid #D8D0C2;fontSize:18px;fontWeight:600;color:#1B1815;textDecoration:none;minHeight:44px">{{ m.label }}</a>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ showTip }}">
+  <div style="position:fixed;top:80px;right:24px;zIndex:70;maxWidth:300px;background:#1B1815;color:#FFFDF9;padding:16px 18px;boxShadow:0 2px 12px rgba(27,24,21,0.08);animation:joRise 300ms ease-out">
+    <p style="fontSize:14px;lineHeight:1.5;margin:0 0 10px">This site is built by Airship. Flip this to see how it works.</p>
+    <button onClick="{{ dismissTip }}" style="background:transparent;border:1px solid rgba(255,253,249,0.4);color:#FFFDF9;fontSize:12px;fontWeight:600;letterSpacing:0.06em;textTransform:uppercase;padding:8px 12px;cursor:pointer">Got it</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section style="position:relative;minHeight:{{ heroH }};overflow:hidden;background:#1B1815">
+    <div style="position:absolute;inset:0"><image-slot id="jo-hero" shape="rect" fit="cover" placeholder="Hero — warm interior at dusk, Joiners Kitchen"></image-slot></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(27,24,21,0.82) 0%,rgba(27,24,21,0.5) 55%,rgba(27,24,21,0.15) 100%);pointerEvents:none"></div>
+    <div style="position:relative;minHeight:{{ heroH }};maxWidth:1200px;margin:0 auto;padding:120px 24px 48px;display:flex;flexDirection:column;justifyContent:flex-end;pointerEvents:none">
+      <div style="maxWidth:640px;pointerEvents:auto">
+        <h1 style="fontSize:{{ h1 }};lineHeight:1.02;fontWeight:800;color:#FFFDF9;margin:0 0 20px">Four places in Sheffield and the Peaks.</h1>
+        <p style="fontSize:20px;lineHeight:1.5;color:rgba(255,253,249,0.92);margin:0 0 28px;maxWidth:36ch">A kitchen, a pub with rooms, a coffee house and a culinary kitchen for learning and fun. (its also completely fictitious)</p>
+        <div style="display:flex;gap:12px;flexWrap:wrap;alignItems:center">
+          <button onClick="{{ goBook }}" style="background:#22403A;color:#FFFDF9;border:0;padding:15px 26px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px" style-hover="background:#2C544C">Book a table</button>
+          <button onClick="{{ goPlaces }}" style="background:transparent;color:#FFFDF9;border:1px solid rgba(255,253,249,0.7);padding:15px 26px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px" style-hover="background:rgba(255,253,249,0.12)">See our places</button>
+          <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p1 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;boxShadow:0 0 0 3px rgba(255,253,249,0.9)">1</button></sc-if>
+          <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p15 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;boxShadow:0 0 0 3px rgba(255,253,249,0.9)">15</button></sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="background:#1B1815;color:rgba(255,253,249,0.85);borderTop:1px solid rgba(255,253,249,0.15)">
+    <div style="maxWidth:1200px;margin:0 auto;padding:14px 24px;fontFamily:'IBM Plex Mono',monospace;fontSize:13px;letterSpacing:0.01em">{{ hoursStrip }}</div>
+  </div>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:40px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">The four places</h2>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p2 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">2</button></sc-if>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ cols4 }};gap:2px;background:rgba(27,24,21,0.4)">
+      <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+        <article style="background:#FFFDF9;display:flex;flexDirection:column">
+          <div style="height:200px;position:relative"><image-slot id="jo-v-{{ v.slug }}" shape="rect" fit="cover" placeholder="{{ v.shot }}"></image-slot></div>
+          <div style="padding:24px;display:flex;flexDirection:column;flexGrow:1">
+            <h3 style="fontSize:24px;fontWeight:800;margin:0 0 8px">{{ v.name }}</h3>
+            <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 16px">{{ v.line }}</p>
+            <div style="marginTop:auto;borderTop:1px solid #D8D0C2;paddingTop:14px;display:flex;flexDirection:column;gap:6px">
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6)">{{ v.distance }}</span>
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:#22403A;fontWeight:500">{{ v.today }}</span>
+              <a href="#" onClick="{{ v.open }}" style="fontSize:14px;fontWeight:600;color:#B4763A;textDecoration:none;borderBottom:1px solid #B4763A;alignSelf:flex-start;marginTop:6px">Book</a>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">What's on</h2>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p16 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">16</button></sc-if>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:32px;paddingTop:24px">
+      <sc-for list="{{ whatsOn }}" as="w" hint-placeholder-count="3">
+        <div style="display:flex;flexDirection:column;gap:10px">
+          <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;textTransform:uppercase;letterSpacing:0.06em;color:#B4763A">{{ w.date }}</span>
+          <h4 style="fontSize:22px;fontWeight:800;margin:0">{{ w.title }}</h4>
+          <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0">{{ w.body }}</p>
+          <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:14px;fontWeight:500">{{ w.price }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#22403A;color:#FFFDF9">
+    <div style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+      <div style="display:flex;alignItems:flex-start;gap:12px;marginBottom:20px">
+        <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0;color:#FFFDF9">Join the Club.</h2>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p3 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">3</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p18 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">18</button></sc-if>
+      </div>
+      <p style="fontSize:18px;lineHeight:1.6;color:rgba(255,253,249,0.9);maxWidth:62ch;margin:0 0 36px">Tell us four things about you and we will stop sending you things you do not care about. A table held back for members on the first Friday of every month, your birthday remembered without you mentioning it, and first refusal on rooms at the Arms.</p>
+
+      <sc-if value="{{ joined }}">
+        <div style="background:#FFFDF9;color:#1B1815;padding:32px;maxWidth:640px;animation:joRise 300ms ease-out">
+          <h3 style="fontSize:26px;fontWeight:800;margin:0 0 10px">Thank you, {{ record.name }}.</h3>
+          <p style="fontSize:16px;lineHeight:1.6;margin:0">Your first Club Friday is 3 October. Your birthday table is already in the diary for {{ record.birthdayLabel }}.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ notJoined }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:grid;gridTemplateColumns:{{ formCols }};gap:12px;alignItems:end;maxWidth:1000px">
+            <label style="display:flex;flexDirection:column;gap:6px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75)">First name</span>
+              <input value="{{ form.name }}" onChange="{{ setName }}" placeholder="Sarah" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:13px 14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:48px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:6px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75)">Email</span>
+              <input value="{{ form.email }}" onChange="{{ setEmail }}" placeholder="you@example.com" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:13px 14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:48px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:6px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75)">Birthday</span>
+              <input value="{{ form.birthday }}" onChange="{{ setBirthday }}" placeholder="14 March" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:13px 14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:48px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:6px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75)">Year</span>
+              <input value="{{ form.birthYear }}" onChange="{{ setBirthYear }}" placeholder="1988" inputMode="numeric" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:13px 14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:48px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:6px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75)">Where you go most</span>
+              <select value="{{ form.venue }}" onChange="{{ setVenue }}" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:13px 14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:48px;width:100%">
+                <option value="Joiners Kitchen">Joiners Kitchen</option>
+                <option value="The Joiners Arms">The Joiners Arms</option>
+                <option value="Joiners Coffee House">Joiners Coffee House</option>
+                <option value="The Kitchen">The Kitchen</option>
+              </select>
+            </label>
+            <button onClick="{{ submitTable }}" style="background:#E2A63C;color:#1B1815;border:0;padding:15px 24px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px;width:100%" style-hover="background:#CF9530">Join the Club</button>
+          </div>
+          <div style="display:flex;alignItems:center;gap:12px;marginTop:18px">
+            <p style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(255,253,249,0.75);margin:0">What you get back: Something for your birthday and special day, competitions, rewards and good news from the venues you love.</p>
+            <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p4 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">4</button></sc-if>
+          </div>
+          <sc-if value="{{ reveal }}">
+            <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;lineHeight:1.5;color:#E2A63C;margin:16px 0 0;maxWidth:70ch">This is a live demonstration. Anything you enter creates a real record in a real Airship account and you will receive real emails. Delete it any time.</p>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:grid;gridTemplateColumns:{{ cols2 }};gap:2px;background:rgba(27,24,21,0.4);border:2px solid rgba(27,24,21,0.4)">
+      <div style="minHeight:360px;position:relative;background:#FFFDF9"><image-slot id="jo-gift" shape="rect" fit="cover" placeholder="Gift card held in a hand"></image-slot></div>
+      <div style="background:#FFFDF9;padding:40px;display:flex;flexDirection:column;justifyContent:center">
+        <div style="display:flex;alignItems:flex-start;gap:12px;marginBottom:18px">
+          <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">Gift someone a table</h2>
+          <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p5 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#1770FD;color:#fff;fontFamily:'Manrope',Montserrat,sans-serif;fontWeight:800;fontSize:12px;cursor:pointer;flexShrink:0">5</button></sc-if>
+        </div>
+        <div style="display:flex;flexDirection:column;gap:0;borderTop:1px solid #D8D0C2;marginBottom:24px">
+          <sc-for list="{{ giftTiles }}" as="g" hint-placeholder-count="3">
+            <div style="display:flex;justifyContent:space-between;gap:16px;padding:14px 0;borderBottom:1px solid #D8D0C2">
+              <span style="fontSize:16px;fontWeight:500">{{ g.name }}</span>
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:15px;color:rgba(27,24,21,0.7);whiteSpace:nowrap">{{ g.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <button onClick="{{ goGifts }}" style="background:#E2A63C;color:#1B1815;border:0;padding:15px 26px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px;alignSelf:flex-start" style-hover="background:#CF9530">Visit the shop</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 16px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px">Journal</h2>
+    <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:32px;paddingTop:24px">
+      <sc-for list="{{ journal }}" as="j" hint-placeholder-count="3">
+        <article>
+          <div style="height:180px;marginBottom:14px;position:relative"><image-slot id="jo-j-{{ j.id }}" shape="rect" fit="cover" placeholder="{{ j.shot }}"></image-slot></div>
+          <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6)">{{ j.date }}</span>
+          <h4 style="fontSize:20px;fontWeight:800;margin:6px 0 0">{{ j.title }}</h4>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPlaces }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-start;gap:14px;margin:0 0 16px">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0">Our four places</h1>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p27 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:32px;height:32px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:13px;cursor:pointer;flexShrink:0;marginTop:10px">27</button></sc-if>
+    </div>
+    <p style="fontSize:20px;lineHeight:1.5;color:rgba(27,24,21,0.72);maxWidth:60ch;margin:0 0 48px">Four rooms on one Sheffield street. Different rooms, same kitchen thinking.</p>
+    <div style="display:grid;gridTemplateColumns:{{ cols2 }};gap:2px;background:rgba(27,24,21,0.4);border:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+        <article style="background:#FFFDF9;padding:0">
+          <div style="height:240px;position:relative"><image-slot id="jo-p-{{ v.slug }}" shape="rect" fit="cover" placeholder="{{ v.shot }}"></image-slot></div>
+          <div style="padding:28px">
+            <h3 style="fontSize:26px;fontWeight:800;margin:0 0 10px">{{ v.name }}</h3>
+            <p style="fontSize:16px;lineHeight:1.6;color:rgba(27,24,21,0.72);margin:0 0 18px">{{ v.long }}</p>
+            <div style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;color:rgba(27,24,21,0.7);display:flex;flexDirection:column;gap:4px;marginBottom:20px">
+              <span>{{ v.address }}</span>
+              <span>{{ v.phone }}</span>
+              <span style="color:#22403A;fontWeight:500">{{ v.today }}</span>
+            </div>
+            <a href="#" onClick="{{ v.open }}" style="fontSize:15px;fontWeight:600;color:#B4763A;textDecoration:none;borderBottom:1px solid #B4763A">Visit this page</a>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isArms }}">
+<div>
+  <section style="position:relative;height:{{ venueHeroH }};minHeight:300px;overflow:hidden;background:#1B1815">
+    <div style="position:absolute;inset:0"><image-slot id="jo-arms-hero" shape="rect" fit="cover" placeholder="The Joiners Arms — South Street exterior in low light"></image-slot></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,24,21,0.15),rgba(27,24,21,0.75));pointerEvents:none"></div>
+    <div style="position:relative;height:100%;maxWidth:1200px;margin:0 auto;padding:0 24px 40px;display:flex;alignItems:flex-end;pointerEvents:none">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;color:#FFFDF9;margin:0">The Joiners Arms</h1>
+    </div>
+  </section>
+
+  <div style="maxWidth:1200px;margin:-40px auto 0;padding:0 24px;position:relative;zIndex:2">
+    <div style="background:#FFFDF9;border:2px solid rgba(27,24,21,0.4);boxShadow:0 2px 12px rgba(27,24,21,0.08);padding:28px;display:grid;gridTemplateColumns:{{ cols2 }};gap:28px">
+      <div style="display:flex;flexDirection:column;gap:10px;fontFamily:'IBM Plex Mono',monospace;fontSize:14px;lineHeight:1.5">
+        <span>16 South Street, Sheffield, S2 5QX</span>
+        <span style="color:#22403A;fontWeight:500">Open today until 11pm · Kitchen 12–9pm</span>
+
+        <a href="tel:01142996477" style="color:#B4763A;textDecoration:none">0114 299 6477</a>
+      </div>
+      <div style="display:flex;flexDirection:column;gap:16px">
+        <div style="display:flex;gap:12px;flexWrap:wrap">
+          <button onClick="{{ goBook }}" style="background:#22403A;color:#FFFDF9;border:0;padding:14px 22px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px" style-hover="background:#2C544C">Book a table</button>
+          <button style="background:transparent;color:#1B1815;border:1px solid #1B1815;padding:14px 22px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px" style-hover="background:#F5EFE4">Check rooms</button>
+        </div>
+        <div style="display:flex;gap:8px;flexWrap:wrap">
+          <sc-for list="{{ armsChips }}" as="c" hint-placeholder-count="4">
+            <span style="border:1px solid #D8D0C2;background:#F5EFE4;padding:7px 12px;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.06em">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px 0">
+    <p style="fontSize:20px;lineHeight:1.6;maxWidth:62ch;margin:0">A corner pub on South Street with nine rooms upstairs and a fire that is lit from October. People come in off the hill wet, dogs come in muddy, and both are fine. Sunday lunch runs from noon until it goes, which on a good week is about half three. If you are staying, breakfast is at the long table and there is a boot room by the back door.</p>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:28px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">Menus</h2>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p6 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">6</button></sc-if>
+    </div>
+
+    <div style="display:flex;gap:2px;background:rgba(27,24,21,0.4);marginBottom:20px;flexWrap:wrap">
+      <sc-for list="{{ menuTabs }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.select }}" style="background:{{ t.bg }};color:{{ t.fg }};border:0;padding:14px 22px;fontSize:14px;fontWeight:600;letterSpacing:0.02em;cursor:pointer;minHeight:48px;flexGrow:1">{{ t.label }}</button>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;alignItems:center;gap:10px;flexWrap:wrap;marginBottom:8px">
+      <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.6)">Filter</span>
+      <sc-for list="{{ dietChips }}" as="d" hint-placeholder-count="5">
+        <button onClick="{{ d.toggle }}" style="background:{{ d.bg }};color:{{ d.fg }};border:1px solid {{ d.border }};padding:9px 14px;fontSize:13px;fontWeight:600;cursor:pointer;minHeight:44px">{{ d.label }}</button>
+      </sc-for>
+    </div>
+    <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);margin:0 0 24px">{{ menuUpdated }} · Filters dim what does not match. Nothing is hidden. Tap a dish for allergens.</p>
+
+    <div style="borderTop:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="6">
+        <div style="borderBottom:1px solid #D8D0C2;opacity:{{ m.opacity }};transition:opacity 200ms ease-out">
+          <button onClick="{{ m.expand }}" style="width:100%;background:transparent;border:0;textAlign:left;padding:18px 0;cursor:pointer;display:flex;gap:20px;alignItems:baseline;minHeight:48px">
+            <span style="fontSize:18px;fontWeight:500;flexGrow:1">{{ m.name }}</span>
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;color:#B4763A;letterSpacing:0.04em;whiteSpace:nowrap">{{ m.tags }}</span>
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:16px;fontWeight:500;whiteSpace:nowrap">{{ m.price }}</span>
+          </button>
+          <sc-if value="{{ m.open }}">
+            <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.6;color:rgba(27,24,21,0.75);margin:0;padding:0 0 18px;maxWidth:66ch">Allergens: {{ m.allergens }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:28px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">Rooms</h2>
+      <div style="display:flex;gap:10px;flexShrink:0">
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p7 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">7</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p25 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">25</button></sc-if>
+      </div>
+    </div>
+    <p style="fontSize:17px;color:rgba(27,24,21,0.72);margin:0 0 24px">Nine rooms. Rates include breakfast at the long table. Dogs £15 a stay.</p>
+    <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:2px;background:rgba(27,24,21,0.4);border:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="3">
+        <article style="background:#FFFDF9">
+          <div style="height:180px;position:relative"><image-slot id="jo-r-{{ r.id }}" shape="rect" fit="cover" placeholder="{{ r.shot }}"></image-slot></div>
+          <div style="padding:22px">
+            <h4 style="fontSize:20px;fontWeight:800;margin:0 0 6px">{{ r.name }}</h4>
+            <p style="fontSize:14px;lineHeight:1.55;color:rgba(27,24,21,0.7);margin:0 0 14px">{{ r.line }}</p>
+            <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:15px;margin:0 0 14px">{{ r.price }}</p>
+            <a href="#" style="fontSize:14px;fontWeight:600;color:#B4763A;textDecoration:none;borderBottom:1px solid #B4763A">Check availability</a>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#FFFDF9;borderTop:2px solid rgba(27,24,21,0.4);borderBottom:2px solid rgba(27,24,21,0.4)">
+    <div style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px;display:grid;gridTemplateColumns:{{ cols2 }};gap:48px">
+      <div>
+        <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 20px">Find us</h2>
+        <div style="height:260px;border:1px solid #D8D0C2;position:relative;marginBottom:24px"><image-slot id="jo-arms-map" shape="rect" fit="cover" placeholder="Map — South Street, Sheffield"></image-slot></div>
+      </div>
+      <div style="display:flex;flexDirection:column;gap:22px;fontSize:16px;lineHeight:1.6">
+        <div>
+          <h4 style="fontSize:16px;fontWeight:600;fontFamily:'Inter',sans-serif;textTransform:uppercase;letterSpacing:0.08em;margin:0 0 8px">By car</h4>
+          <p style="color:rgba(27,24,21,0.75);margin:0">Ten minutes from the Parkway and five from the ring road. Free parking for sixteen cars behind the pub, two of them accessible bays next to the side door.</p>
+        </div>
+        <div>
+          <h4 style="fontSize:16px;fontWeight:600;fontFamily:'Inter',sans-serif;textTransform:uppercase;letterSpacing:0.08em;margin:0 0 8px">By train and tram</h4>
+          <p style="color:rgba(27,24,21,0.75);margin:0">Sheffield station is an eight minute walk, up South Street and left at the top. The Sheffield Station tram stop is closer still, two minutes from the door.</p>
+        </div>
+        <div>
+          <h4 style="fontSize:16px;fontWeight:600;fontFamily:'Inter',sans-serif;textTransform:uppercase;letterSpacing:0.08em;margin:0 0 8px">Access</h4>
+          <p style="color:rgba(27,24,21,0.75);margin:0">Step-free entry through the side door on the car park, level throughout the bar and dining room. Accessible WC on the ground floor. The nine bedrooms are upstairs and there is no lift, so we cannot offer a step-free room. Assistance dogs and any other dog are welcome everywhere except the bedrooms marked in the room notes. Large print menus behind the bar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;marginBottom:28px">
+      <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0">Also ours</h2>
+      <div style="display:flex;gap:10px;flexShrink:0">
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p8 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">8</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p26 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">26</button></sc-if>
+      </div>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:24px">
+      <sc-for list="{{ otherVenues }}" as="v" hint-placeholder-count="3">
+        <a href="#" onClick="{{ v.open }}" style="textDecoration:none;color:#1B1815;display:flex;gap:16px;alignItems:center;border:1px solid #D8D0C2;background:#FFFDF9;padding:14px" style-hover="borderColor:#B4763A">
+          <span style="width:64px;height:64px;flexShrink:0;position:relative;display:block"><image-slot id="jo-x-{{ v.slug }}" shape="rect" fit="cover" placeholder=" "></image-slot></span>
+          <span>
+            <span style="display:block;fontFamily:'Fraunces',Georgia,serif;fontWeight:800;fontSize:17px">{{ v.name }}</span>
+            <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);marginTop:3px">{{ v.distance }}</span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isEngineRoom }}">
+<div>
+  <section style="position:relative;minHeight:{{ venueHeroH }};overflow:hidden;background:#1B1815">
+    <div style="position:absolute;inset:0"><image-slot id="jo-er-hero" shape="rect" fit="cover" placeholder="The Engine Room — the long bench mid-class"></image-slot></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,24,21,0.15),rgba(27,24,21,0.78));pointerEvents:none"></div>
+    <div style="position:relative;minHeight:{{ venueHeroH }};maxWidth:1200px;margin:0 auto;padding:120px 24px 40px;display:flex;alignItems:flex-end;pointerEvents:none">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;color:#FFFDF9;margin:0">The Engine Room</h1>
+    </div>
+  </section>
+
+  <div style="maxWidth:1200px;margin:-40px auto 0;padding:0 24px;position:relative;zIndex:2">
+    <div style="background:#FFFDF9;border:2px solid rgba(27,24,21,0.4);boxShadow:0 2px 12px rgba(27,24,21,0.08);padding:28px;display:grid;gridTemplateColumns:{{ cols2 }};gap:28px">
+      <div style="display:flex;flexDirection:column;gap:10px;fontFamily:'IBM Plex Mono',monospace;fontSize:14px;lineHeight:1.5">
+        <span>16 South Street, Sheffield, S2 5QX</span>
+        <span style="color:#22403A;fontWeight:500">Classes and events by arrangement · see the diary below</span>
+        <a href="tel:01142996477" style="color:#B4763A;textDecoration:none">0114 299 6477</a>
+      </div>
+      <div style="display:flex;flexDirection:column;gap:16px">
+        <div style="display:flex;gap:12px;flexWrap:wrap">
+          <button onClick="{{ goParties }}" style="background:#22403A;color:#FFFDF9;border:0;padding:14px 22px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px;whiteSpace:nowrap" style-hover="background:#2C544C">Enquire about private hire</button>
+          <button onClick="{{ goGifts }}" style="background:transparent;color:#1B1815;border:1px solid #1B1815;padding:14px 22px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px;whiteSpace:nowrap" style-hover="background:#F5EFE4">Gift a class</button>
+        </div>
+        <div style="display:flex;gap:8px;flexWrap:wrap">
+          <sc-for list="{{ engineChips }}" as="c" hint-placeholder-count="4">
+            <span style="border:1px solid #D8D0C2;background:#F5EFE4;padding:7px 12px;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.06em">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px 0">
+    <p style="fontSize:20px;lineHeight:1.6;maxWidth:62ch;margin:0">One room, one long bench and the same kitchen that runs downstairs. Classes are hands-on and small, eight to twelve of you, and you eat what you made at the end. Supper clubs are one sitting, one menu, no choices to make. The rest of the week the room is yours: twelve to sixty covers, and we write the menu with you rather than handing you a folder.</p>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:24px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">Classes and supper clubs</h2>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p30 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">30</button></sc-if>
+    </div>
+
+    <div style="display:flex;alignItems:center;gap:10px;flexWrap:wrap;marginBottom:8px">
+      <sc-for list="{{ diaryFilters }}" as="f" hint-placeholder-count="5">
+        <button onClick="{{ f.select }}" style="background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.border }};padding:10px 16px;fontSize:13px;fontWeight:600;cursor:pointer;minHeight:44px">{{ f.label }}</button>
+      </sc-for>
+    </div>
+    <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);margin:0 0 24px">{{ diaryCount }} · dates through to the end of October, more added monthly</p>
+
+    <div style="borderTop:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ diary }}" as="d" hint-placeholder-count="8">
+        <div style="borderBottom:1px solid #D8D0C2;padding:22px 0;display:grid;gridTemplateColumns:{{ diaryCols }};columnGap:28px;rowGap:10px;alignItems:baseline">
+          <div style="display:flex;flexDirection:column;gap:3px">
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:15px;fontWeight:500;whiteSpace:nowrap">{{ d.date }}</span>
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);whiteSpace:nowrap">{{ d.time }}</span>
+          </div>
+          <div>
+            <span style="display:block;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#B4763A;marginBottom:6px">{{ d.type }}</span>
+            <h4 style="fontSize:21px;fontWeight:800;margin:0 0 6px">{{ d.title }}</h4>
+            <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0;maxWidth:58ch">{{ d.note }}</p>
+          </div>
+          <div style="display:flex;flexDirection:column;gap:8px;alignItems:flex-start">
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:16px;fontWeight:500;whiteSpace:nowrap">{{ d.price }}</span>
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);whiteSpace:nowrap">{{ d.status }}</span>
+            <a href="#" onClick="{{ goGifts }}" style="fontSize:14px;fontWeight:600;color:#B4763A;textDecoration:none;borderBottom:1px solid #B4763A;whiteSpace:nowrap">Book a place</a>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <p style="fontSize:16px;lineHeight:1.6;color:rgba(27,24,21,0.72);margin:28px 0 0;maxWidth:60ch">Members of the Joiners Club hear about new dates a week before they go on general sale. <a href="#" onClick="{{ goTable }}" style="color:#B4763A">Join the Club</a>.</p>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0 0 28px">Also ours</h2>
+    <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:24px">
+      <sc-for list="{{ engineOthers }}" as="v" hint-placeholder-count="3">
+        <a href="#" onClick="{{ v.open }}" style="textDecoration:none;color:#1B1815;display:flex;gap:16px;alignItems:center;border:1px solid #D8D0C2;background:#FFFDF9;padding:14px" style-hover="borderColor:#B4763A">
+          <span style="width:64px;height:64px;flexShrink:0;position:relative;display:block"><image-slot id="jo-eo-{{ v.slug }}" shape="rect" fit="cover" placeholder=" "></image-slot></span>
+          <span>
+            <span style="display:block;fontFamily:'Fraunces',Georgia,serif;fontWeight:800;fontSize:17px">{{ v.name }}</span>
+            <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6);marginTop:3px">{{ v.distance }}</span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTable }}">
+<div>
+  <section style="background:#22403A;color:#FFFDF9">
+    <div style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0 0 20px;color:#FFFDF9">The Joiners Club.</h1>
+      <p style="fontSize:20px;lineHeight:1.5;color:rgba(255,253,249,0.9);maxWidth:56ch;margin:0">A club with no card, no points and no app. Just a table when you want one and less noise the rest of the time.</p>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:24px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:0">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">The seven things we ask</h2>
+      <div style="display:flex;gap:10px;flexShrink:0">
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p9 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">9</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p19 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">19</button></sc-if>
+      </div>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ askCols }};columnGap:36px;rowGap:0">
+      <sc-for list="{{ asks }}" as="a" hint-placeholder-count="7">
+        <div style="padding:36px 36px 36px 0;marginRight:-1px;borderRight:1px solid #D8D0C2">
+          <h3 style="fontSize:{{ h3 }};fontWeight:800;margin:0 0 14px">{{ a.field }}</h3>
+          <p style="fontSize:17px;lineHeight:1.55;color:#B4763A;margin:0">{{ a.gets }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <div style="borderTop:2px solid rgba(27,24,21,0.4);paddingTop:28px;display:flex;gap:24px;alignItems:center;flexWrap:wrap">
+      <button onClick="{{ goJoinForm }}" style="background:#E2A63C;color:#1B1815;border:0;padding:20px 36px;fontSize:19px;fontWeight:600;letterSpacing:0.01em;cursor:pointer;minHeight:60px;flexShrink:0" style-hover="background:#CF9530">Join the Joiners Club</button>
+      <p style="fontSize:14px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65);margin:0;maxWidth:40ch">Seven fields, under a minute. No card, no points, no app.</p>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p13 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:32px;height:32px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:13px;cursor:pointer;flexShrink:0">13</button></sc-if>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <div style="background:#FFFDF9;border:2px solid rgba(27,24,21,0.4);padding:44px">
+      <div style="display:flex;alignItems:center;gap:12px">
+        <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#B4763A">What joining gets you, year one</span>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p20 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">20</button></sc-if>
+      </div>
+      <h3 style="fontSize:{{ h3 }};fontWeight:800;margin:14px 0 16px">Joining is rewarded, then it keeps being rewarded</h3>
+      <p style="fontSize:18px;lineHeight:1.6;color:rgba(27,24,21,0.78);margin:0 0 32px;maxWidth:62ch">Something on us the day you join, your birthday and your anniversary remembered, and a draw every month you are entered into by being a member. The rest is based on how often you actually come in, not on collecting points.</p>
+      <div style="display:grid;gridTemplateColumns:{{ cols4 }};columnGap:36px;rowGap:0">
+        <sc-for list="{{ vxSteps }}" as="v" hint-placeholder-count="4">
+          <div style="padding:0 36px 0 0;marginRight:-1px;borderRight:1px solid #D8D0C2">
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;letterSpacing:0.06em;textTransform:uppercase;color:#B4763A">{{ v.when }}</span>
+            <p style="fontSize:16px;lineHeight:1.55;margin:10px 0 0">{{ v.what }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="joiners-club-form" style="background:#FFFDF9;borderTop:2px solid rgba(27,24,21,0.4);borderBottom:2px solid rgba(27,24,21,0.4)">
+    <div style="maxWidth:800px;margin:0 auto;padding:{{ pad }} 24px">
+      <sc-if value="{{ joined }}">
+        <div style="animation:joRise 300ms ease-out">
+          <div style="display:flex;alignItems:flex-start;gap:12px">
+            <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 18px">Thank you, {{ record.name }}.</h2>
+            <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p10 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">10</button></sc-if>
+            <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p21 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">21</button></sc-if>
+            <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p22 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#1770FD;color:#fff;fontFamily:'Manrope',Montserrat,sans-serif;fontWeight:800;fontSize:12px;cursor:pointer;flexShrink:0">22</button></sc-if>
+          </div>
+          <p style="fontSize:20px;lineHeight:1.55;margin:0 0 28px">Your first Club Friday is 3 October. Your birthday table is already in the diary for {{ record.birthdayLabel }}.</p>
+          <button onClick="{{ resetRecord }}" style="background:transparent;color:#1B1815;border:1px solid #1B1815;padding:13px 20px;fontSize:14px;fontWeight:600;cursor:pointer;minHeight:44px">Start again</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notJoined }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 28px">Join the Club</h2>
+          <div style="display:flex;flexDirection:column;gap:20px">
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">First name</span>
+              <input value="{{ form.name }}" onChange="{{ setName }}" placeholder="Sarah" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Email</span>
+              <input value="{{ form.email }}" onChange="{{ setEmail }}" placeholder="you@example.com" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Mobile</span>
+              <input value="{{ form.mobile }}" onChange="{{ setMobile }}" placeholder="07700 900000" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+            </label>
+            <div style="display:grid;gridTemplateColumns:minmax(0,1fr) 130px;gap:12px">
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Birthday</span>
+                <input value="{{ form.birthday }}" onChange="{{ setBirthday }}" placeholder="14 March" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Year</span>
+                <input value="{{ form.birthYear }}" onChange="{{ setBirthYear }}" placeholder="1988" inputMode="numeric" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+            </div>
+            <div style="display:grid;gridTemplateColumns:minmax(0,1fr) 130px;gap:12px">
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Anniversary</span>
+                <input value="{{ form.anniversary }}" onChange="{{ setAnniversary }}" placeholder="2 October" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Year</span>
+                <input value="{{ form.anniversaryYear }}" onChange="{{ setAnniversaryYear }}" placeholder="2016" inputMode="numeric" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+            </div>
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Postcode</span>
+              <input value="{{ form.postcode }}" onChange="{{ setPostcode }}" placeholder="S2 5QX" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+            </label>
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Where you go most</span>
+              <select value="{{ form.venue }}" onChange="{{ setVenue }}" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+                <option value="Joiners Kitchen">Joiners Kitchen</option>
+                <option value="The Joiners Arms">The Joiners Arms</option>
+                <option value="Joiners Coffee House">Joiners Coffee House</option>
+                <option value="The Kitchen">The Kitchen</option>
+              </select>
+            </label>
+            <button onClick="{{ submitTable }}" style="background:#22403A;color:#FFFDF9;border:0;padding:17px 28px;fontSize:16px;fontWeight:600;cursor:pointer;minHeight:52px;alignSelf:flex-start" style-hover="background:#2C544C">Join the Club</button>
+          </div>
+          <sc-if value="{{ reveal }}">
+            <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;lineHeight:1.5;color:#8D00D4;margin:20px 0 0;maxWidth:70ch">This is a live demonstration. Anything you enter creates a real record in a real Airship account and you will receive real emails. Delete it any time.</p>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:20px;flexWrap:wrap;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:32px">
+      <h2 style="fontSize:{{ h2 }};fontWeight:800;margin:0">A member's year</h2>
+      <div style="display:flex;gap:10px">
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p11 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">11</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p12 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">12</button></sc-if>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p23 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">23</button></sc-if>
+      </div>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ monthCols }};gap:2px;background:rgba(27,24,21,0.4);border:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ months }}" as="m" hint-placeholder-count="12">
+        <div style="background:{{ m.bg }};padding:16px 12px;minHeight:130px;display:flex;flexDirection:column;gap:8px">
+          <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;letterSpacing:0.06em;color:{{ m.fg }};opacity:0.65">{{ m.label }}</span>
+          <span style="fontSize:14px;lineHeight:1.4;fontWeight:500;color:{{ m.fg }}">{{ m.event }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="maxWidth:1200px;margin:0 auto;padding:0 24px {{ pad }}">
+    <div style="background:#E2A63C;padding:44px;display:flex;gap:32px;alignItems:center;justifyContent:space-between;flexWrap:wrap">
+      <div style="maxWidth:52ch">
+        <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0 0 10px">Bring someone new</h2>
+        <p style="fontSize:17px;lineHeight:1.55;margin:0">Give a friend £10 to spend with us. When they use it, you get £10 too.</p>
+      </div>
+      <div style="display:flex;alignItems:center;gap:14px;flexShrink:0">
+        <button style="background:#1B1815;color:#FFFDF9;border:0;padding:15px 26px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:48px" style-hover="background:#000">How it works</button>
+        <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p24 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">24</button></sc-if>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ reveal }}">
+    <section style="background:#1B1815;color:#FFFDF9">
+      <div style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+        <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;letterSpacing:0.08em;textTransform:uppercase;color:#EC00FF">Airship · reveal layer</span>
+        <h2 style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:{{ h2 }};margin:12px 0 12px;color:#FFFDF9;letterSpacing:-0.01em">Segments, made visible</h2>
+        <p style="fontSize:17px;lineHeight:1.6;color:rgba(255,253,249,0.75);maxWidth:64ch;margin:0 0 36px">Fourteen segments built from the data this site already collects. Counts are illustrative and listed with their basis on the numbers page.</p>
+        <div style="display:grid;gridTemplateColumns:{{ cols3 }};gap:2px;background:rgba(255,253,249,0.2);border:1px solid rgba(255,253,249,0.2)">
+          <sc-for list="{{ segments }}" as="s" hint-placeholder-count="14">
+            <div style="background:#1B1815;padding:22px">
+              <h4 style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:16px;margin:0 0 8px;color:#FFFDF9">{{ s.name }}</h4>
+              <p style="fontSize:14px;lineHeight:1.5;color:rgba(255,253,249,0.68);margin:0 0 14px">{{ s.def }}</p>
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:20px;color:#EC00FF">{{ s.count }}</span>
+              <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;color:rgba(255,253,249,0.45);marginTop:4px">contacts · illustrative</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isContact }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0 0 16px">Contact us</h1>
+    <p style="fontSize:20px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 48px;maxWidth:56ch">One street, four places, one phone number. If it is urgent, ring. If it is a booking, book. Everything else, the form below reaches a named person.</p>
+
+    <div style="display:grid;gridTemplateColumns:{{ cols2 }};gap:2px;background:rgba(27,24,21,0.4);border:2px solid rgba(27,24,21,0.4);marginBottom:{{ pad }}">
+      <div style="background:#FFFDF9;padding:32px">
+        <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0 0 20px">Ring or walk in</h2>
+        <div style="display:flex;flexDirection:column;gap:16px;fontFamily:'IBM Plex Mono',monospace;fontSize:15px;lineHeight:1.5">
+          <a href="tel:01142996477" style="color:#B4763A;textDecoration:none;fontSize:22px">0114 299 6477</a>
+          <span>16 South Street, Sheffield, S2 5QX</span>
+          <a href="mailto:hello@joiners.example" style="color:#B4763A;textDecoration:none">hello@joiners.example</a>
+        </div>
+        <div style="borderTop:1px solid #D8D0C2;marginTop:24px;paddingTop:20px;display:flex;flexDirection:column;gap:12px">
+          <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+            <div style="display:flex;justifyContent:space-between;gap:16px;alignItems:baseline">
+              <span style="fontSize:15px;fontWeight:500">{{ v.name }}</span>
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:#22403A;whiteSpace:nowrap">{{ v.today }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#FFFDF9;padding:0;minHeight:320px;position:relative"><image-slot id="jo-contact-map" shape="rect" fit="cover" placeholder="Map — 16 South Street, Sheffield"></image-slot></div>
+    </div>
+
+    <div style="display:grid;gridTemplateColumns:{{ cols2 }};gap:{{ pad }}">
+      <div>
+        <div style="display:flex;alignItems:flex-end;justifyContent:space-between;gap:20px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px;marginBottom:28px">
+          <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0">Send us something</h2>
+          <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p34 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">34</button></sc-if>
+        </div>
+
+        <div data-airship-form-url="https://forms.airship.co.uk/forms/6755399444000000/contact-us" style="minHeight:200px"></div>
+        <p style="fontSize:14px;lineHeight:1.55;color:rgba(27,24,21,0.7);margin:18px 0 0">This form is a real Airship form. It writes straight to the contact record.</p>
+      </div>
+
+      <div>
+        <h2 style="fontSize:{{ h3 }};fontWeight:800;margin:0 0 16px;borderBottom:2px solid rgba(27,24,21,0.4);paddingBottom:16px">Straight to the right place</h2>
+        <div style="display:flex;flexDirection:column">
+          <sc-for list="{{ contactRoutes }}" as="r" hint-placeholder-count="5">
+            <div style="borderBottom:1px solid #D8D0C2;padding:20px 0">
+              <h4 style="fontSize:18px;fontWeight:800;margin:0 0 6px">{{ r.title }}</h4>
+              <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 10px">{{ r.body }}</p>
+              <a href="#" onClick="{{ r.go }}" style="fontSize:14px;fontWeight:600;color:#B4763A;textDecoration:none;borderBottom:1px solid #B4763A">{{ r.cta }}</a>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#F5EFE4;border:1px solid #D8D0C2;padding:24px;marginTop:28px">
+          <h4 style="fontSize:16px;fontWeight:600;fontFamily:'Inter',sans-serif;textTransform:uppercase;letterSpacing:0.08em;margin:0 0 10px">Access and dietary</h4>
+          <p style="fontSize:15px;lineHeight:1.6;color:rgba(27,24,21,0.78);margin:0">Step-free entry through the side door on the car park, level throughout the bar and dining room, accessible WC on the ground floor. Tell us at the point of booking what you need and it will be on the table note, not in somebody's head.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isWhatsOn }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+   <div style="border:3px solid #E2A63C;background:#FFFDF9">
+    <div style="background:#E2A63C;padding:14px 24px;display:flex;alignItems:center;gap:14px;flexWrap:wrap">
+      <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#1B1815">The Joints · operator view, not guest-facing</span>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p33 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">33</button></sc-if>
+    </div>
+    <div style="display:grid;gridTemplateColumns:{{ erTabCols }};gap:2px;background:rgba(27,24,21,0.4);borderBottom:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ erTabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.select }}" style="background:{{ t.bg }};color:{{ t.fg }};border:0;padding:20px 24px;textAlign:left;cursor:pointer;minHeight:48px;display:flex;flexDirection:column;gap:5px">
+          <span style="fontSize:17px;fontWeight:600;lineHeight:1.25">{{ t.label }}</span>
+          <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;opacity:0.75">{{ t.note }}</span>
+        </button>
+      </sc-for>
+    </div>
+   <div style="padding:40px 24px">
+    <sc-if value="{{ erIsFoodie }}">
+      <div>
+        <h1 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 16px">Foodie Favourites</h1>
+        <p style="fontSize:19px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 36px;maxWidth:62ch">The dishes, producers and menu moments worth building a campaign around.</p>
+        <div style="border:2px dashed #D8D0C2;background:#F5EFE4;padding:40px">
+          <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.7;color:rgba(27,24,21,0.7);margin:0;maxWidth:70ch">Waiting on content. Send it in whatever shape it is in — a spreadsheet, a list, a document — and I will build this out to match, filterable and searchable the same way the national diary is.</p>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ erIsCheers }}">
+      <div>
+        <h1 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 16px">Cheers by Airship</h1>
+        <p style="fontSize:19px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 36px;maxWidth:62ch">The drinks side of the calendar and the campaigns that run off it.</p>
+        <div style="border:2px dashed #D8D0C2;background:#F5EFE4;padding:40px">
+          <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.7;color:rgba(27,24,21,0.7);margin:0;maxWidth:70ch">Waiting on content. Same as above — send it through and I will structure it to sit alongside the other two.</p>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ erIsWhatsOn }}" hint-placeholder-val="{{ true }}">
+    <div>
+    <h1 style="fontSize:{{ h2 }};fontWeight:800;margin:0 0 16px">National What's On</h1>
+    <p style="fontSize:19px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 36px;maxWidth:62ch">Every date between now and the end of 2027 that moves hospitality trade: bank holidays, national days, sport, festivals, school holidays, city events, game and produce seasons, and the trade dates that hit cost rather than revenue. Search it, filter it, plan against it.</p>
+
+    <div style="border:2px solid rgba(27,24,21,0.4);background:#F5EFE4;padding:24px;marginBottom:28px">
+      <label style="display:flex;flexDirection:column;gap:8px;marginBottom:18px">
+        <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Search</span>
+        <input value="{{ woQ }}" onChange="{{ setWoQ }}" placeholder="Sheffield, Valentine's, grouse, Ashes" style="background:#FFFDF9;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+      </label>
+
+      <div style="display:flex;alignItems:center;gap:8px;flexWrap:wrap;marginBottom:18px">
+        <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.6);marginRight:4px">Impact</span>
+        <sc-for list="{{ woImpacts }}" as="i" hint-placeholder-count="5">
+          <button onClick="{{ i.select }}" style="background:{{ i.bg }};color:{{ i.fg }};border:1px solid {{ i.border }};padding:10px 16px;fontSize:13px;fontWeight:600;cursor:pointer;minHeight:44px">{{ i.label }}</button>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;gridTemplateColumns:{{ woFilterCols }};gap:12px">
+        <label style="display:flex;flexDirection:column;gap:8px">
+          <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Category</span>
+          <select value="{{ woCategory }}" onChange="{{ setWoCategory }}" style="background:#FFFDF9;border:1px solid #D8D0C2;color:#1B1815;padding:14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:50px;width:100%">
+            <sc-for list="{{ woCategories }}" as="c" hint-placeholder-count="6">
+              <option value="{{ c }}">{{ c }}</option>
+            </sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flexDirection:column;gap:8px">
+          <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Where</span>
+          <select value="{{ woScope }}" onChange="{{ setWoScope }}" style="background:#FFFDF9;border:1px solid #D8D0C2;color:#1B1815;padding:14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:50px;width:100%">
+            <sc-for list="{{ woScopes }}" as="c" hint-placeholder-count="6">
+              <option value="{{ c }}">{{ c }}</option>
+            </sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flexDirection:column;gap:8px">
+          <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Month</span>
+          <select value="{{ woMonth }}" onChange="{{ setWoMonth }}" style="background:#FFFDF9;border:1px solid #D8D0C2;color:#1B1815;padding:14px;fontSize:16px;fontFamily:'Inter',sans-serif;minHeight:50px;width:100%">
+            <sc-for list="{{ woMonths }}" as="c" hint-placeholder-count="6">
+              <option value="{{ c }}">{{ c }}</option>
+            </sc-for>
+          </select>
+        </label>
+      </div>
+
+      <div style="display:flex;alignItems:center;gap:16px;flexWrap:wrap;marginTop:18px;borderTop:1px solid #D8D0C2;paddingTop:16px">
+        <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;color:#1B1815">{{ woCount }}</span>
+        <button onClick="{{ woReset }}" style="background:transparent;color:#1B1815;border:1px solid #D8D0C2;padding:10px 16px;fontSize:13px;fontWeight:600;cursor:pointer;minHeight:44px;whiteSpace:nowrap" style-hover="background:#F5EFE4">Clear all</button>
+      </div>
+    </div>
+
+    <div style="borderTop:2px solid rgba(27,24,21,0.4)">
+      <sc-for list="{{ woRows }}" as="d" hint-placeholder-count="12">
+        <div style="borderBottom:1px solid #D8D0C2">
+          <button onClick="{{ d.expand }}" style="width:100%;background:transparent;border:0;textAlign:left;padding:20px 0;cursor:pointer;display:grid;gridTemplateColumns:{{ woCols }};columnGap:24px;rowGap:8px;alignItems:baseline;minHeight:48px">
+            <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.4;color:#1B1815">{{ d.when }}</span>
+            <span style="display:block">
+              <span style="display:block;fontSize:19px;fontWeight:600;lineHeight:1.3;marginBottom:5px">{{ d.event }}</span>
+              <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:12px;color:rgba(27,24,21,0.6)">{{ d.category }} · {{ d.scope }} · plan from {{ d.lead }} out · {{ d.status }}</span>
+            </span>
+            <span style="justifySelf:start;background:{{ d.impactBg }};color:{{ d.impactFg }};fontSize:11px;fontWeight:600;textTransform:uppercase;letterSpacing:0.06em;padding:5px 9px;whiteSpace:nowrap">{{ d.impact }}</span>
+          </button>
+          <sc-if value="{{ d.open }}">
+            <p style="fontSize:16px;lineHeight:1.6;color:rgba(27,24,21,0.8);margin:0;padding:0 0 22px;maxWidth:72ch">{{ d.means }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ woMore }}">
+      <button onClick="{{ showMoreWo }}" style="marginTop:28px;background:#1B1815;color:#FFFDF9;border:0;padding:16px 28px;fontSize:15px;fontWeight:600;cursor:pointer;minHeight:50px" style-hover="background:#000">{{ woMoreLabel }}</button>
+    </sc-if>
+
+    <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;lineHeight:1.6;color:rgba(27,24,21,0.6);margin:32px 0 0;maxWidth:76ch">Fixed dates cannot move. Confirmed dates are announced by the organiser. Typical (verify) dates follow the established pattern and should be confirmed before you buy media or print anything.</p>
+    </div>
+    </sc-if>
+   </div>
+   </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isWifi }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px;display:flex;justifyContent:center">
+    <div style="width:100%;maxWidth:440px">
+      <div style="background:#FFFDF9;border:2px solid rgba(27,24,21,0.4);boxShadow:0 2px 12px rgba(27,24,21,0.08);padding:32px">
+
+        <sc-if value="{{ wifiForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#B4763A">You are at</span>
+            <h1 style="fontSize:32px;lineHeight:1.1;fontWeight:800;margin:10px 0 28px">Joiners Coffee House</h1>
+            <label style="display:flex;flexDirection:column;gap:8px;marginBottom:16px">
+              <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Email</span>
+              <input value="{{ wifiEmail }}" onChange="{{ setWifiEmail }}" placeholder="you@example.com" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+            </label>
+            <button onClick="{{ connectWifi }}" style="width:100%;background:#22403A;color:#FFFDF9;border:0;padding:17px;fontSize:17px;fontWeight:600;cursor:pointer;minHeight:56px" style-hover="background:#2C544C">Connect</button>
+            <div style="display:grid;gridTemplateColumns:minmax(0,1fr) 110px;gap:12px;marginTop:18px">
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Birthday (optional)</span>
+                <input value="{{ wifiDob }}" onChange="{{ setWifiDob }}" placeholder="14 March" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+              <label style="display:flex;flexDirection:column;gap:8px">
+                <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:rgba(27,24,21,0.65)">Year</span>
+                <input value="{{ wifiDobYear }}" onChange="{{ setWifiDobYear }}" placeholder="1988" inputMode="numeric" style="background:#F5EFE4;border:1px solid #D8D0C2;color:#1B1815;padding:15px;fontSize:17px;fontFamily:'Inter',sans-serif;minHeight:52px;width:100%">
+              </label>
+            </div>
+            <p style="fontSize:14px;lineHeight:1.5;color:rgba(27,24,21,0.7);margin:8px 0 0">We will send you something on the day. Skip it and the WiFi works the same.</p>
+            <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.78);margin:22px 0 0">We will send you nothing unless you tick a box. Connecting gets you two hours of WiFi either way.</p>
+            <div style="display:flex;flexDirection:column;gap:0;marginTop:12px">
+              <button onClick="{{ toggleWifiOptIn }}" style="display:flex;alignItems:flex-start;gap:12px;background:transparent;border:0;padding:12px 0;cursor:pointer;textAlign:left;width:100%;minHeight:44px">
+                <span style="width:22px;height:22px;flexShrink:0;border:1px solid #1B1815;background:{{ wifiOptInBox }};color:#FFFDF9;display:flex;alignItems:center;justifyContent:center;fontSize:14px;marginTop:2px">{{ wifiOptInMark }}</span>
+                <span style="fontSize:15px;lineHeight:1.5;color:#1B1815">News and offers by email. Two a month, nothing else.</span>
+              </button>
+              <button onClick="{{ toggleWifiSms }}" style="display:flex;alignItems:flex-start;gap:12px;background:transparent;border:0;padding:12px 0;cursor:pointer;textAlign:left;width:100%;minHeight:44px">
+                <span style="width:22px;height:22px;flexShrink:0;border:1px solid #1B1815;background:{{ wifiSmsBox }};color:#FFFDF9;display:flex;alignItems:center;justifyContent:center;fontSize:14px;marginTop:2px">{{ wifiSmsMark }}</span>
+                <span style="fontSize:15px;lineHeight:1.5;color:#1B1815">News and offers by text. Only if something is worth a text.</span>
+              </button>
+            </div>
+            <sc-if value="{{ reveal }}">
+              <div style="borderTop:1px solid #D8D0C2;marginTop:22px;paddingTop:18px;display:flex;alignItems:center;gap:12px;flexWrap:wrap">
+                <button onClick="{{ pinFns.p31 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">31</button>
+                <button onClick="{{ pinFns.p32 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">32</button>
+                <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;lineHeight:1.5;color:#8D00D4;margin:0;flexGrow:1;minWidth:0">Live demonstration. Anything entered creates a real record. Delete it any time.</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ wifiOnline }}">
+          <div style="animation:joRise 300ms ease-out">
+            <span style="fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#B4763A">Two hours, no password</span>
+            <h1 style="fontSize:32px;lineHeight:1.1;fontWeight:800;margin:10px 0 14px">You are online.</h1>
+            <p style="fontSize:17px;lineHeight:1.6;color:rgba(27,24,21,0.78);margin:0 0 28px">Here is what is good today.</p>
+            <div style="borderTop:2px solid rgba(27,24,21,0.4);borderBottom:1px solid #D8D0C2;padding:20px 0;marginBottom:24px">
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;textTransform:uppercase;letterSpacing:0.06em;color:#B4763A">Out of the oven at eleven</span>
+              <h3 style="fontSize:22px;fontWeight:800;margin:8px 0 6px">Cardamom bun</h3>
+              <p style="fontSize:15px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 10px">Thirty of them, and they go by one.</p>
+              <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:15px;fontWeight:500">£3.80</span>
+            </div>
+            <button onClick="{{ resetWifi }}" style="background:transparent;color:#1B1815;border:1px solid #1B1815;padding:13px 20px;fontSize:14px;fontWeight:600;cursor:pointer;minHeight:44px" style-hover="background:#F5EFE4">Start again</button>
+            <sc-if value="{{ reveal }}">
+              <div style="borderTop:1px solid #D8D0C2;marginTop:22px;paddingTop:18px;display:flex;alignItems:center;gap:12px;flexWrap:wrap">
+                <button onClick="{{ pinFns.p31 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">31</button>
+                <button onClick="{{ pinFns.p32 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:26px;height:26px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;cursor:pointer;flexShrink:0">32</button>
+                <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;lineHeight:1.5;color:#8D00D4;margin:0;flexGrow:1;minWidth:0">Presence appended to the record. Marketing only if the box was ticked.</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+      </div>
+      <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:12px;lineHeight:1.6;color:rgba(27,24,21,0.6);margin:18px 0 0;textAlign:center">Free WiFi at all four places. Two hours, no password, no scrolling through terms.</p>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isGifts }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-start;gap:14px;margin:0 0 16px">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0">Gift someone a table</h1>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p29 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:32px;height:32px;borderRadius:50%;border:0;background:#1770FD;color:#fff;fontFamily:'Manrope',Montserrat,sans-serif;fontWeight:800;fontSize:13px;cursor:pointer;flexShrink:0;marginTop:10px">29</button></sc-if>
+    </div>
+    <p style="fontSize:20px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 40px;maxWidth:56ch">Gift cards for any amount, experiences with a date and a story, and tickets to things that sell out. Digital or physical, delivered now or on Christmas Eve.</p>
+    <div style="border:2px solid rgba(27,24,21,0.4);background:#FFFDF9;padding:32px">
+      <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.6;color:rgba(27,24,21,0.7);margin:0">The full Toggle shop — product grid, cart, three-step checkout, Apple Wallet, and pins 17 and 18 on the two records one transaction creates — is the next build.</p>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isParties }}">
+  <section style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:flex;alignItems:flex-start;gap:14px;marginBottom:16px">
+      <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0">Parties</h1>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p14 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:32px;height:32px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:13px;cursor:pointer;flexShrink:0;marginTop:10px">14</button></sc-if>
+      <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p28 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:32px;height:32px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:13px;cursor:pointer;flexShrink:0;marginTop:10px">28</button></sc-if>
+    </div>
+    <p style="fontSize:20px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 40px;maxWidth:56ch">Twelve to sixty covers at The Kitchen, party menus at Joiners Kitchen, Christmas Day at the Arms. Tell us the numbers and we will come back with a plan and a price.</p>
+    <div style="border:2px solid rgba(27,24,21,0.4);background:#FFFDF9;padding:32px">
+      <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;lineHeight:1.6;color:rgba(27,24,21,0.7);margin:0">The party enquiry form, deposit terms and the Christmas build are in the next phase, alongside the gift shop, corporate bulk ordering, WiFi, booking, feedback and the Engine Room.</p>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isBook }}">
+  <section style="maxWidth:800px;margin:0 auto;padding:{{ pad }} 24px">
+    <h1 style="fontSize:{{ h1 }};fontWeight:800;margin:0 0 16px">Book a table</h1>
+    <p style="fontSize:19px;lineHeight:1.55;color:rgba(27,24,21,0.72);margin:0 0 36px;maxWidth:52ch">Pick a place, a day and a time. Four taps, no dropdown gymnastics.</p>
+    <div style="border:2px solid rgba(27,24,21,0.4);background:#FFFDF9;padding:32px">
+      <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;color:rgba(27,24,21,0.7);margin:0">The booking flow, the WiFi page, feedback, the gift shop, corporate bulk ordering, Christmas and the Engine Room are the next build. Say the word and I will carry on in that order.</p>
+    </div>
+  </section>
+</sc-if>
+
+<footer style="background:#22403A;color:rgba(255,253,249,0.85);marginTop:0">
+  <div style="maxWidth:1200px;margin:0 auto;padding:{{ pad }} 24px">
+    <div style="display:grid;gridTemplateColumns:{{ cols4 }};gap:40px">
+      <div>
+        <h4 style="fontFamily:'Inter',sans-serif;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#E2A63C;margin:0 0 16px">Our places</h4>
+        <div style="display:flex;flexDirection:column;gap:16px;fontFamily:'IBM Plex Mono',monospace;fontSize:12px;lineHeight:1.55">
+          <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+            <div>
+              <span style="display:block;fontFamily:'Inter',sans-serif;fontSize:14px;fontWeight:600;color:#FFFDF9">{{ v.name }}</span>
+              <span style="display:block">{{ v.address }}</span>
+              <span style="display:block">{{ v.phone }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <h4 style="fontFamily:'Inter',sans-serif;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#E2A63C;margin:0 0 16px">Site</h4>
+        <div style="display:flex;flexDirection:column;gap:10px;fontSize:14px">
+          <a href="#" onClick="{{ goPlaces }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Places</a>
+          <a href="#" onClick="{{ goArms }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Menus</a>
+          <a href="#" onClick="{{ goArms }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Stay</a>
+          <a href="#" onClick="{{ goGifts }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Gift Shop</a>
+          <a href="#" onClick="{{ goEngineRoom }}" style="color:rgba(255,253,249,0.85);textDecoration:none">The Engine Room</a>
+          <sc-if value="{{ showWhatsOnLink }}"><a href="#" onClick="{{ goWhatsOn }}" style="color:#E2A63C;textDecoration:none">The Joints</a></sc-if>
+          <a href="#" onClick="{{ goWifi }}" style="color:rgba(255,253,249,0.85);textDecoration:none">WiFi</a>
+          <a href="#" onClick="{{ goParties }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Parties</a>
+          <a href="#" onClick="{{ goTable }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Joiners Club</a>
+          <a href="#" onClick="{{ goBook }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Book</a>
+          <a href="#" onClick="{{ goContact }}" style="color:rgba(255,253,249,0.85);textDecoration:none">Contact us</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="fontFamily:'Inter',sans-serif;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#E2A63C;margin:0 0 16px">Legal</h4>
+        <div style="display:flex;flexDirection:column;gap:10px;fontSize:14px">
+          <a href="#" style="color:rgba(255,253,249,0.85);textDecoration:none">Privacy</a>
+          <a href="#" style="color:rgba(255,253,249,0.85);textDecoration:none">Terms</a>
+          <a href="#" style="color:rgba(255,253,249,0.85);textDecoration:none">Gift card terms</a>
+          <a href="#" style="color:rgba(255,253,249,0.85);textDecoration:none">Accessibility</a>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;alignItems:center;gap:10px;margin:0 0 16px">
+          <h4 style="fontFamily:'Inter',sans-serif;fontSize:12px;fontWeight:600;textTransform:uppercase;letterSpacing:0.08em;color:#E2A63C;margin:0">Two emails a month</h4>
+          <sc-if value="{{ reveal }}"><button onClick="{{ pinFns.p17 }}" style="display:inline-flex;alignItems:center;justifyContent:center;width:24px;height:24px;borderRadius:50%;border:0;background:#8D00D4;color:#fff;fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:11px;cursor:pointer;flexShrink:0">17</button></sc-if>
+        </div>
+        <p style="fontSize:14px;lineHeight:1.55;margin:0 0 14px;color:rgba(255,253,249,0.8)">What is on, what is new, nothing else.</p>
+        <div style="display:flex;gap:8px;flexWrap:wrap">
+          <input value="{{ form.email }}" onChange="{{ setEmail }}" placeholder="Email" style="background:#FFFDF9;border:1px solid #FFFDF9;color:#1B1815;padding:12px;fontSize:15px;fontFamily:'Inter',sans-serif;minHeight:46px;flexGrow:1;minWidth:0">
+          <button onClick="{{ goJoinFromFooter }}" style="background:#E2A63C;color:#1B1815;border:0;padding:12px 18px;fontSize:14px;fontWeight:600;cursor:pointer;minHeight:46px">Sign up</button>
+        </div>
+        <p style="fontSize:12px;lineHeight:1.5;margin:12px 0 0;color:rgba(255,253,249,0.65)">Takes you to the Joiners Club, where you can see exactly what you get back before you finish.</p>
+      </div>
+    </div>
+    <div style="borderTop:1px solid rgba(255,253,249,0.25);marginTop:40px;paddingTop:24px;display:flex;gap:20px;alignItems:center;justifyContent:space-between;flexWrap:wrap">
+      <p style="fontSize:13px;lineHeight:1.5;color:rgba(255,253,249,0.6);margin:0;maxWidth:70ch">Joiners is a fictional hospitality group built by Airship to show what Airship and Toggle can do for operators.</p>
+      <div style="display:flex;gap:28px;alignItems:center;flexShrink:0">
+        <img src="assets/airship.png" alt="Airship" style="display:block;height:38px;width:auto">
+        <img src="assets/toggle.png" alt="toggle" style="display:block;height:24px;width:auto">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<sc-if value="{{ showBookBar }}">
+  <div style="position:fixed;bottom:0;left:0;right:0;zIndex:55;display:flex;background:#22403A;borderTop:1px solid rgba(255,253,249,0.2)">
+    <button onClick="{{ goBook }}" style="flexGrow:1;height:56px;background:transparent;border:0;color:#FFFDF9;fontSize:16px;fontWeight:600;letterSpacing:0.02em;cursor:pointer">Book a table</button>
+    <button onClick="{{ goTable }}" style="flexShrink:0;height:56px;background:#E2A63C;border:0;color:#1B1815;fontSize:16px;fontWeight:600;letterSpacing:0.02em;cursor:pointer;padding:0 22px">Join the Club</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ panelOpen }}">
+  <div>
+    <div onClick="{{ closePin }}" style="position:fixed;inset:0;zIndex:90;background:rgba(27,24,21,0.45)"></div>
+    <aside style="position:fixed;top:0;right:0;bottom:0;zIndex:91;width:{{ panelW }};maxWidth:100vw;background:#FFFDF9;borderLeft:3px solid {{ pin.color }};overflowY:auto;animation:joSlide 300ms ease-out;boxShadow:0 2px 12px rgba(27,24,21,0.08)">
+      <div style="padding:28px 28px 40px">
+        <div style="display:flex;alignItems:center;justifyContent:space-between;gap:16px;marginBottom:24px">
+          <sc-if value="{{ pin.isAirship }}"><img src="assets/airship.png" alt="Airship" style="display:block;height:40px;width:auto"></sc-if>
+          <sc-if value="{{ pin.isToggle }}"><img src="assets/toggle.png" alt="toggle" style="display:block;height:24px;width:auto"></sc-if>
+          <button onClick="{{ closePin }}" aria-label="Close panel" style="background:transparent;border:1px solid #D8D0C2;color:#1B1815;width:44px;height:44px;fontSize:18px;cursor:pointer" style-hover="background:#F5EFE4">✕</button>
+        </div>
+        <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;letterSpacing:0.08em;textTransform:uppercase;color:rgba(27,24,21,0.55)">Pin {{ pin.n }} · {{ pin.where }}</span>
+        <h3 style="fontFamily:{{ pin.headFont }};fontWeight:{{ pin.headWeight }};fontSize:26px;lineHeight:1.15;margin:8px 0 20px;color:#1B1815">{{ pin.title }}</h3>
+        <p style="fontSize:16px;lineHeight:1.6;color:rgba(27,24,21,0.8);margin:0 0 28px">{{ pin.what }}</p>
+
+        <h4 style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;letterSpacing:0.08em;textTransform:uppercase;color:{{ pin.color }};margin:0 0 12px">Data captured</h4>
+        <div style="borderTop:1px solid #D8D0C2;marginBottom:28px">
+          <sc-for list="{{ pin.fields }}" as="f" hint-placeholder-count="4">
+            <div style="fontFamily:'IBM Plex Mono',monospace;fontSize:13px;padding:9px 0;borderBottom:1px solid #D8D0C2;display:flex;justifyContent:space-between;gap:12px">
+              <span>{{ f.k }}</span>
+              <span style="color:rgba(27,24,21,0.55);textAlign:right">{{ f.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <h4 style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;letterSpacing:0.08em;textTransform:uppercase;color:{{ pin.color }};margin:0 0 16px">What fires next</h4>
+        <div style="display:flex;flexDirection:column;gap:0;marginBottom:28px;borderLeft:1px solid #D8D0C2;paddingLeft:16px">
+          <sc-for list="{{ pin.journey }}" as="j" hint-placeholder-count="3">
+            <div style="position:relative;padding:0 0 18px">
+              <span style="position:absolute;left:-21px;top:6px;width:9px;height:9px;background:{{ pin.color }};display:block"></span>
+              <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;letterSpacing:0.06em;textTransform:uppercase;color:rgba(27,24,21,0.55)">{{ j.t }}</span>
+              <span style="display:block;fontSize:15px;lineHeight:1.45;marginTop:2px">{{ j.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:#F5EFE4;padding:24px;marginBottom:24px">
+          <span style="display:block;fontFamily:'Fraunces',Georgia,serif;fontVariationSettings:'SOFT' 40,'WONK' 1;fontWeight:800;fontSize:40px;lineHeight:1;color:#1B1815">{{ pin.number }}</span>
+          <span style="display:block;fontSize:15px;lineHeight:1.45;marginTop:8px">{{ pin.numberLabel }}</span>
+          <span style="display:block;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;lineHeight:1.5;color:rgba(27,24,21,0.6);marginTop:10px">{{ pin.source }}</span>
+        </div>
+
+        <sc-if value="{{ pin.argument }}">
+          <p style="fontFamily:'Fraunces',Georgia,serif;fontVariationSettings:'SOFT' 40,'WONK' 1;fontWeight:600;fontSize:20px;lineHeight:1.35;margin:0 0 24px;color:#1B1815">{{ pin.argument }}</p>
+        </sc-if>
+
+        <a href="#" style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:14px;color:{{ pin.color }};textDecoration:none;borderBottom:1px solid {{ pin.color }}">See this in the Engine Room</a>
+      </div>
+    </aside>
+  </div>
+</sc-if>
+
+<sc-if value="{{ reveal }}">
+  <div style="position:fixed;{{ recPos }};zIndex:80;width:{{ recW }};background:#FFFDF9;border:1px solid #1B1815;boxShadow:0 2px 12px rgba(27,24,21,0.08)">
+    <button onClick="{{ toggleRec }}" style="width:100%;background:#1B1815;color:#FFFDF9;border:0;padding:12px 14px;display:flex;alignItems:center;justifyContent:space-between;gap:12px;cursor:pointer;minHeight:44px">
+      <span style="fontFamily:'Montserrat',sans-serif;fontWeight:600;fontSize:12px;letterSpacing:0.1em;textTransform:uppercase">Your record</span>
+      <span style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;color:rgba(255,253,249,0.65)">{{ recToggleLabel }}</span>
+    </button>
+    <sc-if value="{{ recOpen }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:14px;maxHeight:min(42vh,380px);overflowY:auto">
+        <sc-for list="{{ recRows }}" as="r" hint-placeholder-count="10">
+          <div style="display:flex;justifyContent:space-between;gap:12px;alignItems:baseline;padding:7px 0;borderBottom:1px solid #D8D0C2;fontFamily:'IBM Plex Mono',monospace;fontSize:12px">
+            <span style="color:rgba(27,24,21,0.6);whiteSpace:nowrap">{{ r.k }}</span>
+            <span style="textAlign:right;color:{{ r.color }}">{{ r.v }}<span style="display:block;fontSize:10px;color:rgba(27,24,21,0.4)">{{ r.src }}</span></span>
+          </div>
+        </sc-for>
+        <p style="fontFamily:'IBM Plex Mono',monospace;fontSize:11px;lineHeight:1.5;color:#8D00D4;margin:12px 0 0">{{ recFoot }}</p>
+        <button onClick="{{ resetRecord }}" style="marginTop:12px;background:transparent;border:1px solid #D8D0C2;color:#1B1815;fontFamily:'IBM Plex Mono',monospace;fontSize:11px;padding:9px 12px;cursor:pointer;width:100%;minHeight:40px" style-hover="background:#F5EFE4">reset — delete this record</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440}}">
+const VENUES = [
+  {slug:'kitchen', name:'Joiners Kitchen', line:'All-day restaurant and bar. Breakfast from eight, last orders at ten.', long:'The flagship. Breakfast from eight, lunch, small plates through the afternoon and a proper dinner menu from six. The bar stays open later than the kitchen.', distance:'South Street', address:'16 South Street, Sheffield, S2 5QX', phone:'0114 299 6477', today:'Open until 11pm', shot:'Joiners Kitchen — dining room, warm light'},
+  {slug:'arms', name:'The Joiners Arms', line:'Pub with nine rooms. Roasts, walkers, dogs.', long:'A corner pub on South Street with nine rooms upstairs. Sunday lunch runs from noon until it goes. Dogs everywhere except the bedrooms.', distance:'On the corner', address:'16 South Street, Sheffield, S2 5QX', phone:'0114 299 6477', today:'Open until 11pm', shot:'The Joiners Arms — South Street exterior, low light'},
+  {slug:'coffee-house', name:'Joiners Coffee House', line:'Coffee and bakery, counter service, two doors down.', long:'Coffee, bread and pastry from six in the morning. Counter service, no table service, and the corner table is worth waiting for.', distance:'Two doors down', address:'16 South Street, Sheffield, S2 5QX', phone:'0114 299 6477', today:'Closed', shot:'Joiners Coffee House — counter and bakery'},
+  {slug:'engine-room', name:'The Engine Room', line:'Cookery classes, supper clubs and private dining, twelve to sixty covers.', long:'The room above Joiners Kitchen. Classes and supper clubs through the week, then twelve to sixty covers for private dining, one long table or several, and a kitchen you can talk to.', distance:'Above Joiners Kitchen', address:'16 South Street, Sheffield, S2 5QX', phone:'0114 299 6477', today:'Classes and events by arrangement', shot:'The Engine Room — class in progress at the long bench'}
+];
+
+const MENUS = {
+  Lunch: [
+    {name:'Welsh rarebit, pickled walnut', price:'£9.50', tags:'V', allergens:'Gluten, milk, mustard, sulphites'},
+    {name:'Hathersage trout, cucumber, dill', price:'£16.00', tags:'GF DF', allergens:'Fish'},
+    {name:'Roast squash, freekeh, sage oil', price:'£14.50', tags:'VG DF', allergens:'Gluten'},
+    {name:'Steak sandwich, onions, horseradish', price:'£17.00', tags:'', allergens:'Gluten, milk, mustard, sulphites'},
+    {name:'Chips, beef dripping', price:'£5.00', tags:'GF DF NF', allergens:'None'}
+  ],
+  Dinner: [
+    {name:'Grouse, bread sauce, game chips', price:'£29.00', tags:'', allergens:'Gluten, milk, celery'},
+    {name:'Hake, mussels, cider', price:'£24.00', tags:'GF', allergens:'Fish, molluscs, milk, sulphites'},
+    {name:'Celeriac, hazelnut, brown butter', price:'£18.50', tags:'V', allergens:'Milk, nuts'},
+    {name:'Hogget, turnip, mint', price:'£26.00', tags:'GF DF NF', allergens:'None'},
+    {name:'Buttermilk pudding, damsons', price:'£8.50', tags:'V GF NF', allergens:'Milk, eggs'}
+  ],
+  Sunday: [
+    {name:'Sirloin of Derbyshire beef', price:'£22.00', tags:'', allergens:'Gluten, milk, eggs, mustard'},
+    {name:'Pork loin, crackling, apple', price:'£20.00', tags:'DF NF', allergens:'Gluten, sulphites'},
+    {name:'Whole roast onion, lentils, gravy', price:'£17.00', tags:'VG DF NF', allergens:'Gluten, celery'},
+    {name:'Extra Yorkshire pudding', price:'£2.50', tags:'V', allergens:'Gluten, milk, eggs'},
+    {name:'Sticky toffee pudding', price:'£8.00', tags:'V NF', allergens:'Gluten, milk, eggs'}
+  ],
+  Drinks: [
+    {name:'Abbeydale Moonshine, pint', price:'£5.20', tags:'VG DF NF', allergens:'Gluten (barley)'},
+    {name:'Thornbridge Jaipur, pint', price:'£5.80', tags:'VG DF NF', allergens:'Gluten (barley)'},
+    {name:'Peak cider, half', price:'£3.10', tags:'VG GF DF NF', allergens:'Sulphites'},
+    {name:'House red, Cotes du Rhone, 175ml', price:'£7.40', tags:'VG GF DF NF', allergens:'Sulphites'},
+    {name:'Coffee House filter, cup', price:'£3.20', tags:'VG GF DF NF', allergens:'None'}
+  ]
+};
+
+const DIETS = [
+  {key:'V', label:'Vegetarian'},
+  {key:'VG', label:'Vegan'},
+  {key:'GF', label:'Gluten free'},
+  {key:'DF', label:'Dairy free'},
+  {key:'NF', label:'Nut free'}
+];
+
+const AIRSHIP = {color:'#8D00D4', lockup:'Airship', isAirship:true, isToggle:false, headFont:"'Montserrat',sans-serif", headWeight:600};
+const TOGGLE = {color:'#1770FD', lockup:'toggle', isAirship:false, isToggle:true, headFont:"'Manrope',Montserrat,sans-serif", headWeight:800};
+
+const PINS = {
+  1:{...AIRSHIP, n:1, where:'Home · hero', title:'Proof of Presence',
+    what:'The page view is recorded against an anonymous device record before anybody fills in anything. When an email address arrives later, this history is already attached to it.',
+    fields:[{k:'device_id',v:'anonymous'},{k:'first_seen',v:'this session'},{k:'pages_viewed',v:'running'},{k:'dwell_seconds',v:'running'},{k:'source',v:'direct'}],
+    journey:[{t:'On view',label:'Anonymous record created or matched'},{t:'On identify',label:'History merged into the named contact'},{t:'Ongoing',label:'Every later visit appends to the same record'}],
+    number:'Every visit', numberLabel:'A record or a waste. There is no third option.', source:'Illustrative. No benchmark claimed.'},
+  2:{...AIRSHIP, n:2, where:'Home · the four places', title:'Venue preference signal',
+    what:'Which venue card a visitor opens is written to the contact record as venue_preference. It weights every later send, so a Hathersage regular does not get Kelham Island offers.',
+    fields:[{k:'venue_preference',v:'derived'},{k:'venue_views',v:'counted per venue'},{k:'last_venue_viewed',v:'timestamped'}],
+    journey:[{t:'On click',label:'venue_preference weighted'},{t:'Next send',label:'Content block selected by venue'},{t:'After 3 signals',label:'Preference locked until it changes'}],
+    number:'4 venues', numberLabel:'One list, four different conversations.', source:'Illustrative. No benchmark claimed.'},
+  3:{...AIRSHIP, n:3, where:'Home · Join the Table', title:'The Joiners Club form',
+    what:'Four fields, written straight to the contact record and grouped so segmentation works from the first submission. No progressive profiling, no second form later.',
+    fields:[{k:'first_name',v:'text'},{k:'email',v:'text'},{k:'birth_date',v:'day, month, year'},{k:'venue_preference',v:'enum'},{k:'group',v:'club-members'},{k:'consent_marketing',v:'true'}],
+    journey:[{t:'Immediate',label:'Welcome email, Table Friday dates'},{t:'-6 weeks',label:'Birthday journey armed'},{t:'Annual',label:'Anniversary journey armed'},{t:'Day 21 quiet',label:'Lapsing journey armed'}],
+    number:'7 fields', numberLabel:'Seven fields arm five journeys that run for years.', source:'Illustrative. No benchmark claimed.'},
+  4:{...AIRSHIP, n:4, where:'Home · Join the Table', title:'Value Exchange',
+    what:'Every field on the form has a stated return, written next to the form rather than in a privacy policy. The guest knows what they get before they type.',
+    fields:[{k:'principle',v:'stated return per field'},{k:'fields_without_return',v:'0'},{k:'consent_type',v:'explicit'}],
+    journey:[{t:'Before',label:'Ask stated with its return'},{t:'On submit',label:'Return delivered in the first email'},{t:'Ongoing',label:'Cadence promise held: two a month'}],
+    number:'[SOURCE NEEDED]', numberLabel:'Form completion uplift when the value exchange is stated.', source:'Airship form completion benchmark. Not yet sourced or cleared.',
+    argument:'Every field earns its place or comes off the form.'},
+  5:{...TOGGLE, n:5, where:'Home · Gifts', title:'Presold revenue',
+    what:'A gift card is money in the bank today against a visit that happens later, usually with more spend attached than the card carries. Toggle handles the product, the validity rules and the redemption at the till.',
+    fields:[{k:'product_type',v:'gift_card | experience | ticket'},{k:'face_value',v:'currency'},{k:'purchased_at',v:'timestamp'},{k:'expiry_rule',v:'from product'},{k:'redeemed_at',v:'null until used'}],
+    journey:[{t:'Day 0',label:'Sale settles, card issued'},{t:'Day 30',label:'Reminder if unredeemed'},{t:'Day 60',label:'Second reminder'},{t:'-30 days',label:'Expiry warning'}],
+    number:'[SOURCE NEEDED]', numberLabel:'Average redemption spend above card face value.', source:'Toggle redemption uplift. Not yet sourced or cleared.'},
+  6:{...AIRSHIP, n:6, where:'The Arms · menus', title:'Menu interest signal',
+    what:'Which menu tab a visitor opens and which dietary filter they apply is written to the contact record. It drives dish selection in later emails, so a vegan does not get a grouse photograph.',
+    fields:[{k:'menu_viewed',v:'lunch | dinner | sunday | drinks'},{k:'dietary_filter',v:'multi-select'},{k:'allergen_expanded',v:'dish id'}],
+    journey:[{t:'On filter',label:'Dietary flag set on the contact'},{t:'Next send',label:'Dish blocks filtered to match'},{t:'Ongoing',label:'Flag persists across venues'}],
+    number:'0 forms', numberLabel:'This is captured without asking a single question.', source:'Illustrative. No benchmark claimed.'},
+  7:{...AIRSHIP, n:7, where:'The Arms · rooms', title:'Stay data and the anniversary',
+    what:'Stay history is appended to the contact: dates, room, lead time, spend. The first stay date becomes the anniversary trigger, captured passively with no form and no ask.',
+    fields:[{k:'first_stay_date',v:'derived'},{k:'stay_count',v:'integer'},{k:'booking_lead_days',v:'integer'},{k:'room_type',v:'enum'},{k:'dog',v:'boolean'}],
+    journey:[{t:'+1 day',label:'Post-stay thank you and feedback'},{t:'+11 months',label:'Anniversary invitation to book'},{t:'Annual',label:'Repeats with no maintenance'}],
+    number:'0 questions', numberLabel:'The date was never asked for.', source:'Illustrative. No benchmark claimed.',
+    argument:'We never asked for this date. We just remembered it.'},
+  8:{...AIRSHIP, n:8, where:'The Arms · also ours', title:'Cross-venue segmentation',
+    what:'Four venues on one contact record means the gaps are visible. A coffee regular who has never booked a table is a segment, not a guess.',
+    fields:[{k:'venues_visited',v:'array'},{k:'venues_never_booked',v:'derived'},{k:'visit_frequency',v:'per venue'}],
+    journey:[{t:'Nightly',label:'Segment recalculated'},{t:'On match',label:'One email, one offer, one Tuesday'},{t:'On conversion',label:'Contact exits the segment'}],
+    number:'1,840', numberLabel:'Coffee House regulars who have never booked the Kitchen.', source:'Illustrative example, not a measured figure.'},
+  9:{...AIRSHIP, n:9, where:'Joiners Club · the seven things we ask', title:'The Value Exchange pattern',
+    what:'This block is the pattern in full: seven fields, seven stated returns, nothing asked that is not paid back. It is a UI rule, not a slogan.',
+    fields:[{k:'first_name',v:'→ written to, not "valued customer"'},{k:'email',v:'→ two a month, never more'},{k:'mobile',v:'→ one text if the table is at risk'},{k:'birth_date',v:'→ a table and a glass'},{k:'anniversary_date',v:'→ the same on your own date'},{k:'postcode',v:'→ your nearest place only'},{k:'venue_preference',v:'→ your place, not all four'}],
+    journey:[{t:'Design',label:'Every field gets a stated return'},{t:'Review',label:'Fields without one are deleted'},{t:'Result',label:'Shorter form, better data'}],
+    number:'7 of 7', numberLabel:'Fields on this form with a stated return.', source:'By design.',
+    argument:'Every field on a hospitality form should have a stated return. The ones that do not should be deleted.'},
+  10:{...AIRSHIP, n:10, where:'Joiners Club · success state', title:'The success state',
+    what:'The page transforms rather than showing a modal. Behind it, the contact is written, the groups applied and four journeys armed with real trigger dates.',
+    fields:[{k:'contact_id',v:'created'},{k:'group',v:'club-members'},{k:'segments_matched',v:'3 of 14'},{k:'journeys_armed',v:'4'}],
+    journey:[{t:'Now',label:'Welcome email with Table Friday dates'},{t:'3 Oct',label:'First Table Friday reminder'},{t:'-6 weeks',label:'Birthday invitation to book'},{t:'+12 months',label:'Anniversary of joining'}],
+    number:'4 journeys', numberLabel:'Armed by one submission, running for years.', source:'Illustrative. No benchmark claimed.'},
+  11:{...AIRSHIP, n:11, where:'Joiners Club · a member\u2019s year', title:'Birthdays',
+    what:'The birthday journey starts six weeks out, not the day before. At six weeks you are the first idea. At three days you are competing with a decision already made.',
+    fields:[{k:'birth_date',v:'day, month, year'},{k:'birthday_booked',v:'boolean'},{k:'party_size',v:'integer'},{k:'preorder',v:'boolean'}],
+    journey:[{t:'-6 weeks',label:'Invitation to book'},{t:'-2 weeks',label:'Reminder if no booking'},{t:'-3 days',label:'Confirmation and pre-order'},{t:'+1 day',label:'Thank you and feedback'}],
+    number:'[SOURCE NEEDED]', numberLabel:'Booking rate on the birthday journey.', source:'Airship birthday journey booking rate. Not yet sourced or cleared.',
+    argument:'Six weeks out you are the first idea. Three days out you are competing with a decision already made.'},
+  12:{...AIRSHIP, n:12, where:'Joiners Club · a member\u2019s year', title:'Anniversaries',
+    what:'Derived, not asked. First booking date, first stay date, first Table Friday. Each becomes an annual trigger that fires with no maintenance and no campaign to build.',
+    fields:[{k:'first_booking_date',v:'derived'},{k:'first_stay_date',v:'derived'},{k:'joined_table_date',v:'derived'}],
+    journey:[{t:'-3 weeks',label:'Anniversary invitation'},{t:'-1 week',label:'Reminder if no booking'},{t:'Annual',label:'Repeats forever, unattended'}],
+    number:'0 maintenance', numberLabel:'Built once. Runs every year after that.', source:'Illustrative. No benchmark claimed.'},
+  13:{...AIRSHIP, n:13, where:'Joiners Club · the join block', title:'The Value Exchange',
+    what:'The newsletter form is replaced with an incentive-led sign-up: a reward on joining, birthday and celebration incentives, and a monthly prize draw. The ask is prominent across every digital and in-venue touchpoint rather than buried in a footer.',
+    fields:[{k:'source',v:'web | QR | POS | competition'},{k:'reward_on_join',v:'issued at sign-up'},{k:'celebration_dates',v:'birthday, anniversary'},{k:'prize_draw_entry',v:'monthly'},{k:'segment_route',v:'by form and source'},{k:'tier',v:'prospect → platinum'}],
+    journey:[{t:'Immediate',label:'Welcome email sets expectations'},{t:'Delayed',label:'First incentive held back to earn a repeat visit'},{t:'35–60 days',label:'Structured awareness sequence'},{t:'Annual',label:'Check-in keeps the lifecycle connection'},{t:'180+ days',label:'Lapsed re-engagement'}],
+    number:'5 tiers', numberLabel:'Prospect, Bronze, Silver, Gold, Platinum. Behaviour-based rewards, not points.', source:'The Value Exchange, Airship. Internal deck, no external benchmark claimed.',
+    argument:'Surprise and delight, not constant discounting.'},
+  14:{...AIRSHIP, n:14, where:'Parties · group bookers', title:'Single Customer View',
+    what:'Party bookers are a segment, and the Single Customer View puts that segment on a live dashboard next to every other one. Percentage of base, spend, value and demographics at a glance, with no exports to stitch together.',
+    fields:[{k:'segment',v:'parties of 8+'},{k:'pct_of_base',v:'share of database'},{k:'segment_movement',v:'7 / 14 / 30 / 60 / 90 days'},{k:'avg_spend_per_visit',v:'currency'},{k:'vital_stats',v:'customers, value, visits, tenure'},{k:'demographics',v:'age and gender'}],
+    journey:[{t:'Overnight',label:'Segment membership refreshes'},{t:'On entry',label:'Journey triggers, email sends the next day'},{t:'Ongoing',label:'Keeps sending as new people qualify'},{t:'Proof',label:'Proof of Presence links the journey to real visits and spend'}],
+    number:'3,150', numberLabel:'Guests in the parties of 8+ segment.', source:'Single Customer View and Segment Journey Triggers, Airship. Example tile figure, not a Joiners number.',
+    argument:'Set the audience once. Send forever.'},
+  15:{...AIRSHIP, n:15, where:'Home · hero', title:'What running the journeys is worth',
+    what:'Airship compared accounts with the core journeys switched on against accounts without them, across five months of trading. The gap is not marginal.',
+    fields:[{k:'date_triggers',v:'live / not live'},{k:'welcome_journey',v:'live / not live'},{k:'birthday_journey',v:'live / not live'},{k:'measure_1',v:'email click to visit conversion'},{k:'measure_2',v:'average Proofs of Presence'}],
+    journey:[{t:'Date triggers',label:'+27% click to visit, +55% average PoPs'},{t:'Welcome',label:'+68% click to visit, +37% average PoPs'},{t:'Birthday',label:'+34% click to visit, +60% average PoPs'}],
+    number:'+68%', numberLabel:'Email click-to-visit conversion uplift where the welcome journey is live.', source:'Airship & Toggle Best Practice 2026. Averages across five months, January to May 2023.',
+    argument:'Three journeys, built once. Every account without them is leaving that on the table.'},
+  16:{...AIRSHIP, n:16, where:'Home · what\u2019s on', title:'Competitions as a data engine',
+    what:'A competition is the cheapest data you will ever buy. Chopstix ran one from an Airship form embedded in their own site, with an immediate bounce-back email confirming the entry and the winner drawn using Randomise across every entrant.',
+    fields:[{k:'entry_route',v:'embedded Airship form'},{k:'bounce_back',v:'immediate confirmation'},{k:'winner_selection',v:'Randomise'},{k:'source',v:'tracked per competition'},{k:'consent_marketing',v:'captured at entry'}],
+    journey:[{t:'On entry',label:'Bounce-back email confirms the entry'},{t:'Monthly',label:'Low-effort giveaway, prize varied by target segment'},{t:'On close',label:'Winner email sent to all entrants via Randomise'},{t:'After',label:'Entrants feed the welcome journey'}],
+    number:'1,200', numberLabel:'Entries to one Chopstix competition from a form on their own website.', source:'Airship & Toggle Best Practice 2026, Chopstix example.'},
+  17:{...AIRSHIP, n:17, where:'Home · footer, two emails a month', title:'What the best operators actually send',
+    what:'The brands Airship rates highest almost never send the same thing to the whole database. They send localised, seasonal and reactive, with layouts that change to suit the message.',
+    fields:[{k:'send_scope',v:'segment, rarely whole base'},{k:'content',v:'localised and merged blocks'},{k:'cadence',v:'weekly, but not to everyone'},{k:'reactive_trigger',v:'weather, events, what\u2019s on'},{k:'layout',v:'varies to support the message'}],
+    journey:[{t:'Weekly',label:'Localised send to a segment, not the base'},{t:'Seasonal',label:'Content led by the time of year'},{t:'Reactive',label:'Surprise and delight, triggered by weather or events'}],
+    number:'Rarely', numberLabel:'How often a good operator sends the same email to the whole database.', source:'Airship & Toggle Best Practice 2026, \u201CWhat other brands are doing well\u201D.'},
+  18:{...AIRSHIP, n:18, where:'Home · Joiners Club band', title:'Data collection: the basics',
+    what:'Collect the same information everywhere, and make every form a form. Contact-us and enquiry pages that fire a mailto command capture nothing and offer no opt-in.',
+    fields:[{k:'fields',v:'identical across every form'},{k:'mailto_links',v:'replaced with forms'},{k:'opt_in',v:'on every form'},{k:'form_source',v:'tracked'},{k:'passive_capture',v:'EPOS, WiFi, booking, redemption'}],
+    journey:[{t:'Active',label:'The guest opts in and joins the CRM'},{t:'Passive',label:'The majority of data arrives without being asked for'},{t:'Routing',label:'Every form lands in the right segment'}],
+    number:'Most of it', numberLabel:'The share of a good database that arrives through passive collection.', source:'Airship & Toggle Best Practice 2026, Data Collection: The Basics.',
+    argument:'A mailto link is a form that captures nothing.'},
+  19:{...AIRSHIP, n:19, where:'Joiners Club · the seven things', title:'Form design, learned from Ego Club',
+    what:'Ego Club\u2019s sign-up is the reference for a club form aimed at an older, higher-spending audience. It is why this form asks for an anniversary and a mobile, not just a birthday.',
+    fields:[{k:'anniversary_date',v:'a second occasion to trade on'},{k:'email',v:'entered twice to cut errors'},{k:'drink_preference',v:'drop-down'},{k:'offers',v:'stated clearly on the form'},{k:'fulfilment',v:'single-use vouchers, POS integrated'}],
+    journey:[{t:'On join',label:'Offers delivered as single-use vouchers'},{t:'At the till',label:'Voucher validated through the POS integration'},{t:'Anniversary',label:'Second occasion traded, Valentine\u2019s included'}],
+    number:'2 dates', numberLabel:'A birthday and an anniversary give you two occasions a year instead of one.', source:'Airship & Toggle Best Practice 2026, Ego Club example.'},
+  20:{...AIRSHIP, n:20, where:'Joiners Club · what joining gets you', title:'Proof of Presence tiers',
+    what:'Guests sit in a visit-frequency tier and the email they get depends on which one. Movement between tiers is itself the trigger, so the journey drives the next visit rather than rewarding the last one.',
+    fields:[{k:'tier',v:'lapsed | prospect | bronze | silver | gold | platinum'},{k:'tier_movement',v:'triggers the send'},{k:'treatment',v:'incentive or reward by tier'},{k:'lapsed_window',v:'180+ days'}],
+    journey:[{t:'Prospect',label:'Strong incentive to drive a first visit'},{t:'Bronze / Silver',label:'Reward the previous visit, then incentivise the next'},{t:'Gold / Platinum',label:'VIP information and reward, not discount'},{t:'Lapsed',label:'Win-back message at 180+ days'}],
+    number:'6 tiers', numberLabel:'Lapsed through to Platinum, each with its own treatment.', source:'Airship & Toggle Best Practice 2026, Driving Visits.',
+    argument:'Behaviour-based rewards, not points.'},
+  21:{...AIRSHIP, n:21, where:'Joiners Club · success state', title:'The welcome journey',
+    what:'Five emails over two weeks, each with one job and one call to action. It introduces the brand, collects the data the sign-up form did not, and ends by letting the guest tag themselves.',
+    fields:[{k:'trigger',v:'sign-up +0'},{k:'self_tag',v:'guest-selected interests'},{k:'unique_code',v:'per contact'},{k:'key_date_optouts',v:'guest can mute a date'},{k:'whitelist_prompt',v:'deliverability'}],
+    journey:[{t:'+0 days',label:'Promise and the value exchange. CTA: whitelist us'},{t:'+1 day',label:'Our food and our rooms. CTA: book a table'},{t:'+3 days',label:'Voucher with a unique code. CTA: download'},{t:'+7 days',label:'Gift. CTA: claim'},{t:'+14 days',label:'Segmenter form. CTA: tell us what you care about'}],
+    number:'5 emails', numberLabel:'Two weeks of welcome, then it can run for a year. \u201CCan you believe it has been a year.\u201D', source:'Airship & Toggle Best Practice 2026, The Welcome Journey.',
+    argument:'The welcome journey is where you collect what the form was too short to ask.'},
+  22:{...TOGGLE, n:22, where:'Joiners Club · success state', title:'The £5 welcome voucher',
+    what:'A Toggle voucher inside the Airship welcome journey. It is the single best-performing mechanic in the deck: over half of them get redeemed, and the basket is worth six times the voucher.',
+    fields:[{k:'voucher_value',v:'£5'},{k:'delivery',v:'inside the welcome journey'},{k:'redemption',v:'at the till, POS integrated'},{k:'basket_spend',v:'tracked per redemption'}],
+    journey:[{t:'On join',label:'Voucher issued with the welcome email'},{t:'On redemption',label:'Visit and spend written back to the contact'},{t:'After',label:'Read-to-visit conversion measured, not guessed'}],
+    number:'55%', numberLabel:'Redemption rate on a £5 Toggle welcome voucher. 3,000 redeemed generated £20k of additional revenue, at an average basket of £31.', source:'Airship & Toggle Best Practice 2026, anonymised client, 1 January to 22 April 2024. Clear before external use.'},
+  23:{...AIRSHIP, n:23, where:'Joiners Club · a member\u2019s year', title:'What Airship recommends for birthdays',
+    what:'Four emails, and the two reminders suppress anyone who has already redeemed. Guests with a missing date of birth do not need to rejoin, they just complete the one field.',
+    fields:[{k:'birth_date',v:'day, month, year'},{k:'offer_redeemed',v:'suppression flag'},{k:'unique_code',v:'per email'},{k:'callback_request',v:'for larger parties'},{k:'sms_consent',v:'reinforces the email'}],
+    journey:[{t:'DoB -45',label:'Email 1: birthday offer. CTA: claim'},{t:'DoB -14',label:'Email 2: reminder, suppressed if redeemed'},{t:'DoB',label:'Email 3: happy birthday, no suppression'},{t:'DoB +7',label:'Email 4: reminder, suppressed if redeemed'}],
+    number:'4 emails', numberLabel:'An easy win: quick to set up, warm to receive, and it books tables.', source:'Airship & Toggle Best Practice 2026, Birthdays.',
+    argument:'Add a click-for-callback to one of the birthday emails and the bigger parties come to you.'},
+  24:{...AIRSHIP, n:24, where:'Joiners Club · bring someone new', title:'Rewards journeys',
+    what:'Three months of rewards, each one earned. The next reward only sends once the last was redeemed, so only genuinely repeat guests keep getting them.',
+    fields:[{k:'booking_type',v:'reward-eligible type on the booking platform'},{k:'reward_issued',v:'night before the reservation'},{k:'redeemed',v:'boolean, gates the next send'}],
+    journey:[{t:'Post visit',label:'Email with a booking link to the next visit type'},{t:'Night before',label:'Reward voucher triggered by the booking type'},{t:'On redemption',label:'Next reward email released'}],
+    number:'3 months', numberLabel:'A rolling reward sequence that only pays out to guests who come back.', source:'Airship & Toggle Best Practice 2026, Rewards Journeys.'},
+  25:{...AIRSHIP, n:25, where:'The Arms · rooms', title:'Sell the little things',
+    what:'Rooms guests choose on detail. Dog-friendly rooms and an EV charger convert better than an adjective, and loyalty members get their own newsletter about room discounts rather than the general send.',
+    fields:[{k:'dog',v:'boolean'},{k:'ev_charging',v:'boolean'},{k:'room_type',v:'enum'},{k:'loyalty_member',v:'separate send list'}],
+    journey:[{t:'Pre-stay',label:'Confirm the details that made them book'},{t:'Members',label:'Separate newsletter: monthly rewards and room discounts'},{t:'Post-stay',label:'Feedback, then the anniversary trigger'}],
+    number:'Specifics', numberLabel:'\u201CDog friendly rooms\u201D and \u201CEV charging\u201D outperform \u201Cwelcoming\u201D.', source:'Airship & Toggle Best Practice 2026, Hotels and Pubs examples.'},
+  26:{...AIRSHIP, n:26, where:'The Arms · also ours', title:'Filling a new site from nothing',
+    what:'Rudy\u2019s opened in Soho with no local database. They built a lookalike audience from their best northern customers, offered a free pizza, and drip-fed the booking email over seven hours so the kitchen survived it.',
+    fields:[{k:'lookalike_audience',v:'built from best-customer profiles'},{k:'holding_group',v:'\u201Cwaiting\u201D'},{k:'drip_rate',v:'7,000 emails over 7 hours'},{k:'booking_link',v:'ResDiary form in the email'}],
+    journey:[{t:'Step 1',label:'Targeted ads to a lookalike audience, into an Airship form'},{t:'Step 2',label:'Data written to a waiting group'},{t:'Step 3',label:'Drip-fed email directs the waiting list to book'}],
+    number:'17 minutes', numberLabel:'To fill the first three days of trade. 6,040 pizzas claimed in two hours, 92% of claimants turned up, and a post-visit email took them to 26th on Tripadvisor in London.', source:'Airship & Toggle Best Practice 2026, Rudy\u2019s Soho.'},
+  27:{...AIRSHIP, n:27, where:'Places · loyalty', title:'Loyalty that sits on top of the CRM',
+    what:'Loyalty and CRM are not the same system and should not pretend to be. Almond Family Pubs and New Dawn Pubs run Zonal loyalty alongside Airship: the club handles points, Airship handles who hears what.',
+    fields:[{k:'member_number',v:'shown in every email'},{k:'loyalty_points',v:'from the till, swapped for spend'},{k:'regulars_club',v:'separate list and content'},{k:'wallet_pass',v:'card lives in the digital wallet'}],
+    journey:[{t:'On sign-up',label:'Welcome journey introduces the loyalty club'},{t:'Other routes',label:'Welcome journey pushes them to join loyalty too'},{t:'Ongoing',label:'Every email shows the member number or the prompt'},{t:'Regulars',label:'Separate sends with rewards assigned in the app'}],
+    number:'10th visit', numberLabel:'Tortilla\u2019s Burrito Society: stamp-based, card in the digital wallet, scanned at the point of purchase, free burrito on the tenth.', source:'Airship & Toggle Best Practice 2026, Zonal Loyalty and Tortilla examples.'},
+  28:{...AIRSHIP, n:28, where:'Parties · Christmas', title:'The Christmas journey, and January',
+    what:'December is won in the enquiry and January is won in December. The same journey does both: prize draw and menu while they are booking, then a voucher that only spends in January.',
+    fields:[{k:'christmas_booker',v:'group, carried year on year'},{k:'prize_draw_entry',v:'on sign-up'},{k:'january_voucher',v:'unique code'},{k:'qr_capture',v:'scanned on the day of the booking'}],
+    journey:[{t:'Immediately',label:'Prize draw. CTA: enter'},{t:'+2 days',label:'Christmas menu. CTA: find out more'},{t:'+6 days',label:'Reminder. CTA: claim your gift'},{t:'+10 days',label:'Thanks for visiting in December. CTA: claim your January voucher'}],
+    number:'Two months', numberLabel:'Revenue in December, and again in January, which every operator knows is the quiet one.', source:'Airship & Toggle Best Practice 2026, Christmas and January Campaign.',
+    argument:'Put a QR code on the table on the day of the booking and the party becomes contacts, not covers.'},
+  29:{...TOGGLE, n:29, where:'Gift Shop · physical cards', title:'The card is the first touchpoint',
+    what:'A physical gift card is often the first thing a new guest ever holds of yours. Daniel Thwaites treat theirs as brand, not stationery. Permanently Unique went further and used the card itself as the offer.',
+    fields:[{k:'product_type',v:'physical | digital | experience'},{k:'face_value',v:'currency'},{k:'validity_rules',v:'from the product'},{k:'carrier',v:'branded sleeve and insert'}],
+    journey:[{t:'Purchase',label:'Cash banked today'},{t:'Gifting',label:'Recipient becomes a contact in their own right'},{t:'Redemption',label:'Visit and spend written back'}],
+    number:'£499', numberLabel:'Permanently Unique sold a metal seasonal card for Tattu in 2024 carrying £800 of spend across four visits, for £499.', source:'Airship & Toggle Best Practice 2026, Physical Gifting examples.',
+    argument:'A gift card should not just represent the brand. It should elevate it.'},
+  30:{...AIRSHIP, n:30, where:'The Engine Room · classes and supper clubs', title:'A diary is a segmentation tool',
+    what:'Every date in this diary is a segment waiting to happen. Which type a guest opens, which they book and which they let sell out without acting is written to the contact record and decides what they are told about next.',
+    fields:[{k:'event_type_viewed',v:'classes | supper clubs | tastings | private hire'},{k:'event_booked',v:'event id'},{k:'ticket_product',v:'Toggle, dated and limited'},{k:'waiting_list',v:'group, for sold-out dates'},{k:'lead_time_days',v:'integer'}],
+    journey:[{t:'On filter',label:'Event interest written to the contact'},{t:'Sold out',label:'Added to the waiting group, told first next time'},{t:'-7 days',label:'Reminder and pre-order'},{t:'+1 day',label:'Feedback, then the next date that fits what they booked'}],
+    number:'1 week', numberLabel:'Members hear about new dates a week before general sale, which is what a members\u2019 window is actually for.', source:'Illustrative. Ticketing mechanics per Toggle products.',
+    argument:'A dated, limited product sells out. A permanent one never does.'},
+  31:{...AIRSHIP, n:31, where:'WiFi · the splash page', title:'WiFi capture through Fydelia',
+    what:'The splash page is Fydelia, and it writes straight into Airship. The device is recognised on the next visit so the guest never fills this in twice, and the interaction is appended to the contact whether or not they opt in.',
+    fields:[{k:'email',v:'text'},{k:'mac_address',v:'device, recognised on return'},{k:'venue',v:'detected from the SSID'},{k:'connected_at',v:'timestamp'},{k:'dwell_minutes',v:'session length'},{k:'birth_date',v:'day, month, year, optional'},{k:'consent_email',v:'boolean'},{k:'consent_sms',v:'boolean'}],
+    journey:[{t:'On connect',label:'Presence appended to the contact, consent or not'},{t:'If opted in',label:'Welcome journey starts'},{t:'Return visit',label:'Device recognised, no form shown'},{t:'Ongoing',label:'Every connection is another visit on the record'}],
+    number:'0 friction', numberLabel:'Proof of Presence without a consent wall. Marketing only where the box was ticked.', source:'Fydelia splash page for Joiners Kitchen, live. Mechanics per Fydelia and Airship.',
+    argument:'Presence without consent friction. Marketing only with it.'},
+  32:{...AIRSHIP, n:32, where:'WiFi · the splash page', title:'Time-of-day patterning',
+    what:'Three coffee visits before nine on weekdays is a commuter, not a weekend browser. The connection times build that picture without a single question, and the send time changes to match.',
+    fields:[{k:'connection_times',v:'array of timestamps'},{k:'day_part',v:'derived'},{k:'weekday_pattern',v:'derived'},{k:'send_time',v:'set per contact'}],
+    journey:[{t:'3 connections',label:'Pattern established'},{t:'Nightly',label:'Segment recalculated'},{t:'Next send',label:'Sent at the hour that guest is actually awake and near you'}],
+    number:'Before 9am', numberLabel:'The difference between a commuter and a browser, and between an email read and an email deleted.', source:'Illustrative. Patterning derived from connection data.'},
+  33:{...AIRSHIP, n:33, where:'The Joints · national what\u2019s on', title:'The diary is the campaign calendar',
+    what:'Five hundred and twenty-one dates, each with an impact rating and a lead time. Sort by start date minus lead time and you have a working marketing calendar rather than a list of things you missed.',
+    fields:[{k:'event_date',v:'fixed | confirmed | typical'},{k:'impact',v:'critical | high | medium | low'},{k:'scope',v:'UK-wide or city'},{k:'lead_weeks',v:'when the campaign starts'},{k:'segment_target',v:'chosen per date'}],
+    journey:[{t:'Minus lead time',label:'Campaign built, stock and staffing set'},{t:'Minus 3 weeks',label:'Send to the segment that date actually suits'},{t:'On the day',label:'Capture at the till and on the table'},{t:'After',label:'Attendees become a segment for next year'}],
+    number:'521 dates', numberLabel:'Critical and High are worth a plan. Medium and Low are menu and social content, and nothing more.', source:'UK Hospitality Trading Diary, September 2026 to December 2027.',
+    argument:'Sunday 14 February 2027 is Valentine\u2019s Day, England v France and Super Bowl LXI at once. Pick your audience before you write the menu.'},
+  34:{...AIRSHIP, n:34, where:'Contact us · the form', title:'A contact form is a form, not a mailto',
+    what:'Every enquiry is routed by topic to the right segment and the right named person, and the reason for the enquiry is written to the contact record. A mailto link would have captured none of it.',
+    fields:[{k:'enquiry_topic',v:'booking | party | rooms | classes | gifts | feedback'},{k:'first_name',v:'text'},{k:'email',v:'text'},{k:'message',v:'free text'},{k:'owner',v:'named person, by topic'},{k:'consent_marketing',v:'separate tick, never bundled'}],
+    journey:[{t:'Immediate',label:'Acknowledgement naming who will reply'},{t:'Same day',label:'Routed to the owner for that topic'},{t:'On close',label:'Outcome written to the record'},{t:'If opted in',label:'Welcome journey starts, separately from the enquiry'}],
+    number:'7 routes', numberLabel:'One form, seven destinations, seven segments. The guest still only sees one form.', source:'Airship & Toggle Best Practice 2026, Data Collection: The Basics.',
+    argument:'Segment enquiry follow-ups by type, or you are answering everyone the same way.'}
+};
+
+const CONTACT_OWNERS = {
+  'A booking': 'Ruth, who runs the floor',
+  'A party or private hire': 'Dan, who does the events diary',
+  'Rooms': 'Priya, who looks after the nine rooms',
+  'Classes and events': 'Marcus, the head chef',
+  'Gift cards': 'Ellie in the office',
+  'Feedback': 'Ruth, who runs the floor',
+  'Something else': 'Ellie in the office'
+};
+
+const DIARY_TYPES = ['Everything', 'Classes', 'Supper clubs', 'Tastings', 'Private hire'];
+
+const DIARY = [
+  {id:'d1', date:'Thu 17 Sep', time:'6.30pm', type:'Classes', title:'Bread, start to finish', note:'Four hours, one oven each, everything you make goes home with you.', price:'£85', status:'4 places left'},
+  {id:'d2', date:'Sat 20 Sep', time:'7pm', type:'Supper clubs', title:'Peak District supper club', note:'Six courses, everything within twenty miles, the kitchen in the room.', price:'£65', status:'Sold out'},
+  {id:'d3', date:'Wed 24 Sep', time:'7pm', type:'Tastings', title:'Abbeydale and cheese', note:'Six beers, six cheeses, a brewer who will not stop talking.', price:'£38', status:'Available'},
+  {id:'d4', date:'Thu 2 Oct', time:'10am', type:'Classes', title:'Knife skills, properly', note:'Three hours. You will chop faster than everyone you live with.', price:'£65', status:'Available'},
+  {id:'d5', date:'Thu 9 Oct', time:'7pm', type:'Supper clubs', title:'Game supper club', note:'Grouse, hare and a room that smells like October.', price:'£65', status:'8 places left'},
+  {id:'d6', date:'Sat 18 Oct', time:'11am', type:'Classes', title:'Pasta by hand', note:'No machine. Four shapes, one sauce, lunch at the end of it.', price:'£75', status:'Available'},
+  {id:'d7', date:'Wed 29 Oct', time:'6.30pm', type:'Tastings', title:'Cotes du Rhone, six glasses', note:'Six wines from one valley, poured next to the food they were made for.', price:'£45', status:'Available'},
+  {id:'d8', date:'Any date', time:'By arrangement', type:'Private hire', title:'The long table, twelve to sixty', note:'One table or several. We write the menu with you, not at you.', price:'From £48 a head', status:'Enquire'}
+];
+
+const SEGMENTS = [
+  {name:'Sunday lunch regulars', def:'Three or more Sunday bookings in twelve months.', count:'2,410'},
+  {name:'Rooms guests who have never eaten in the Kitchen', def:'One or more stays, zero Kitchen bookings.', count:'640'},
+  {name:'Lapsing coffee, 21 days quiet', def:'Weekly coffee pattern, nothing for three weeks.', count:'1,120'},
+  {name:'Christmas 2025 party bookers', def:'Party enquiry converted last December.', count:'380'},
+  {name:'Gift card recipients who have not redeemed', def:'Card issued over 30 days ago, balance untouched.', count:'510'},
+  {name:'Champions with two or more friends', def:'Two or more shared links claimed and spent.', count:'96'},
+  {name:'Walkers', def:'Arms bookings, weekend lunch, no rooms.', count:'1,760'},
+  {name:'Dog owners', def:'Dog flag set on any booking or stay.', count:'890'},
+  {name:'Commuters', def:'Three or more coffee visits before 9am on weekdays.', count:'1,340'},
+  {name:'Birthday month, no booking', def:'Birthday within six weeks, nothing in the diary.', count:'420'},
+  {name:'Corporate buyers', def:'Bulk order or Kitchen enquiry in twelve months.', count:'210'},
+  {name:'Dietary: vegan or vegetarian', def:'Filter applied on any menu, or noted at booking.', count:'1,480'},
+  {name:'High spend, low frequency', def:'Top quartile spend, two or fewer visits a year.', count:'560'},
+  {name:'Feedback unresolved', def:'Score of two or less, issue still open. Suppressed.', count:'34'}
+];
+
+class Component extends DCLogic {
+  state = {
+    route:'home', reveal:false, activePin:null, recOpen:false, menuOpen:false, frame:'desktop',
+    vw: (typeof window !== 'undefined' ? Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) || 1440 : 1440),
+    tipSeen:false, menuTab:'Sunday', diets:[], openDish:null,
+    erTab:'whats-on',
+    contact:{topic:'A booking', name:'', email:'', message:'', optIn:false}, contactSent:false,
+    wo:[], woQ:'', woImpact:'Any', woCategory:'Any', woScope:'Any', woMonth:'Any', woLimit:40, woOpen:null,
+    diaryType:'Everything', wifiState:'form', wifiEmail:'', wifiOptIn:false, wifiSms:false, wifiDob:'', wifiDobYear:'',
+    form:{name:'', email:'', mobile:'', birthday:'', birthYear:'', anniversary:'', anniversaryYear:'', postcode:'', venue:'Joiners Kitchen'},
+    joined:false,
+    rec:{pages:['home'], seconds:0, venueViews:{}, interests:[], name:null, email:null, birthday:null, venue:null}
+  };
+
+  componentDidMount() {
+    if (!document.getElementById('airship-forms-embed')) {
+      const sc = document.createElement('script');
+      sc.id = 'airship-forms-embed';
+      sc.src = 'https://forms.airship.co.uk/assets/js/embed.js';
+      sc.async = true;
+      document.body.appendChild(sc);
+    }
+    import('./diary-data.js').then(m => this.setState({wo: m.DIARY_2026.map(d => ({...d, scope: (d.scope||'').trim()}))})).catch(() => {});
+    this._t = setInterval(() => this.setState(s => ({rec:{...s.rec, seconds:s.rec.seconds + 1}})), 1000);
+    this._r = () => {
+      const w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      if (w && w !== this.state.vw) this.setState({vw: w});
+    };
+    this._r();
+    requestAnimationFrame(this._r);
+    setTimeout(this._r, 0);
+    setTimeout(this._r, 250);
+    window.addEventListener('resize', this._r);
+    if (window.ResizeObserver) {
+      this._ro = new ResizeObserver(this._r);
+      this._ro.observe(document.documentElement);
+      if (document.body) this._ro.observe(document.body);
+    }
+    this._k = (e) => {
+      if (e.key === 'Escape') this.setState({activePin:null});
+      if ((e.key === 'j' || e.key === 'J') && !/^(INPUT|SELECT|TEXTAREA)$/.test((e.target && e.target.tagName) || '')) this.toggleReveal();
+    };
+    window.addEventListener('keydown', this._k);
+    try {
+      const saved = sessionStorage.getItem('joiners-reveal');
+      if (saved === '1') this.setState({reveal:true});
+      if (sessionStorage.getItem('joiners-tip') === '1') this.setState({tipSeen:true});
+    } catch (e) {}
+  }
+  componentWillUnmount() {
+    clearInterval(this._t);
+    window.removeEventListener('resize', this._r);
+    if (this._ro) this._ro.disconnect();
+    window.removeEventListener('keydown', this._k);
+  }
+
+  toggleReveal = () => this.setState(s => {
+    const reveal = !s.reveal;
+    try { sessionStorage.setItem('joiners-reveal', reveal ? '1' : '0'); } catch (e) {}
+    return {reveal, activePin: reveal ? s.activePin : null, route: (!reveal && s.route === 'whats-on') ? 'home' : s.route};
+  });
+
+  dismissTip = () => {
+    try { sessionStorage.setItem('joiners-tip', '1'); } catch (e) {}
+    this.setState({tipSeen:true});
+  };
+
+  go = (route, venueSlug) => (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState(s => {
+      const views = {...s.rec.venueViews};
+      if (venueSlug) views[venueSlug] = (views[venueSlug] || 0) + 1;
+      const pages = s.rec.pages.indexOf(route) === -1 ? s.rec.pages.concat([route]) : s.rec.pages;
+      return {route, activePin:null, menuOpen:false, rec:{...s.rec, pages, venueViews:views}};
+    });
+    window.scrollTo(0, 0);
+  };
+
+  noteInterest = (label) => this.setState(s => ({
+    rec:{...s.rec, interests: s.rec.interests.indexOf(label) === -1 ? s.rec.interests.concat([label]) : s.rec.interests}
+  }));
+
+  selectTab = (tab) => () => { this.setState({menuTab:tab, openDish:null}); this.noteInterest(tab.toLowerCase()); };
+  toggleDiet = (key) => () => {
+    this.setState(s => ({diets: s.diets.indexOf(key) === -1 ? s.diets.concat([key]) : s.diets.filter(d => d !== key)}));
+    this.noteInterest(key);
+  };
+  expandDish = (id) => () => this.setState(s => ({openDish: s.openDish === id ? null : id}));
+  selectDiary = (t) => () => { this.setState({diaryType:t}); if (t !== 'Everything') this.noteInterest(t.toLowerCase()); };
+
+  submitTable = () => {
+    const f = this.state.form;
+    if (!f.name || !f.email) return;
+    const join = (d, y) => d ? (y ? d + ' ' + y : d) : null;
+    this.setState(s => ({joined:true, rec:{...s.rec, name:f.name, email:f.email, mobile:f.mobile || null, birthday:join(f.birthday, f.birthYear), anniversary:join(f.anniversary, f.anniversaryYear), postcode:f.postcode || null, venue:f.venue}}));
+  };
+
+  resetRecord = () => this.setState({
+    joined:false, form:{name:'', email:'', mobile:'', birthday:'', birthYear:'', anniversary:'', anniversaryYear:'', postcode:'', venue:'Joiners Kitchen'},
+    rec:{pages:[this.state.route], seconds:0, venueViews:{}, interests:[], name:null, email:null, mobile:null, birthday:null, anniversary:null, postcode:null, venue:null}
+  });
+
+  hoursStrip() {
+    return VENUES.map(v => v.name.replace('Joiners ', '').replace('The ', '') + ' ' + v.today.toLowerCase()).join('  ·  ');
+  }
+
+  dwell() {
+    const s = this.state.rec.seconds;
+    const m = Math.floor(s / 60);
+    return (m > 0 ? m + ' min ' : '') + (s % 60) + 's';
+  }
+
+  recordRows() {
+    const r = this.state.rec;
+    const topVenue = Object.keys(r.venueViews).sort((a, b) => r.venueViews[b] - r.venueViews[a])[0];
+    const vName = topVenue ? (VENUES.find(v => v.slug === topVenue) || {}).name : null;
+    const vCount = topVenue ? r.venueViews[topVenue] : 0;
+    const segs = this.state.joined ? 3 : (r.interests.length ? 1 : 0);
+    return [
+      {k:'Contact', v: r.name || 'anonymous', src: r.name ? 'the Table form' : 'not identified', color: r.name ? '#8D00D4' : 'rgba(27,24,21,0.85)'},
+      {k:'Proof of Presence', v: r.pages.length + ' pages, ' + this.dwell(), src:'device record', color:'rgba(27,24,21,0.85)'},
+      {k:'Venue signal', v: vName ? vName + ' (viewed ' + (vCount === 1 ? 'once' : vCount + ' times') + ')' : 'none yet', src:'venue_preference', color: vName ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Interest', v: r.interests.length ? r.interests.join(', ') : 'nothing yet', src:'menu and filter signals', color: r.interests.length ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Segments', v: segs + ' of 14 matched', src:'recalculated nightly', color: segs ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Email', v: r.email || 'not captured yet', src: r.email ? 'the Joiners Club form' : '—', color: r.email ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Mobile', v: r.mobile || 'not captured yet', src: r.mobile ? 'the Joiners Club form' : '—', color: r.mobile ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Birthday', v: r.birthday || 'not captured yet', src: r.birthday ? 'the Joiners Club form' : '—', color: r.birthday ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Anniversary', v: r.anniversary || 'not captured yet', src: r.anniversary ? 'the Joiners Club form' : '—', color: r.anniversary ? '#8D00D4' : 'rgba(27,24,21,0.5)'},
+      {k:'Postcode', v: r.postcode || 'not captured yet', src: r.postcode ? 'the Joiners Club form' : '—', color: r.postcode ? '#8D00D4' : 'rgba(27,24,21,0.5)'}
+    ];
+  }
+
+  whatsOnVals(narrow, veryNarrow) {
+    const s = this.state;
+    const uniq = (k) => ['Any'].concat([...new Set(s.wo.map(d => d[k]).filter(Boolean))].sort());
+    const months = ['Any'].concat([...new Set(s.wo.map(d => d.month))]);
+    const q = s.woQ.trim().toLowerCase();
+    const all = s.wo.filter(d =>
+      (s.woImpact === 'Any' || d.impact === s.woImpact) &&
+      (s.woCategory === 'Any' || d.category === s.woCategory) &&
+      (s.woScope === 'Any' || d.scope === s.woScope) &&
+      (s.woMonth === 'Any' || d.month === s.woMonth) &&
+      (!q || (d.event + ' ' + d.means + ' ' + d.scope + ' ' + d.category + ' ' + d.when).toLowerCase().indexOf(q) > -1)
+    );
+    const impactBg = {Critical:'#C0392B', High:'#B4763A', Medium:'#22403A', Low:'#D8D0C2'};
+    const impactFg = {Critical:'#FFFDF9', High:'#FFFDF9', Medium:'#FFFDF9', Low:'#1B1815'};
+    return {
+      woQ: s.woQ,
+      setWoQ: (e) => this.setState({woQ:e.target.value, woLimit:40}),
+      woImpacts: ['Any','Critical','High','Medium','Low'].map(v => ({
+        label: v, select: () => this.setState({woImpact:v, woLimit:40}),
+        bg: s.woImpact === v ? '#1B1815' : 'transparent',
+        fg: s.woImpact === v ? '#FFFDF9' : '#1B1815',
+        border: s.woImpact === v ? '#1B1815' : '#D8D0C2'
+      })),
+      woCategory: s.woCategory, woScope: s.woScope, woMonth: s.woMonth,
+      woCategories: uniq('category'), woScopes: uniq('scope'), woMonths: months,
+      setWoCategory: (e) => this.setState({woCategory:e.target.value, woLimit:40}),
+      setWoScope: (e) => this.setState({woScope:e.target.value, woLimit:40}),
+      setWoMonth: (e) => this.setState({woMonth:e.target.value, woLimit:40}),
+      woReset: () => this.setState({woQ:'', woImpact:'Any', woCategory:'Any', woScope:'Any', woMonth:'Any', woLimit:40}),
+      woCount: s.wo.length ? all.length + ' of ' + s.wo.length + ' dates' : 'loading the diary',
+      woRows: all.slice(0, s.woLimit).map(d => ({
+        ...d, impactBg: impactBg[d.impact] || '#D8D0C2', impactFg: impactFg[d.impact] || '#1B1815',
+        open: s.woOpen === d.id,
+        expand: () => this.setState(x => ({woOpen: x.woOpen === d.id ? null : d.id}))
+      })),
+      woMore: all.length > s.woLimit,
+      woMoreLabel: 'Show ' + Math.min(40, all.length - s.woLimit) + ' more',
+      showMoreWo: () => this.setState(x => ({woLimit: x.woLimit + 40})),
+      woCols: veryNarrow ? '1fr' : (narrow ? '132px minmax(0,1fr)' : '150px minmax(0,1fr) 96px'),
+      woFilterCols: veryNarrow ? '1fr' : (narrow ? 'repeat(2,minmax(0,1fr))' : 'repeat(3,minmax(0,1fr))')
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const narrow = s.frame === 'phone' || s.vw < 860;
+    const headerNarrow = s.frame === 'phone' || s.vw < 860;
+    const veryNarrow = s.frame === 'phone' || s.vw < 620;
+    const pinFns = {};
+    for (let i = 1; i <= 40; i++) pinFns['p' + i] = () => this.setState({activePin:i});
+
+    const routeFor = (slug) => slug === 'arms' ? 'arms' : (slug === 'engine-room' ? 'engine-room' : 'places');
+    const venues = VENUES.map(v => ({...v, open: this.go(routeFor(v.slug), v.slug)}));
+    const items = MENUS[s.menuTab] || [];
+
+    return {
+      pinFns,
+      reveal: s.reveal,
+      wide: !headerNarrow,
+      showBookBar: headerNarrow && s.route !== 'book',
+      showTip: !s.tipSeen && !s.reveal && !headerNarrow,
+      dismissTip: this.dismissTip,
+      toggleReveal: this.toggleReveal,
+      switchTrack: s.reveal ? '#E2A63C' : 'transparent',
+      switchKnob: s.reveal ? '21px' : '2px',
+      switchKnobBg: s.reveal ? '#1B1815' : '#B4763A',
+      navLinks: [
+        {label:'Places', route:'places', go: this.go('places')},
+        {label:'Menus', route:'arms', go: this.go('arms', 'arms')},
+        {label:'Stay', route:'arms', go: this.go('arms', 'arms')},
+        {label:'The Engine Room', route:'engine-room', go: this.go('engine-room', 'engine-room')},
+        {label:'Parties', route:'parties', go: this.go('parties')},
+        {label:'Contact', route:'contact', go: this.go('contact')},
+        {label:'Gift Shop', route:'gifts', go: this.go('gifts')},
+        {label:'WiFi', route:'wifi', go: this.go('wifi')}
+      ].map(n => ({...n, weight: s.route === n.route ? 600 : 500, rule: s.route === n.route ? '#B4763A' : 'transparent'})),
+      goParties: this.go('parties'),
+      isParties: s.route === 'parties',
+      goGifts: this.go('gifts'),
+      isGifts: s.route === 'gifts',
+      compact: headerNarrow,
+      menuOpen: s.menuOpen && headerNarrow,
+      toggleMenu: () => this.setState(x => ({menuOpen: !x.menuOpen})),
+      menuLinks: [
+        {label:'Places', go: this.go('places')},
+        {label:'The Joiners Arms', go: this.go('arms', 'arms')},
+        {label:'The Engine Room', go: this.go('engine-room', 'engine-room')},
+        {label:'Gift Shop', go: this.go('gifts')},
+        {label:'WiFi', go: this.go('wifi')},
+        {label:'Parties', go: this.go('parties')},
+        {label:'Joiners Club', go: this.go('table')},
+        {label:'Book a table', go: this.go('book')},
+        {label:'Contact us', go: this.go('contact')}
+      ],
+      goWifi: this.go('wifi'),
+      isWifi: s.route === 'wifi',
+      goContact: this.go('contact'),
+      isContact: s.route === 'contact',
+      contact: s.contact,
+      contactTopics: ['A booking', 'A party or private hire', 'Rooms', 'Classes and events', 'Gift cards', 'Feedback', 'Something else'],
+      setContactTopic: (e) => this.setState({contact:{...this.state.contact, topic:e.target.value}}),
+      setContactName: (e) => this.setState({contact:{...this.state.contact, name:e.target.value}}),
+      setContactEmail: (e) => this.setState({contact:{...this.state.contact, email:e.target.value}}),
+      setContactMessage: (e) => this.setState({contact:{...this.state.contact, message:e.target.value}}),
+      toggleContactOptIn: () => this.setState(x => ({contact:{...x.contact, optIn: !x.contact.optIn}})),
+      contactOptInBox: s.contact.optIn ? '#B4763A' : 'transparent',
+      contactOptInMark: s.contact.optIn ? '✓' : '',
+      contactSent: s.contactSent, contactNotSent: !s.contactSent,
+      contactName: s.contact.name,
+      contactHandler: CONTACT_OWNERS[s.contact.topic] || 'Ruth, who runs the floor',
+      contactHandlerLine: 'This goes to ' + (CONTACT_OWNERS[s.contact.topic] || 'Ruth, who runs the floor') + '. Not an inbox nobody reads.',
+      sendContact: () => {
+        const c = this.state.contact;
+        if (!c.name || !c.email) return;
+        this.setState({contactSent:true, rec:{...this.state.rec, email: this.state.rec.email || c.email, name: this.state.rec.name || c.name}});
+        this.noteInterest(c.topic.toLowerCase());
+      },
+      resetContact: () => this.setState({contactSent:false, contact:{topic:'A booking', name:'', email:'', message:'', optIn:false}}),
+      contactRoutes: [
+        {title:'Book a table', body:'Four taps and you are done. Faster than we can answer the phone at seven.', cta:'Go to booking', go: this.go('book')},
+        {title:'A party, twelve to sixty', body:'The Engine Room, party menus, Christmas. Tell us the numbers and we come back with a plan and a price.', cta:'Parties', go: this.go('parties')},
+        {title:'Classes and supper clubs', body:'The full diary, what is left and what has gone.', cta:'The Engine Room', go: this.go('engine-room', 'engine-room')},
+        {title:'Gift cards and vouchers', body:'Balances, expiry, a card that will not scan. All of it is in the shop.', cta:'Gift Shop', go: this.go('gifts')},
+        {title:'Join the Joiners Club', body:'Your birthday and your special day remembered, competitions and rewards.', cta:'Joiners Club', go: this.go('table')}
+      ],
+      goWhatsOn: this.go('whats-on'),
+      isWhatsOn: s.route === 'whats-on' && s.reveal,
+      showWhatsOnLink: s.reveal,
+      whatsOnRule: s.route === 'whats-on' ? '#E2A63C' : 'transparent',
+      erTabCols: veryNarrow ? '1fr' : 'repeat(3,minmax(0,1fr))',
+      erIsWhatsOn: s.erTab === 'whats-on',
+      erIsFoodie: s.erTab === 'foodie',
+      erIsCheers: s.erTab === 'cheers',
+      erTabs: [
+        {key:'whats-on', label:"National What's On", note:'521 dates · Sep 2026 – Dec 2027'},
+        {key:'foodie', label:'Foodie Favourites', note:'awaiting content'},
+        {key:'cheers', label:'Cheers by Airship', note:'awaiting content'}
+      ].map(t => ({
+        ...t, select: () => this.setState({erTab:t.key}),
+        bg: s.erTab === t.key ? '#1B1815' : '#FFFDF9',
+        fg: s.erTab === t.key ? '#FFFDF9' : '#1B1815'
+      })),
+      ...this.whatsOnVals(narrow, veryNarrow),
+      wifiState: s.wifiState,
+      wifiForm: s.wifiState === 'form', wifiOnline: s.wifiState === 'online',
+      wifiEmail: s.wifiEmail,
+      setWifiEmail: (e) => this.setState({wifiEmail:e.target.value}),
+      wifiOptIn: s.wifiOptIn,
+      toggleWifiOptIn: () => this.setState(x => ({wifiOptIn: !x.wifiOptIn})),
+      wifiOptInBox: s.wifiOptIn ? '#B4763A' : 'transparent',
+      wifiOptInMark: s.wifiOptIn ? '✓' : '',
+      wifiDob: s.wifiDob,
+      setWifiDob: (e) => this.setState({wifiDob:e.target.value}),
+      toggleWifiSms: () => this.setState(x => ({wifiSms: !x.wifiSms})),
+      wifiSmsBox: s.wifiSms ? '#B4763A' : 'transparent',
+      wifiSmsMark: s.wifiSms ? '✓' : '',
+      connectWifi: () => {
+        if (!s.wifiEmail) return;
+        this.setState({wifiState:'online', rec:{...this.state.rec, email: this.state.rec.email || s.wifiEmail, birthday: this.state.rec.birthday || (s.wifiDob ? (s.wifiDobYear ? s.wifiDob + ' ' + s.wifiDobYear : s.wifiDob) : null)}});
+        this.noteInterest('wifi, coffee house');
+      },
+      resetWifi: () => this.setState({wifiState:'form', wifiEmail:'', wifiOptIn:false, wifiSms:false, wifiDob:'', wifiDobYear:''}),
+
+      isHome: s.route === 'home', isPlaces: s.route === 'places', isArms: s.route === 'arms',
+      isTable: s.route === 'table', isBook: s.route === 'book',
+      goHome: this.go('home'), goPlaces: this.go('places'), goArms: this.go('arms', 'arms'),
+      goTable: this.go('table'), goBook: this.go('book'),
+
+      h1: veryNarrow ? '40px' : '72px',
+      h2: veryNarrow ? '32px' : '48px',
+      h3: veryNarrow ? '24px' : '32px',
+      pad: veryNarrow ? '64px' : '120px',
+      heroH: veryNarrow ? 'max(55vh,460px)' : 'max(60vh,520px)',
+      venueHeroH: veryNarrow ? '42vh' : '52vh',
+      cols2: narrow ? '1fr' : 'repeat(2,minmax(0,1fr))',
+      cols3: narrow ? '1fr' : 'repeat(3,minmax(0,1fr))',
+      cols4: veryNarrow ? '1fr' : (narrow ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))'),
+      formCols: narrow ? '1fr' : 'repeat(5,minmax(0,1fr))',
+      monthCols: veryNarrow ? 'repeat(2,minmax(0,1fr))' : (narrow ? 'repeat(4,minmax(0,1fr))' : 'repeat(6,minmax(0,1fr))'),
+
+      venues,
+      otherVenues: VENUES.filter(v => v.slug !== 'arms').map(v => ({...v, open: this.go(routeFor(v.slug), v.slug)})),
+      isEngineRoom: s.route === 'engine-room',
+      goEngineRoom: this.go('engine-room', 'engine-room'),
+      diaryFilters: DIARY_TYPES.map(t => {
+        const on = s.diaryType === t;
+        return {label: t, select: this.selectDiary(t), bg: on ? '#1B1815' : 'transparent', fg: on ? '#FFFDF9' : '#1B1815', border: on ? '#1B1815' : '#D8D0C2'};
+      }),
+      diary: DIARY.filter(d => s.diaryType === 'Everything' || d.type === s.diaryType),
+      diaryCount: DIARY.filter(d => s.diaryType === 'Everything' || d.type === s.diaryType).length + ' of ' + DIARY.length + ' dates',
+      hoursStrip: this.hoursStrip(),
+      whatsOn: [
+        {date:'From 18 September', title:'Autumn menu at the Kitchen', body:'Grouse, damsons, celeriac. The whole board changes on the Thursday.', price:'£34 for three courses'},
+        {date:'Thursday 9 October', title:'Supper club at The Kitchen', body:'One long table, six courses, the kitchen in the room with you.', price:'£65 a head'},
+        {date:'October half term', title:'Rooms at the Arms', body:'Four of the nine still free across the week. Breakfast at the long table.', price:'From £140 a night'}
+      ],
+      giftTiles: [
+        {name:'Gift card, any amount', price:'From £20'},
+        {name:'Chef\u2019s table for two', price:'£130'},
+        {name:'Supper club ticket', price:'£65'}
+      ],
+      journal: [
+        {id:'j1', date:'2 September', title:'What nine rooms teaches you about breakfast', shot:'The long table at breakfast'},
+        {id:'j2', date:'21 August', title:'Where the grouse comes from, exactly', shot:'Moorland above Hathersage'},
+        {id:'j3', date:'4 August', title:'Two years of the corner table', shot:'The corner table, Coffee House'}
+      ],
+
+      armsChips: ['Step-free entry', 'Dog friendly', 'Parking', 'Allergen menu'],
+      engineChips: ['Step-free lift access', 'Hands-on, 8 to 12', '12 to 60 covers', 'Allergens catered'],
+      engineOthers: VENUES.filter(v => v.slug !== 'engine-room').map(v => ({...v, open: this.go(routeFor(v.slug), v.slug)})),
+      diaryCols: veryNarrow ? '1fr' : (narrow ? '110px minmax(0,1fr)' : '130px minmax(0,1fr) 190px'),
+      menuUpdated: 'Menus updated 2 September 2026',
+      menuTabs: Object.keys(MENUS).map(t => ({
+        label: t, select: this.selectTab(t),
+        bg: s.menuTab === t ? '#1B1815' : '#FFFDF9',
+        fg: s.menuTab === t ? '#FFFDF9' : '#1B1815'
+      })),
+      dietChips: DIETS.map(d => {
+        const on = s.diets.indexOf(d.key) > -1;
+        return {label: d.label, toggle: this.toggleDiet(d.key), bg: on ? '#B4763A' : 'transparent', fg: on ? '#FFFDF9' : '#1B1815', border: on ? '#B4763A' : '#D8D0C2'};
+      }),
+      menuItems: items.map((m, i) => {
+        const dishTags = m.tags ? m.tags.split(' ') : [];
+        const match = s.diets.length === 0 || s.diets.every(d => dishTags.indexOf(d) > -1);
+        return {...m, tags: m.tags || '—', opacity: match ? 1 : 0.32, open: s.openDish === i, expand: this.expandDish(i)};
+      }),
+      rooms: [
+        {id:'r1', name:'Bank', line:'Double at the front, over the road, deepest bath in the building.', price:'From £150', shot:'Room — Bank'},
+        {id:'r2', name:'Boot Room', line:'Ground floor twin, own door to the yard. Dogs welcome.', price:'From £140', shot:'Room — Boot Room'},
+        {id:'r3', name:'Long View', line:'Top floor, two windows, the whole city on a clear morning.', price:'From £175', shot:'Room — Long View'}
+      ],
+
+      askCols: veryNarrow ? '1fr' : (narrow ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))'),
+      vxSteps: [
+        {when:'The day you join', what:'A drink on us on your next visit, whichever place you walk into.'},
+        {when:'Your dates', what:'Birthday and anniversary tables held, asked about six weeks out.'},
+        {when:'Every month', what:'Entered into the members\u2019 draw. Dinner for two, no forms to fill in.'},
+        {when:'The more you visit', what:'Better held back for you, based on coming in rather than on points.'}
+      ],
+      asks: [
+        {field:'Your name', gets:'So we can write to you, not to \u201Cvalued customer\u201D.'},
+        {field:'Your email', gets:'Two emails a month. Never more.'},
+        {field:'Your mobile', gets:'One text if your table is at risk, and nothing else. No marketing by text.'},
+        {field:'Your birthday', gets:'A table held for you and a glass on us. We will ask six weeks out, not the day before.'},
+        {field:'Your anniversary', gets:'The same again on the date that matters to you, whatever it marks.'},
+        {field:'Your postcode', gets:'We tell you what is on at your nearest place, and nothing about the other three.'},
+        {field:'Where you go most', gets:'You hear about your place, not all four.'}
+      ],
+      months: [
+        {label:'JAN', event:'First Friday table'}, {label:'FEB', event:'Quiet month, one email'},
+        {label:'MAR', event:'Birthday table held'}, {label:'APR', event:'First Friday table'},
+        {label:'MAY', event:'Rooms first refusal'}, {label:'JUN', event:'Supper club priority'},
+        {label:'JUL', event:'First Friday table'}, {label:'AUG', event:'Quiet month, one email'},
+        {label:'SEP', event:'Joining anniversary'}, {label:'OCT', event:'Rooms first refusal'},
+        {label:'NOV', event:'Christmas priority window'}, {label:'DEC', event:'Table on the 27th'}
+      ].map((m, i) => ({
+        ...m,
+        bg: (i === 2 || i === 8 || i === 10) ? '#22403A' : '#FFFDF9',
+        fg: (i === 2 || i === 8 || i === 10) ? '#FFFDF9' : '#1B1815'
+      })),
+      segments: SEGMENTS,
+
+      form: s.form,
+      setName: (e) => this.setState({form:{...this.state.form, name:e.target.value}}),
+      setEmail: (e) => this.setState({form:{...this.state.form, email:e.target.value}}),
+      setMobile: (e) => this.setState({form:{...this.state.form, mobile:e.target.value}}),
+      setBirthday: (e) => this.setState({form:{...this.state.form, birthday:e.target.value}}),
+      setBirthYear: (e) => this.setState({form:{...this.state.form, birthYear:e.target.value}}),
+      setAnniversary: (e) => this.setState({form:{...this.state.form, anniversary:e.target.value}}),
+      setAnniversaryYear: (e) => this.setState({form:{...this.state.form, anniversaryYear:e.target.value}}),
+      wifiDobYear: s.wifiDobYear,
+      setWifiDobYear: (e) => this.setState({wifiDobYear:e.target.value}),
+      setPostcode: (e) => this.setState({form:{...this.state.form, postcode:e.target.value}}),
+      setVenue: (e) => this.setState({form:{...this.state.form, venue:e.target.value}}),
+      submitTable: this.submitTable,
+      goJoinFromFooter: (e) => {
+        this.go('table')(e);
+        setTimeout(() => {
+          const el = document.getElementById('joiners-club-form');
+          if (el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 96, behavior:'smooth'});
+        }, 80);
+      },
+      goJoinForm: () => {
+        const el = document.getElementById('joiners-club-form');
+        if (el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 96, behavior:'smooth'});
+      },
+      joined: s.joined, notJoined: !s.joined,
+      record: {name: s.rec.name || '', birthdayLabel: s.rec.birthday || '14 March'},
+
+      panelOpen: !!(s.reveal && s.activePin && PINS[s.activePin]),
+      pin: PINS[s.activePin] || {...AIRSHIP, n:'', where:'', title:'', what:'', fields:[], journey:[], number:'', numberLabel:'', source:'', argument:''},
+      closePin: () => this.setState({activePin:null}),
+      panelW: narrow ? '100vw' : '420px',
+
+      recOpen: s.recOpen,
+      toggleRec: () => this.setState(x => ({recOpen: !x.recOpen})),
+      recToggleLabel: s.recOpen ? 'hide' : 'show',
+      recPos: narrow ? 'left:12px;right:12px;bottom:' + (headerNarrow && s.route !== 'book' ? '68px' : '12px') : 'right:20px;bottom:' + (headerNarrow && s.route !== 'book' ? '68px' : '20px'),
+      recW: narrow ? 'auto' : '340px',
+      recRows: this.recordRows(),
+      recFoot: s.joined
+        ? 'Birthday journey scheduled \u2014 first email 6 weeks before ' + (s.rec.birthday || '14 March') + '.'
+        : 'Join the Club and watch this fill in.',
+      resetRecord: this.resetRecord,
+
+      setPhone: () => this.setState({frame:'phone'}),
+      setDesktop: () => this.setState({frame:'desktop'}),
+      phoneBg: s.frame === 'phone' ? '#E2A63C' : 'transparent',
+      phoneFg: s.frame === 'phone' ? '#1B1815' : 'rgba(255,253,249,0.7)',
+      deskBg: s.frame === 'desktop' ? '#E2A63C' : 'transparent',
+      deskFg: s.frame === 'desktop' ? '#1B1815' : 'rgba(255,253,249,0.7)'
+    };
+  }
+}
+
+</script>
+</body>
+</html>
