@@ -864,87 +864,36 @@ const contact = `
 const wifi = `
 <section class="jo-container jo-section jo-splash-wrap">
   <div class="jo-splash">
-    <p class="jo-splash-label">The design</p>
-    <div class="jo-splash-card">
+    <span class="jo-label jo-label-oak">You are at</span>
+    <h1 class="jo-splash-h1">Joiners Coffee House</h1>
 
-      <div id="jo-wifi-form">
-        <span class="jo-label jo-label-oak">You are at</span>
-        <!-- Venue detected at the point of connection. -->
-        <h1 class="jo-splash-h1">Joiners Coffee House</h1>
-        <form id="jo-wifi-formel">
-          <label class="jo-field jo-mb-16">
-            <span class="jo-field-label">Email</span>
-            <input class="jo-input" type="email" name="wifiEmail" placeholder="you@example.com" autocomplete="email" required>
-          </label>
-          <button type="submit" class="jo-btn jo-btn-pine jo-btn-block">Connect</button>
-          <div class="jo-field-pair-sm jo-mt-18">
-            <label class="jo-field">
-              <span class="jo-field-label">Birthday (optional)</span>
-              <input class="jo-input" name="wifiDob" placeholder="14 March">
-            </label>
-            <label class="jo-field">
-              <span class="jo-field-label">Year</span>
-              <input class="jo-input" name="wifiDobYear" placeholder="1988" inputmode="numeric">
-            </label>
-          </div>
-          <p class="jo-small" style="font-size:14px;margin:8px 0 0">We will send you something on the day. Skip it and the WiFi works the same.</p>
-          <p class="jo-small" style="font-size:15px;color:rgba(27,24,21,0.78);margin:22px 0 0">We will send you nothing unless you tick a box. Connecting gets you two hours of WiFi either way.</p>
-          <!-- Two separate opt-ins. Never one bundled tick. -->
-          <div class="jo-stack-10" style="gap:0;margin-top:12px">
-            <button type="button" class="jo-check" data-check="wifiOptIn" aria-pressed="false">
-              <span class="jo-check-box" aria-hidden="true"></span>
-              <span class="jo-check-text">News and offers by email. Two a month, nothing else.</span>
-            </button>
-            <button type="button" class="jo-check" data-check="wifiSms" aria-pressed="false">
-              <span class="jo-check-box" aria-hidden="true"></span>
-              <span class="jo-check-text">News and offers by text. Only if something is worth a text.</span>
-            </button>
-          </div>
-        </form>
-        <div class="jo-reveal-only jo-reveal-only-flex jo-row-12" style="border-top:1px solid var(--jo-stone);margin-top:22px;padding-top:18px">
-          ${pin(31)}${pin(32)}
-          <p class="jo-sandbox" style="margin:0;font-size:11px;flex-grow:1;min-width:0">Live demonstration. Anything entered creates a real record. Delete it any time.</p>
-        </div>
-      </div>
-
-      <div id="jo-wifi-online" hidden>
-        <div style="animation:joRise 300ms ease-out">
-          <span class="jo-label jo-label-oak">Two hours, no password</span>
-          <h1 class="jo-splash-h1" style="margin-bottom:14px">You are online.</h1>
-          <p class="jo-body jo-mb-28" style="color:rgba(27,24,21,0.78)">Here is what is good today.</p>
-          <!-- One well-chosen recommendation, not a wall of marketing. -->
-          <div class="jo-rec-block">
-            <span class="jo-wo-date">Out of the oven at eleven</span>
-            <h3 class="jo-h4" style="font-size:22px;margin:8px 0 6px">Cardamom bun</h3>
-            <p class="jo-card-line" style="margin:0 0 10px">Thirty of them, and they go by one.</p>
-            <span class="jo-mono-price" style="font-size:15px">£3.80</span>
-          </div>
-          <button type="button" class="jo-btn jo-btn-outline jo-btn-sm" id="jo-wifi-restart">Start again</button>
-          <div class="jo-reveal-only jo-reveal-only-flex jo-row-12" style="border-top:1px solid var(--jo-stone);margin-top:22px;padding-top:18px">
-            ${pin(31)}${pin(32)}
-            <p class="jo-sandbox" style="margin:0;font-size:11px;flex-grow:1;min-width:0">Presence appended to the record. Marketing only if the box was ticked.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <p class="jo-splash-foot">Free WiFi at all four places. Two hours, no password, no scrolling through terms.</p>
-  </div>
-
-  <!-- The live Fydelia splash for Joiners Kitchen, embedded for comparison.
-       This is the real thing as it stands today; the card to its left is the
-       proposed replacement. Third-party page - it can change without notice. -->
-  <div class="jo-splash">
-    <p class="jo-splash-label">Live today &middot; Fydelia</p>
+    <!-- The live Fydelia splash for Joiners Kitchen. Third-party page: it can
+         change or disappear without notice, so nothing depends on its contents. -->
     <div class="jo-splash-frame">
       <iframe class="jo-splash-iframe"
               src="https://ondemand.fydelia.com/splash/joiners-kitchen/"
               title="Joiners Kitchen WiFi splash, live on Fydelia"
               loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
+              referrerpolicy="no-referrer-when-downgrade"
+              scrolling="no"></iframe>
     </div>
-    <p class="jo-splash-foot">The splash guests see today, embedded live from Fydelia.</p>
+    <p class="jo-splash-foot">Free WiFi at all four places. Two hours, no password, no scrolling through terms.</p>
   </div>
+
+  <!-- The joints for this page sit alongside the splash rather than on it, so
+       they stay visible and clickable over a frame we do not control. -->
+  <aside class="jo-splash-joints jo-reveal-only jo-reveal-only-block">
+    <p class="jo-splash-joints-head">The joints</p>
+    <div class="jo-splash-joint">
+      ${pin(31)}
+      <span class="jo-splash-joint-label">WiFi capture through Fydelia</span>
+    </div>
+    <div class="jo-splash-joint">
+      ${pin(32)}
+      <span class="jo-splash-joint-label">Time-of-day patterning</span>
+    </div>
+    <p class="jo-sandbox jo-splash-joints-note">Live demonstration. Anything entered creates a real record. Delete it any time.</p>
+  </aside>
 </section>`;
 
 /* ---- Structural shells ---- */

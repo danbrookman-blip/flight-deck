@@ -893,25 +893,56 @@ button { font-family: inherit; }
    its own. The Fydelia splash uses a <= 620px mobile layout that still carries a
    410px min-width inside it, so framing it at 440px clips. Instead it renders at
    a 600px logical width - safely inside its mobile breakpoint - and is scaled to
-   fit the 440px column. 600 x 0.7333 = 440; 982 x 0.7333 = 720.
-   The scale itself is set by site.js from the frame's measured width, so it
-   stays exact at every viewport; the 0.7333 here is the desktop fallback if
-   the script does not run. */
+   fit the column. The logical width is always 600 whatever the screen - only the
+   scale changes - so the framed page's height is a constant: measured at 1088px,
+   given 1100px here so nothing scrolls inside the frame.
+   600 x 0.7333 = 440; 1100 x 0.7333 = 807. The scale is set by site.js from the
+   frame's measured width, so it stays exact at every viewport; the 0.7333 here
+   is the desktop fallback if the script does not run. */
 .jo-splash-frame {
   border: 2px solid var(--jo-rule);
   box-shadow: var(--jo-shadow);
   background: var(--jo-paper);
   width: 100%;
-  height: 720px;
+  height: 807px;
   overflow: hidden;
 }
 .jo-splash-iframe {
   display: block;
   width: 600px;
-  height: 982px;
+  height: 1100px;
   border: 0;
   transform: scale(var(--jo-splash-scale, 0.7333));
   transform-origin: top left;
+}
+
+/* The joints for the WiFi page sit beside the splash, not on it - the frame is
+   a third-party page we cannot place pins inside. Reveal-layer only. */
+.jo-splash-joints {
+  width: 100%;
+  max-width: 260px;
+  padding-top: 34px;
+}
+.jo-splash-joints-head {
+  font-family: var(--jo-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jo-ink-60);
+  margin: 0 0 18px;
+}
+.jo-splash-joint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--jo-stone);
+}
+.jo-splash-joint-label { font-size: 15px; line-height: 1.4; font-weight: 500; }
+.jo-splash-joints-note { margin-top: 18px; }
+
+@media (max-width: 859px) {
+  .jo-splash-joints { max-width: 440px; padding-top: 0; }
 }
 .jo-splash-card {
   background: var(--jo-paper);

@@ -282,46 +282,17 @@
     }
   }
 
-  /* --------------------------------------------------------------- WiFi --- */
-
-  var wifiForm = $('#jo-wifi-formel');
-  if (wifiForm) {
-    wifiForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var f = new FormData(wifiForm);
-      var email = (f.get('wifiEmail') || '').trim();
-      if (!email) return;
-      JO.rec.email = JO.rec.email || email;
-      var dob = (f.get('wifiDob') || '').trim();
-      if (dob && !JO.rec.birthday) JO.rec.birthday = joinDate(dob, (f.get('wifiDobYear') || '').trim());
-      JO.recordChanged();
-      JO.noteInterest('wifi, coffee house');
-      $('#jo-wifi-form').hidden = true;
-      $('#jo-wifi-online').hidden = false;
-    });
-  }
-  var wifiRestart = $('#jo-wifi-restart');
-  if (wifiRestart) {
-    wifiRestart.addEventListener('click', function () {
-      wifiForm.reset();
-      $$('[data-check].is-on').forEach(function (b) {
-        b.classList.remove('is-on');
-        b.setAttribute('aria-pressed', 'false');
-        var mark = $('.jo-check-box', b);
-        if (mark) mark.textContent = '';
-      });
-      $('#jo-wifi-online').hidden = true;
-      $('#jo-wifi-form').hidden = false;
-    });
-  }
-
   /* ------------------------------------------- the live Fydelia embed ----- */
+
+  /* The WiFi page shows the real Fydelia splash rather than a designed one, so
+     there is no local WiFi form to wire up. The designed two-state splash and
+     its separated opt-ins are still documented in the brief and screenshots. */
 
   /* The framed splash renders at a fixed 600px logical width, because its own
      mobile layout carries a 410px min-width and clips below roughly 500px.
      Scale it to whatever width the column actually has, and set the frame's
      height to match so there is no dead space under it. */
-  var SPLASH_W = 600, SPLASH_H = 982;
+  var SPLASH_W = 600, SPLASH_H = 1100;  /* measured: the framed page is 1088px tall at a 600px width */
 
   function fitSplash() {
     $$('.jo-splash-frame').forEach(function (frame) {

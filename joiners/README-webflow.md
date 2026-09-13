@@ -269,21 +269,32 @@ the design is firm about: success is **not a modal**, the section transforms in
 place; and the day/year pairs are two fields, because people will give you a day
 and month happily and a birth year reluctantly.
 
-**The WiFi splash** carries two separate opt-ins, email and SMS, as custom 22px
-checkboxes. Never bundle them into one tick.
+**The WiFi page shows the live Fydelia splash**, framed from
+`https://ondemand.fydelia.com/splash/joiners-kitchen/`. The designed replacement
+that used to sit beside it was removed on request; its design is not lost — it is
+specified in full in `_reference/original-design-brief.md` (section 7) and
+captured in `_reference/screenshots/`. If it is ever rebuilt, the two things that
+matter are that success is not a modal, and that the email and SMS opt-ins are
+**two separate ticks**, never bundled with each other or with the terms.
 
-The WiFi page shows that designed card **beside the live Fydelia splash**, framed
-from `https://ondemand.fydelia.com/splash/joiners-kitchen/` and labelled "Live
-today · Fydelia". The contrast is the argument: the live one asks for first name,
-last name and email and bundles consent into a single terms tick; the design asks
-for less, and separates the two opt-ins from the terms.
+Three things to keep if you rebuild the embed:
 
-Two things to keep if you rebuild it. The framed page's mobile layout carries a
-410px min-width, so framing it at the 440px column width clips it — it renders at
-a 600px logical width and is scaled down (`.jo-splash-iframe`), with `site.js`
-setting the scale from the frame's measured width. And it is a third-party page
-outside our control: it can change or disappear without notice, so do not build
-anything that depends on its contents.
+- The framed page's mobile layout carries a 410px min-width, so framing it at the
+  440px column width clips the right-hand edge off the form. It renders at a
+  600px **logical** width and is scaled down (`.jo-splash-iframe`), with
+  `site.js` setting the scale from the frame's measured width so it holds on a
+  phone too.
+- Because that logical width is always 600, the framed page's height is a
+  constant — measured at 1088px. The iframe is given 1100px so nothing scrolls
+  inside it. If Fydelia changes the page, re-measure and update `SPLASH_H` in
+  `site.js` and the height in `.jo-splash-iframe`.
+- It is a third-party page outside our control. It can change or disappear
+  without notice, so nothing on the page depends on its contents — and every
+  visitor to this page loads Fydelia in the background.
+
+**The joints for this page sit beside the splash, not on it** (`.jo-splash-joints`),
+because pins cannot be placed inside a cross-origin frame. Pins 31 and 32 are
+labelled there so they still read on their own.
 
 **The footer signup** does not subscribe anybody. It forwards to the Joiners
 Club page, scrolls to the form and carries the typed email across, so the guest
