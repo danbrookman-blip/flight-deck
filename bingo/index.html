@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>
+  html{color-scheme:dark}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>Company Day Bingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap">
+
+<style>
+  :root{
+    --ink:#0B1F22;
+    --panel:#0F2C30;
+    --raise:#16403F;
+    --edge:rgba(246,238,220,.14);
+    --edge-2:rgba(246,238,220,.28);
+    --paper:#F6EEDC;
+    --paper-2:#E6DAC0;
+    --on-paper:#123230;
+    --gold:#F2A93B;
+    --coral:#E2553C;
+    --mint:#54C39C;
+    --dim:#9BB2AD;
+    --display:"Anton","Haettenschweiler","Arial Narrow",sans-serif;
+    --body:"DM Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --r:10px;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+  }
+  button{font:inherit;color:inherit}
+  input,select{font:inherit}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  .wrap{max-width:1500px;margin:0 auto;padding-inline:16px;padding-block:18px}
+
+  .eyebrow{
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--dim);font-weight:700;
+  }
+  .display{font-family:var(--display);font-weight:400;letter-spacing:.01em;line-height:.92;text-transform:uppercase}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  .btn{
+    border:1px solid var(--edge-2);background:var(--raise);color:var(--paper);
+    border-radius:var(--r);padding:11px 16px;font-weight:700;font-size:15px;
+    cursor:pointer;touch-action:manipulation;transition:background .12s,border-color .12s;
+  }
+  .btn:hover{background:#1c4f4d}
+  .btn:disabled{opacity:.38;cursor:not-allowed}
+  .btn-primary{background:var(--gold);border-color:var(--gold);color:#241403}
+  .btn-primary:hover{background:#ffbb4d}
+  .btn-ghost{background:transparent}
+  .btn-sm{padding:7px 11px;font-size:13px}
+
+  /* ---------- shared: card ---------- */
+  .card{
+    background:var(--paper);
+    border-radius:var(--r);
+    padding:5px;
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    gap:3px;
+    box-shadow:0 6px 0 rgba(0,0,0,.28);
+  }
+  .cell{
+    aspect-ratio:1/1.25;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:6px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(14px,3.9vw,22px);
+    color:var(--on-paper);
+    background:#fffaf0;
+    border:none;padding:0;
+    position:relative;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .cell.blank{background:var(--paper-2);box-shadow:none}
+  .cell.num{cursor:pointer}
+  .cell.num:active{transform:scale(.94)}
+  .cell.marked{background:var(--coral);color:#fff}
+  .cell.marked::after{
+    content:"";position:absolute;inset:14%;
+    border-radius:50%;
+    border:2.5px solid rgba(255,255,255,.75);
+  }
+  /* Cross game: the five cells that count are ringed, the rest recede. */
+  .cell.target{box-shadow:inset 0 0 0 3px var(--gold)}
+  .cell.offpattern{opacity:.34}
+
+  /* ---------- player ---------- */
+  .p-shell{max-width:620px;margin:0 auto}
+  .p-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding-bottom:12px;border-bottom:1px solid var(--edge);margin-bottom:16px;flex-wrap:wrap;
+  }
+  .p-name{font-family:var(--display);font-size:26px;text-transform:uppercase;line-height:1}
+  .code-chip{
+    display:inline-block;background:var(--raise);border:1px solid var(--edge-2);
+    border-radius:6px;padding:3px 8px;font-weight:700;letter-spacing:.14em;
+    font-size:13px;color:var(--gold);font-variant-numeric:tabular-nums;
+  }
+  .tabs{display:flex;gap:7px;margin-bottom:14px}
+  .tab{
+    flex:1;min-width:0;border:1px solid var(--edge-2);background:transparent;color:var(--dim);
+    border-radius:var(--r);padding:10px 5px;font-weight:700;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.15;
+    font-size:15px;
+  }
+  .tab small{font-size:10px;font-weight:500;letter-spacing:.04em;opacity:.85}
+  .tab[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+
+  .pattern-note{
+    display:flex;gap:10px;align-items:center;
+    background:var(--panel);border:1px solid var(--edge);border-radius:var(--r);
+    padding:10px 12px;margin-bottom:12px;font-size:13.5px;color:var(--dim);line-height:1.35;
+  }
+  .pattern-note b{color:var(--gold)}
+  .glyph{
+    flex:none;display:grid;grid-template-columns:repeat(3,7px);gap:3px;
+  }
+  .glyph i{width:7px;height:7px;border-radius:2px;background:var(--raise);display:block}
+  .glyph i.on{background:var(--gold)}
+
+  .p-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .p-actions.single{grid-template-columns:1fr}
+  .shout{
+    border:none;border-radius:var(--r);padding:16px 10px;font-family:var(--display);
+    text-transform:uppercase;font-size:21px;cursor:pointer;line-height:1;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .shout small{font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.08em;opacity:.8}
+  .shout-line{background:var(--mint);color:#08251c}
+  .shout-house{background:var(--coral);color:#fff}
+  .shout-cross{background:var(--gold);color:#241403}
+  .p-foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--edge);color:var(--dim);font-size:13px}
+  .p-foot a{color:var(--dim)}
+
+  .join{max-width:420px;margin:0 auto;padding-top:6vh;text-align:center}
+  .join h1{font-family:var(--display);font-size:clamp(44px,13vw,72px);margin:0 0 4px;text-transform:uppercase}
+  .join p{color:var(--dim);margin:0 0 26px;font-size:15px}
+  .field{text-align:left;margin-bottom:14px}
+  .field label{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:700;margin-bottom:6px}
+  .field input{
+    width:100%;background:var(--panel);border:1px solid var(--edge-2);color:var(--paper);
+    border-radius:var(--r);padding:14px;font-size:17px;
+  }
+  .field input::placeholder{color:#5d7a76}
+  .hint{font-size:12.5px;color:var(--dim);margin-top:8px;line-height:1.4}
+  .join .btn-primary{width:100%;padding:16px;font-size:17px;margin-top:4px}
+
+  .toast{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    background:var(--paper);color:var(--ink);font-weight:700;
+    padding:13px 20px;border-radius:99px;box-shadow:0 8px 28px rgba(0,0,0,.45);
+    z-index:50;max-width:calc(100% - 32px);text-align:center;
+  }
+
+  /* ---------- host ---------- */
+  .h-grid{display:grid;grid-template-columns:270px minmax(0,1fr) 320px;gap:18px;align-items:start}
+  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:16px}
+  .panel h2{
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+    margin:0 0 12px;font-weight:700;
+  }
+
+  .qr-box{background:var(--paper);border-radius:10px;padding:10px;line-height:0}
+  .qr-box canvas{width:100%;height:auto;image-rendering:pixelated}
+  .join-url{margin-top:10px;font-size:12px;color:var(--gold);word-break:break-all;font-weight:500;line-height:1.35}
+
+  .ball-stage{
+    background:var(--panel);border:1px solid var(--edge);border-radius:14px;
+    padding:20px;display:flex;gap:22px;align-items:center;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .ball{
+    width:clamp(130px,17vw,190px);aspect-ratio:1;flex:none;
+    border-radius:50%;background:var(--gold);color:#241403;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--display);font-size:clamp(62px,8.6vw,96px);line-height:1;
+    box-shadow:inset 0 -10px 0 rgba(0,0,0,.14);
+  }
+  .ball.empty{background:var(--raise);color:var(--dim);box-shadow:none;font-size:clamp(20px,2.4vw,26px)}
+  .ball-meta{min-width:0;flex:1 1 220px}
+  .nickname{font-family:var(--display);font-size:clamp(26px,3.6vw,44px);text-transform:uppercase;margin:2px 0 10px}
+  .recent{display:flex;gap:7px;flex-wrap:wrap}
+  .recent span{
+    background:var(--raise);border:1px solid var(--edge-2);border-radius:7px;
+    padding:4px 9px;font-weight:700;font-variant-numeric:tabular-nums;font-size:15px;color:var(--dim);
+  }
+
+  .board{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+  .bnum{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    border-radius:7px;background:var(--raise);color:#6f8d88;
+    font-weight:700;font-variant-numeric:tabular-nums;
+    font-size:clamp(12px,1.5vw,20px);
+  }
+  .bnum.hit{background:var(--paper);color:var(--ink)}
+  .bnum.last{background:var(--gold);color:#241403}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .call-btn{font-family:var(--display);font-size:26px;text-transform:uppercase;padding:16px 30px;border-radius:12px;line-height:1}
+  .seg{display:flex;border:1px solid var(--edge-2);border-radius:var(--r);overflow:hidden}
+  .seg button{background:transparent;border:none;padding:11px 15px;font-weight:700;color:var(--dim);cursor:pointer;font-size:14px}
+  .seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+  .spacer{flex:1}
+
+  .win-row{display:flex;align-items:baseline;gap:9px;padding:9px 0;border-bottom:1px solid var(--edge)}
+  .win-row:last-child{border-bottom:none}
+  .win-row .rank{font-family:var(--display);font-size:17px;color:var(--gold);min-width:22px;flex:none}
+  .win-row .who{font-weight:700;flex:1;min-width:0;overflow-wrap:anywhere}
+  .win-row .at{font-size:12px;color:var(--dim);flex:none;font-variant-numeric:tabular-nums}
+  .empty-note{color:var(--dim);font-size:13.5px;line-height:1.5}
+
+  .prize-head{display:flex;align-items:center;gap:8px;margin:14px 0 2px;font-family:var(--display);text-transform:uppercase;font-size:17px}
+  .prize-head:first-child{margin-top:0}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .dot.line{background:var(--mint)}
+  .dot.house{background:var(--coral)}
+  .dot.cross{background:var(--gold)}
+
+  .check-input{
+    width:100%;background:var(--raise);border:1px solid var(--edge-2);color:var(--paper);
+    border-radius:var(--r);padding:11px;font-size:15px;margin-bottom:10px;
+  }
+  .verdict{border-radius:var(--r);padding:11px 13px;font-weight:700;margin-bottom:10px;font-size:14.5px}
+  .verdict.yes{background:var(--mint);color:#08251c}
+  .verdict.no{background:var(--raise);border:1px solid var(--coral);color:var(--paper)}
+  .mini{display:grid;grid-template-columns:repeat(9,1fr);gap:2px;background:var(--paper);padding:4px;border-radius:8px}
+  .mini div{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;border-radius:3px;
+    background:#fffaf0;color:var(--on-paper);font-variant-numeric:tabular-nums;
+  }
+  .mini div.b{background:var(--paper-2)}
+  .mini div.h{background:var(--coral);color:#fff}
+  .mini div.t{box-shadow:inset 0 0 0 2px var(--gold)}
+
+  textarea.roster{
+    width:100%;min-height:120px;background:var(--raise);border:1px solid var(--edge-2);
+    color:var(--paper);border-radius:var(--r);padding:11px;font-size:14px;
+    font-family:var(--body);resize:vertical;line-height:1.5;
+  }
+
+  .stat-row{display:flex;gap:10px;margin-top:12px}
+  .stat{flex:1;background:var(--raise);border-radius:var(--r);padding:10px 12px;min-width:0}
+  .stat b{display:block;font-family:var(--display);font-size:26px;line-height:1;margin-bottom:3px}
+  .stat span{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);font-weight:700}
+
+  @media (max-width:1180px){
+    .h-grid{grid-template-columns:240px minmax(0,1fr)}
+    .h-right{grid-column:1/-1}
+  }
+  @media (max-width:820px){
+    .h-grid{grid-template-columns:1fr}
+    .h-left,.h-right{grid-column:auto}
+    .ball-stage{gap:16px;padding:16px}
+  }
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     Card generation — deterministic from a name.
+     The same name always yields the same card, in every browser,
+     so the host screen can rebuild any player's card without ever
+     having spoken to their phone. That is what removes the backend.
+     ============================================================ */
+
+  var SALT = "airship-toggle-company-day";
+
+  function fnv1a(str){
+    var h = 2166136261 >>> 0;
+    for (var i = 0; i < str.length; i++){
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function mulberry32(a){
+    return function(){
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // "Dan Brookman", "Dan B", "dan b." all collapse to "danb" — so what a
+  // player types on their phone and what the host has on the roster agree.
+  function normKey(raw){
+    var parts = String(raw || "").toLowerCase()
+      .replace(/[^a-z0-9\s]+/g, " ")
+      .trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "";
+    return parts[0] + (parts.length > 1 ? parts[1].charAt(0) : "");
+  }
+
+  var CODE_ALPHABET = "ACDEFGHJKLMNPQRTUVWXY349";
+  function cardCode(key){
+    var h = fnv1a(key + "|code|" + SALT), out = "";
+    for (var i = 0; i < 4; i++){
+      out += CODE_ALPHABET.charAt(h % CODE_ALPHABET.length);
+      h = Math.floor(h / CODE_ALPHABET.length) + 7919;
+    }
+    return out;
+  }
+
+  function colRange(c){
+    if (c === 0) return [1, 9];
+    if (c === 8) return [80, 90];
+    return [c * 10, c * 10 + 9];
+  }
+
+  function shuffle(arr, rnd){
+    for (var i = arr.length - 1; i > 0; i--){
+      var j = Math.floor(rnd() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  // A UK 90-ball card: 3 rows x 9 columns, 15 numbers, exactly 5 per row,
+  // 1-3 per column, ascending down each column.
+  function buildCard(seedStr){
+    for (var attempt = 0; attempt < 12; attempt++){
+      var rnd = mulberry32(fnv1a(seedStr + "#" + attempt));
+
+      var counts = [1,1,1,1,1,1,1,1,1], spare = 6, guard = 0;
+      while (spare > 0 && guard++ < 500){
+        var c = Math.floor(rnd() * 9);
+        if (counts[c] < 3){ counts[c]++; spare--; }
+      }
+
+      var cols = [];
+      for (var ci = 0; ci < 9; ci++){
+        var r = colRange(ci), pool = [];
+        for (var v = r[0]; v <= r[1]; v++) pool.push(v);
+        shuffle(pool, rnd);
+        cols.push(pool.slice(0, counts[ci]).sort(function(a,b){ return a - b; }));
+      }
+
+      // Comparators below are pure total orders — no randomness inside a
+      // sort — so the result is identical on every JS engine. That is
+      // load-bearing: host and phone must agree on the card.
+      var tie = shuffle([0,1,2,3,4,5,6,7,8], rnd);
+      var order = [0,1,2,3,4,5,6,7,8].sort(function(a,b){
+        return (counts[b] - counts[a]) || (tie.indexOf(a) - tie.indexOf(b));
+      });
+
+      var grid = [new Array(9).fill(null), new Array(9).fill(null), new Array(9).fill(null)];
+      var cap = [5,5,5], ok = true;
+
+      for (var k = 0; k < order.length; k++){
+        var col = order[k], n = counts[col];
+        var rt = shuffle([0,1,2], rnd);
+        var rows = [0,1,2].sort(function(a,b){
+          return (cap[b] - cap[a]) || (rt.indexOf(a) - rt.indexOf(b));
+        }).slice(0, n).sort(function(a,b){ return a - b; });
+
+        for (var m = 0; m < rows.length; m++){
+          if (cap[rows[m]] <= 0){ ok = false; break; }
+          grid[rows[m]][col] = cols[col][m];
+          cap[rows[m]]--;
+        }
+        if (!ok) break;
+      }
+
+      if (ok && cap[0] === 0 && cap[1] === 0 && cap[2] === 0) return grid;
+    }
+    throw new Error("card generation failed");
+  }
+
+  /* ============================================================
+     The games.
+     ============================================================ */
+
+  var GAME_ORDER = ["g1", "cross", "g2"];
+  var GAMES = {
+    g1:    { label: "Game 1", sub: "Line & house",   prizes: ["line", "house"], seed: 1 },
+    cross: { label: "Cross",  sub: "Corners+centre", prizes: ["cross"],         seed: 3 },
+    g2:    { label: "Game 2", sub: "Line & house",   prizes: ["line", "house"], seed: 2 }
+  };
+  var PRIZE_LABEL = { line: "Line", house: "Full house", cross: "Cross" };
+
+  function isGame(k){ return GAME_ORDER.indexOf(k) !== -1; }
+
+  function cardFor(name, gameKey){
+    return buildCard(normKey(name) + "|" + SALT + "|g" + GAMES[gameKey].seed);
+  }
+
+  function cardNumbers(grid){
+    var out = [];
+    for (var r = 0; r < 3; r++) for (var c = 0; c < 9; c++) if (grid[r][c]) out.push(grid[r][c]);
+    return out;
+  }
+
+  // The X: first and last number of the top row, first and last of the
+  // bottom row, and the middle number of the middle row. Every row holds
+  // exactly five numbers, so all five cells always exist whatever the
+  // blanks do — no card can be unwinnable.
+  function crossCells(grid){
+    function filled(r){
+      var idx = [];
+      for (var c = 0; c < 9; c++) if (grid[r][c]) idx.push(c);
+      return idx;
+    }
+    var top = filled(0), mid = filled(1), bot = filled(2);
+    return [
+      { r: 0, c: top[0] },
+      { r: 0, c: top[top.length - 1] },
+      { r: 1, c: mid[2] },
+      { r: 2, c: bot[0] },
+      { r: 2, c: bot[bot.length - 1] }
+    ];
+  }
+
+  function crossNumbers(grid){
+    return crossCells(grid).map(function(p){ return grid[p.r][p.c]; });
+  }
+
+  /* ============================================================
+     Winner maths — the truth, independent of what anyone crossed off.
+     Returns the call number at which each prize actually landed.
+     ============================================================ */
+
+  function evaluate(grid, called){
+    var seen = Object.create(null);
+    var lineAt = null, houseAt = null, crossAt = null, hits = 0;
+    var total = cardNumbers(grid).length;
+    var xs = crossNumbers(grid);
+
+    for (var i = 0; i < called.length; i++){
+      seen[called[i]] = true;
+
+      var onCard = false;
+      for (var r = 0; r < 3 && !onCard; r++)
+        for (var c = 0; c < 9; c++) if (grid[r][c] === called[i]){ onCard = true; break; }
+      if (!onCard) continue;
+      hits++;
+
+      if (lineAt === null){
+        for (var rr = 0; rr < 3; rr++){
+          var full = true;
+          for (var cc = 0; cc < 9; cc++){
+            var v = grid[rr][cc];
+            if (v && !seen[v]){ full = false; break; }
+          }
+          if (full){ lineAt = i + 1; break; }
+        }
+      }
+
+      if (crossAt === null){
+        var allX = true;
+        for (var x = 0; x < xs.length; x++) if (!seen[xs[x]]){ allX = false; break; }
+        if (allX) crossAt = i + 1;
+      }
+
+      if (houseAt === null && hits === total) houseAt = i + 1;
+    }
+
+    var xHits = 0;
+    for (var y = 0; y < xs.length; y++) if (seen[xs[y]]) xHits++;
+
+    return {
+      lineAt: lineAt, houseAt: houseAt, crossAt: crossAt,
+      hits: hits, total: total, xHits: xHits, xTotal: xs.length
+    };
+  }
+
+  function prizeAt(res, prize){
+    return prize === "line" ? res.lineAt : (prize === "house" ? res.houseAt : res.crossAt);
+  }
+
+  /* ============================================================
+     The calls. Traditional UK bingo nicknames — the host reads these
+     out; it is most of what makes it feel like bingo rather than a
+     number generator.
+     ============================================================ */
+
+  var NICKNAMES = ("Kelly's eye|One little duck|Cup of tea|Knock at the door|Man alive|"
+    + "Half a dozen|Lucky seven|Garden gate|Doctor's orders|Downing Street|"
+    + "Legs eleven|One dozen|Unlucky for some|Valentine's Day|Young and keen|"
+    + "Sweet sixteen|Dancing queen|Coming of age|Goodbye teens|One score|"
+    + "Key of the door|Two little ducks|Thee and me|Two dozen|Duck and dive|"
+    + "Half a crown|Gateway to heaven|In a state|Rise and shine|Dirty Gertie|"
+    + "Get up and run|Buckle my shoe|All the threes|Ask for more|Jump and jive|"
+    + "Three dozen|More than eleven|Christmas cake|Steps|Life begins|"
+    + "Time for fun|Winnie the Pooh|Down on your knees|Droopy drawers|Halfway there|"
+    + "Up to tricks|Four and seven|Four dozen|Nick nick|Half a century|"
+    + "Tweak of the thumb|Danny La Rue|Stuck in the tree|Clean the floor|Snakes alive|"
+    + "Shotts bus|Heinz varieties|Make them wait|Brighton line|Five dozen|"
+    + "Baker's bun|Turn the screw|Tickle me|Almost retired|Retirement age|"
+    + "Clickety click|Stairway to heaven|Saving grace|Anyway up|Three score and ten|"
+    + "Bang on the drum|Six dozen|Queen bee|Hit the floor|Strive and strive|"
+    + "Trombones|Sunset strip|Heaven's gate|One more time|Gandhi's breakfast|"
+    + "Stop and run|Straight on through|Time for tea|Seven dozen|Staying alive|"
+    + "Between the sticks|Torquay in Devon|Two fat ladies|Nearly there|Top of the shop")
+    .split("|");
+
+  /* ============================================================
+     Storage — per-device only. The host machine remembers the game,
+     each phone remembers its own crosses. Nothing is shared.
+     ============================================================ */
+
+  function load(key, fallback){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw === null ? fallback : JSON.parse(raw);
+    } catch (e){ return fallback; }
+  }
+  function save(key, value){
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e){}
+  }
+
+  var app = document.getElementById("app");
+  var toastTimer = null;
+  function toast(msg){
+    var el = document.querySelector(".toast");
+    if (el) el.remove();
+    el = document.createElement("div");
+    el.className = "toast";
+    el.setAttribute("role", "status");
+    el.textContent = msg;
+    document.body.appendChild(el);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.remove(); }, 2600);
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(ch){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[ch];
+    });
+  }
+
+  var joinURL = location.href.split("#")[0];
+
+  // A little 3x3 X glyph, so the shape is legible before anyone reads a word.
+  var CROSS_GLYPH = (function(){
+    var on = [0, 2, 4, 6, 8], out = "";
+    for (var i = 0; i < 9; i++) out += '<i class="' + (on.indexOf(i) !== -1 ? "on" : "") + '"></i>';
+    return '<span class="glyph" aria-hidden="true">' + out + "</span>";
+  })();
+
+  /* ============================================================
+     PLAYER
+     ============================================================ */
+
+  var storedGame = load("bingo.game", "g1");
+  if (storedGame === 1 || storedGame === "1") storedGame = "g1";
+  if (storedGame === 2 || storedGame === "2") storedGame = "g2";
+
+  var player = {
+    name: load("bingo.name", ""),
+    game: isGame(storedGame) ? storedGame : "g1"
+  };
+
+  function marksKey(gameKey){
+    return "bingo.marks." + normKey(player.name) + "." + gameKey;
+  }
+
+  function renderJoin(){
+    app.innerHTML =
+      '<div class="wrap"><div class="join">'
+      + '<div class="eyebrow">Airship &amp; Toggle</div>'
+      + '<h1>Bingo</h1>'
+      + '<p>Three games. A line, a cross, a full house. Grab your card.</p>'
+      + '<form id="joinForm">'
+      + '<div class="field">'
+      + '<label for="nameInput">Your name</label>'
+      + '<input id="nameInput" name="name" placeholder="Dan B" autocomplete="name"'
+      + ' autocapitalize="words" enterkeyhint="go" required>'
+      + '<div class="hint">First name and the initial of your surname is plenty.'
+      + ' Your card is built from your name, so type it the same way you would say it.</div>'
+      + '</div>'
+      + '<button class="btn btn-primary" type="submit">Deal my card</button>'
+      + '</form>'
+      + '<div class="p-foot" style="text-align:left">Running the game?'
+      + ' <a href="#host">Open the host screen</a>.</div>'
+      + '</div></div>';
+
+    document.getElementById("joinForm").addEventListener("submit", function(ev){
+      ev.preventDefault();
+      var v = document.getElementById("nameInput").value.trim();
+      if (!normKey(v)) { toast("Pop your name in first"); return; }
+      player.name = v;
+      save("bingo.name", v);
+      renderPlayer();
+    });
+  }
+
+  function renderPlayer(){
+    if (!normKey(player.name)) return renderJoin();
+
+    var key = normKey(player.name);
+    var gameKey = player.game;
+    var isCross = gameKey === "cross";
+    var grid = cardFor(player.name, gameKey);
+
+    var targets = Object.create(null);
+    if (isCross) crossCells(grid).forEach(function(p){ targets[p.r + ":" + p.c] = true; });
+
+    var marks = load(marksKey(gameKey), []);
+    var markSet = Object.create(null);
+    marks.forEach(function(n){ markSet[n] = true; });
+
+    var cells = "", targetHits = 0, targetTotal = 0;
+    for (var r = 0; r < 3; r++){
+      for (var c = 0; c < 9; c++){
+        var v = grid[r][c];
+        if (!v){ cells += '<div class="cell blank" aria-hidden="true"></div>'; continue; }
+
+        var isTarget = targets[r + ":" + c];
+        if (isCross && isTarget){ targetTotal++; if (markSet[v]) targetHits++; }
+
+        var cls = "cell num";
+        if (markSet[v]) cls += " marked";
+        if (isCross) cls += isTarget ? " target" : " offpattern";
+
+        cells += '<button type="button" class="' + cls + '" data-n="' + v + '"'
+          + ' aria-pressed="' + (markSet[v] ? "true" : "false") + '"'
+          + ' aria-label="' + v + (isCross && isTarget ? ", part of the cross" : "")
+          + (markSet[v] ? ", crossed off" : "") + '">' + v + '</button>';
+      }
+    }
+
+    var tabs = GAME_ORDER.map(function(k){
+      return '<button class="tab" role="tab" data-game="' + k + '"'
+        + ' aria-selected="' + (gameKey === k) + '">'
+        + GAMES[k].label + '<small>' + GAMES[k].sub + '</small></button>';
+    }).join("");
+
+    var note = isCross
+      ? '<div class="pattern-note">' + CROSS_GLYPH
+        + '<div>Only the <b>five ringed numbers</b> count this game — the four'
+        + ' outside corners and the middle of the centre row. First to all five shouts'
+        + ' <b>CROSS!</b></div></div>'
+      : '';
+
+    var actions = isCross
+      ? '<div class="p-actions single">'
+        + '<button class="shout shout-cross" data-shout="cross">Cross!<small>All five ringed</small></button>'
+        + '</div>'
+      : '<div class="p-actions">'
+        + '<button class="shout shout-line" data-shout="line">Line!<small>One full row</small></button>'
+        + '<button class="shout shout-house" data-shout="house">House!<small>All fifteen</small></button>'
+        + '</div>';
+
+    var progress = isCross
+      ? '<b>' + targetHits + ' of ' + targetTotal + '</b> of the cross crossed off'
+      : '<b>' + marks.length + ' of 15</b> crossed off';
+
+    app.innerHTML =
+      '<div class="wrap"><div class="p-shell">'
+      + '<div class="p-head">'
+      + '<div><div class="eyebrow">Your card</div>'
+      + '<div class="p-name">' + esc(player.name) + '</div></div>'
+      + '<div style="text-align:right">'
+      + '<div class="code-chip">' + cardCode(key) + '</div>'
+      + '<div style="margin-top:6px"><button class="btn btn-ghost btn-sm" id="switchName">Not you?</button></div>'
+      + '</div></div>'
+
+      + '<div class="tabs" role="tablist">' + tabs + '</div>'
+      + note
+      + '<div class="card" id="card">' + cells + '</div>'
+      + actions
+
+      + '<div class="p-foot">'
+      + progress + ' &middot; tap a number to mark it.<br>'
+      + 'Each game gives you a different card. Read out your name or card code'
+      + ' <b>' + cardCode(key) + '</b> when you shout, so the caller can check it.'
+      + '<div style="margin-top:8px"><button class="btn btn-ghost btn-sm" id="clearMarks">Clear my crosses</button></div>'
+      + '</div>'
+      + '</div></div>';
+
+    document.getElementById("card").addEventListener("click", function(ev){
+      var btn = ev.target.closest(".cell.num");
+      if (!btn) return;
+      var n = Number(btn.dataset.n);
+      var cur = load(marksKey(gameKey), []);
+      var idx = cur.indexOf(n);
+      if (idx === -1) cur.push(n); else cur.splice(idx, 1);
+      save(marksKey(gameKey), cur);
+      renderPlayer();
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+      t.addEventListener("click", function(){
+        player.game = t.dataset.game;
+        save("bingo.game", player.game);
+        renderPlayer();
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-shout]"), function(b){
+      b.addEventListener("click", function(){
+        var word = b.dataset.shout === "line" ? "LINE"
+          : (b.dataset.shout === "cross" ? "CROSS" : "HOUSE");
+        toast("Shout " + word + "! — loud enough for the caller");
+      });
+    });
+
+    document.getElementById("clearMarks").addEventListener("click", function(){
+      save(marksKey(gameKey), []);
+      renderPlayer();
+    });
+
+    document.getElementById("switchName").addEventListener("click", function(){
+      player.name = "";
+      save("bingo.name", "");
+      renderJoin();
+    });
+  }
+
+  /* ============================================================
+     HOST
+     ============================================================ */
+
+  var storedHostGame = load("bingo.host.game", "g1");
+  if (storedHostGame === 1 || storedHostGame === "1") storedHostGame = "g1";
+  if (storedHostGame === 2 || storedHostGame === "2") storedHostGame = "g2";
+
+  var storedCalled = load("bingo.host.called", null);
+  var calledMap = { g1: [], cross: [], g2: [] };
+  if (storedCalled && typeof storedCalled === "object"){
+    if (Array.isArray(storedCalled["1"])) calledMap.g1 = storedCalled["1"];
+    if (Array.isArray(storedCalled["2"])) calledMap.g2 = storedCalled["2"];
+    GAME_ORDER.forEach(function(k){
+      if (Array.isArray(storedCalled[k])) calledMap[k] = storedCalled[k];
+    });
+  }
+
+  var host = {
+    game: isGame(storedHostGame) ? storedHostGame : "g1",
+    called: calledMap,
+    roster: load("bingo.host.roster", ""),
+    autoMs: 0
+  };
+
+  var autoTimer = null;
+  var checkQuery = "";
+
+  function calls(){ return host.called[host.game]; }
+  function persistHost(){
+    save("bingo.host.game", host.game);
+    save("bingo.host.called", host.called);
+    save("bingo.host.roster", host.roster);
+  }
+
+  function rosterNames(){
+    return host.roster.split(/[\n,;]+/).map(function(s){ return s.trim(); })
+      .filter(function(s){ return normKey(s).length > 0; });
+  }
+
+  function callNext(){
+    var used = calls(), pool = [];
+    for (var n = 1; n <= 90; n++) if (used.indexOf(n) === -1) pool.push(n);
+    if (!pool.length){ stopAuto(); toast("All ninety called"); return; }
+    used.push(pool[Math.floor(Math.random() * pool.length)]);
+    persistHost();
+    renderHost();
+  }
+
+  function stopAuto(){
+    clearInterval(autoTimer);
+    autoTimer = null;
+    host.autoMs = 0;
+  }
+
+  function setAuto(ms){
+    stopAuto();
+    host.autoMs = ms;
+    if (ms) autoTimer = setInterval(callNext, ms);
+    renderHost();
+  }
+
+  function winnerList(prize){
+    var called = calls();
+    var names = rosterNames();
+
+    if (!names.length){
+      return '<div class="empty-note">Paste the attendee list below and every card in the'
+        + ' room is tracked here automatically — whether or not people cross correctly.</div>';
+    }
+
+    var rows = names.map(function(nm){
+      return { name: nm, at: prizeAt(evaluate(cardFor(nm, host.game), called), prize) };
+    }).filter(function(x){ return x.at !== null; });
+
+    if (!rows.length){
+      return '<div class="empty-note">No ' + PRIZE_LABEL[prize].toLowerCase()
+        + ' yet across ' + names.length + ' cards.</div>';
+    }
+
+    rows.sort(function(a, b){ return a.at - b.at; });
+    return rows.slice(0, 6).map(function(row, i){
+      return '<div class="win-row"><span class="rank">' + (i + 1) + '</span>'
+        + '<span class="who">' + esc(row.name) + '</span>'
+        + '<span class="at tnum">call ' + row.at + '</span></div>';
+    }).join("");
+  }
+
+  function checkPanel(){
+    var q = checkQuery.trim();
+    if (!normKey(q)){
+      return '<div class="empty-note">Someone shouted? Type their name here to see their'
+        + ' real card and whether it stands.</div>';
+    }
+
+    var name = q;
+    // Let the host type a card code instead of a name, if that is what was shouted.
+    if (/^[A-Za-z0-9]{4}$/.test(q)){
+      rosterNames().forEach(function(nm){
+        if (cardCode(normKey(nm)).toLowerCase() === q.toLowerCase()) name = nm;
+      });
+    }
+
+    var grid = cardFor(name, host.game);
+    var res = evaluate(grid, calls());
+    var isCross = host.game === "cross";
+
+    var targets = Object.create(null);
+    if (isCross) crossCells(grid).forEach(function(p){ targets[p.r + ":" + p.c] = true; });
+
+    var calledSet = Object.create(null);
+    calls().forEach(function(n){ calledSet[n] = true; });
+
+    var mini = "";
+    for (var r = 0; r < 3; r++){
+      for (var c = 0; c < 9; c++){
+        var v = grid[r][c];
+        if (!v){ mini += '<div class="b"></div>'; continue; }
+        var cls = [];
+        if (calledSet[v]) cls.push("h");
+        if (targets[r + ":" + c]) cls.push("t");
+        mini += '<div class="' + cls.join(" ") + '">' + v + '</div>';
+      }
+    }
+
+    var verdict;
+    if (isCross){
+      verdict = res.crossAt !== null
+        ? '<div class="verdict yes">CROSS stands &middot; landed on call ' + res.crossAt + '</div>'
+        : '<div class="verdict no">Not yet &middot; ' + res.xHits + ' of ' + res.xTotal
+          + ' of the cross</div>';
+    } else if (res.houseAt !== null){
+      verdict = '<div class="verdict yes">FULL HOUSE stands &middot; landed on call ' + res.houseAt + '</div>';
+    } else if (res.lineAt !== null){
+      verdict = '<div class="verdict yes">LINE stands &middot; landed on call ' + res.lineAt
+        + '<br><span style="font-weight:500">' + res.hits + ' of 15 for the house</span></div>';
+    } else {
+      verdict = '<div class="verdict no">Not yet &middot; ' + res.hits
+        + ' of 15, no complete row</div>';
+    }
+
+    return '<div style="font-weight:700;margin-bottom:8px">' + esc(name)
+      + ' <span class="code-chip">' + cardCode(normKey(name)) + '</span></div>'
+      + verdict + '<div class="mini">' + mini + '</div>';
+  }
+
+  function renderHost(){
+    var called = calls();
+    var last = called.length ? called[called.length - 1] : null;
+    var game = GAMES[host.game];
+
+    var board = "";
+    for (var n = 1; n <= 90; n++){
+      var cls = n === last ? "bnum last" : (called.indexOf(n) !== -1 ? "bnum hit" : "bnum");
+      board += '<div class="' + cls + '">' + n + '</div>';
+    }
+
+    var recent = called.slice(-7, -1).reverse().map(function(n){
+      return "<span>" + n + "</span>";
+    }).join("") || '<span style="border-color:transparent;background:transparent">&nbsp;</span>';
+
+    var gameBtns = GAME_ORDER.map(function(k){
+      return '<button data-set-game="' + k + '" aria-pressed="' + (host.game === k) + '">'
+        + GAMES[k].label + '</button>';
+    }).join("");
+
+    var prizeBlocks = game.prizes.map(function(p){
+      return '<div class="prize-head"><span class="dot ' + p + '"></span>'
+        + PRIZE_LABEL[p] + '</div>' + winnerList(p);
+    }).join("");
+
+    var crossHint = host.game === "cross"
+      ? '<div class="pattern-note" style="margin:0 0 12px">' + CROSS_GLYPH
+        + '<div>Four outside corners plus the middle of the centre row.'
+        + ' Five numbers.</div></div>'
+      : '';
+
+    app.innerHTML =
+      '<div class="wrap"><div class="h-grid">'
+
+      + '<div class="h-left">'
+      + '<div class="panel">'
+      + '<h2>Scan to play</h2>'
+      + '<div class="qr-box"><canvas id="qr"></canvas></div>'
+      + '<div class="join-url">' + esc(joinURL.replace(/^https?:\/\//, "")) + '</div>'
+      + '<div class="stat-row">'
+      + '<div class="stat"><b class="tnum">' + called.length + '</b><span>Called</span></div>'
+      + '<div class="stat"><b class="tnum">' + rosterNames().length + '</b><span>Cards</span></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="panel" style="margin-top:16px">'
+      + '<h2>Room roster</h2>'
+      + '<textarea class="roster" id="roster" placeholder="One name per line&#10;Dan B&#10;Sarah M&#10;Priya K">'
+      + esc(host.roster) + '</textarea>'
+      + '<div class="empty-note" style="margin-top:8px">Names as people will type them.'
+      + ' Only used on this screen, to work out who has actually won.</div>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="h-main">'
+      + '<div class="ball-stage">'
+      + (last ? '<div class="ball tnum">' + last + '</div>' : '<div class="ball empty">Ready</div>')
+      + '<div class="ball-meta">'
+      + '<div class="eyebrow">' + game.label + ' &middot; ' + game.sub
+      + ' &middot; call ' + called.length + ' of 90</div>'
+      + '<div class="nickname">' + (last ? esc(NICKNAMES[last - 1]) : "Press call to start") + '</div>'
+      + '<div class="recent">' + recent + '</div>'
+      + '</div></div>'
+
+      + '<div class="controls">'
+      + '<button class="btn btn-primary call-btn" id="callBtn">Call next</button>'
+      + '<button class="btn" id="undoBtn"' + (called.length ? "" : " disabled") + '>Undo</button>'
+      + '<div class="seg" role="group" aria-label="Game">' + gameBtns + '</div>'
+      + '<div class="seg" role="group" aria-label="Auto call">'
+      + '<button data-auto="0" aria-pressed="' + (host.autoMs === 0) + '">Manual</button>'
+      + '<button data-auto="5000" aria-pressed="' + (host.autoMs === 5000) + '">5s</button>'
+      + '<button data-auto="8000" aria-pressed="' + (host.autoMs === 8000) + '">8s</button>'
+      + '</div>'
+      + '<div class="spacer"></div>'
+      + '<button class="btn btn-ghost btn-sm" id="resetBtn">Reset ' + game.label + '</button>'
+      + '</div>'
+
+      + '<div class="panel"><h2>The board</h2><div class="board">' + board + '</div></div>'
+      + '</div>'
+
+      + '<div class="h-right">'
+      + '<div class="panel">'
+      + '<h2>Who has actually won</h2>'
+      + crossHint
+      + prizeBlocks
+      + '</div>'
+      + '<div class="panel" style="margin-top:16px">'
+      + '<h2>Check a shout</h2>'
+      + '<input class="check-input" id="checkInput" placeholder="Name or card code"'
+      + ' value="' + esc(checkQuery) + '" autocomplete="off">'
+      + checkPanel()
+      + '</div>'
+      + '</div>'
+
+      + '</div></div>';
+
+    try {
+      new QRious({
+        element: document.getElementById("qr"),
+        value: joinURL,
+        size: 560,
+        level: "M",
+        background: "#F6EEDC",
+        foreground: "#0B1F22"
+      });
+    } catch (e){}
+
+    document.getElementById("callBtn").addEventListener("click", callNext);
+
+    document.getElementById("undoBtn").addEventListener("click", function(){
+      calls().pop();
+      persistHost();
+      renderHost();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", function(){
+      if (!confirm("Clear every number called in " + game.label + "?")) return;
+      host.called[host.game] = [];
+      stopAuto();
+      persistHost();
+      renderHost();
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-set-game]"), function(b){
+      b.addEventListener("click", function(){
+        host.game = b.dataset.setGame;
+        stopAuto();
+        persistHost();
+        renderHost();
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-auto]"), function(b){
+      b.addEventListener("click", function(){ setAuto(Number(b.dataset.auto)); });
+    });
+
+    var rosterEl = document.getElementById("roster");
+    rosterEl.addEventListener("change", function(){
+      host.roster = rosterEl.value;
+      persistHost();
+      renderHost();
+    });
+
+    var checkEl = document.getElementById("checkInput");
+    checkEl.addEventListener("input", function(){
+      checkQuery = checkEl.value;
+      var panel = checkEl.parentNode;
+      // Redraw only the verdict, so the caret stays where the host is typing.
+      var rest = checkPanel();
+      while (checkEl.nextSibling) panel.removeChild(checkEl.nextSibling);
+      var tmp = document.createElement("div");
+      tmp.innerHTML = rest;
+      while (tmp.firstChild) panel.appendChild(tmp.firstChild);
+    });
+  }
+
+  /* ============================================================ */
+
+  function route(){
+    if (location.hash === "#host") renderHost();
+    else { stopAuto(); renderPlayer(); }
+  }
+
+  window.addEventListener("hashchange", route);
+
+  // Space bar calls the next number — the host is watching the room, not the screen.
+  document.addEventListener("keydown", function(ev){
+    if (location.hash !== "#host") return;
+    if (ev.code !== "Space" && ev.key !== " ") return;
+    var t = ev.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+    ev.preventDefault();
+    callNext();
+  });
+
+  route();
+})();
+</script>
+</body>
+</html>
